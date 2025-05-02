@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var hasCompletedOnboarding = UserDataManager.shared.hasCompletedOnboarding()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        if hasCompletedOnboarding {
+            PlanSummaryView(hasCompletedOnboarding: $hasCompletedOnboarding)
+        } else {
+            OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
         }
-        .padding()
     }
 }
 
