@@ -59,6 +59,13 @@
                 "--",
                 "xcodebuildmcp"
             ]
+        },
+        "notify": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "mcp-notify"
+            ]
         }
     }
 }
