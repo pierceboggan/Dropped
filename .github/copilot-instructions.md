@@ -13,6 +13,4 @@
 
     NEXT, use #tool:get-library-docs from Context7 to get the library's documentation to assist in the user's request.
     </context>
-
-
 </rules>
