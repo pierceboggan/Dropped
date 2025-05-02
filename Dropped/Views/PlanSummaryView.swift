@@ -40,7 +40,7 @@ struct PlanSummaryView: View {
                             .foregroundColor(.secondary)
                         
                         HStack(spacing: 20) {
-                            StatCard(title: "Weight", value: "\(Int(userData.weight)) kg")
+                            StatCard(title: "Weight", value: String(format: "%.1f %@", userData.displayWeight(), userData.weightUnit))
                             StatCard(title: "FTP", value: "\(userData.ftp) W")
                             StatCard(title: "Time", value: "\(userData.trainingHoursPerWeek) h/week")
                         }
@@ -76,18 +76,26 @@ struct PlanSummaryView: View {
                         UserDefaults.standard.removeObject(forKey: "com.dropped.userdata")
                         hasCompletedOnboarding = false
                     }) {
-                        Text("Restart Onboarding")
-                            .font(.headline)
-                            .foregroundColor(.red)
-                            .frame(maxWidth: .infinity)
+                        HStack {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                            Text("Restart Onboarding")
+                                .font(.headline)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .foregroundColor(.white)
+                        .background(Color.red.gradient)
+                        .cornerRadius(12)
                     }
-                    .buttonStyle(.bordered)
                     .padding(.horizontal)
                     .padding(.bottom)
                 }
                 .padding(.top)
             }
             .navigationTitle("Your Training Plan")
+            .onAppear {
+                refreshUserData()
+            }
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     HStack {
@@ -98,8 +106,19 @@ struct PlanSummaryView: View {
                             .fontWeight(.bold)
                     }
                 }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(destination: SettingsView()) {
+                        Image(systemName: "gear")
+                    }
+                }
             }
         }
+    }
+    
+    // Refresh data when returning from settings
+    func refreshUserData() {
+        userData = UserDataManager.shared.loadUserData()
     }
     
     private func generateWorkoutPlan() -> [WorkoutDay] {

@@ -14,27 +14,59 @@ struct InfoPopupView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            Text(title)
-                .font(.headline)
-                .fontWeight(.bold)
-                .multilineTextAlignment(.center)
-            
-            Text(message)
-                .font(.body)
-                .multilineTextAlignment(.center)
-            
-            Button("Got it") {
-                isPresented = false
+            // Header with title
+            HStack {
+                Spacer()
+                
+                Button(action: {
+                    isPresented = false
+                }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.title3)
+                        .foregroundColor(.secondary)
+                }
             }
-            .buttonStyle(.borderedProminent)
-            .padding(.top)
+            .padding(.bottom, -10)
+            
+            // Title and message
+            VStack(spacing: 16) {
+                Text(title)
+                    .font(.title3)
+                    .fontWeight(.bold)
+                    .multilineTextAlignment(.center)
+                
+                Text(message)
+                    .font(.body)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            
+            // "Got it" button
+            Button(action: {
+                isPresented = false
+            }) {
+                Text("Got it")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(
+                        LinearGradient(
+                            colors: [Color.accentColor, Color.accentColor.opacity(0.8)],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .cornerRadius(12)
+            }
+            .padding(.top, 8)
         }
-        .padding()
+        .padding(24)
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: 20)
                 .fill(Color(.systemBackground))
         )
-        .shadow(radius: 20)
+        .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 10)
         .padding(30)
     }
 }
