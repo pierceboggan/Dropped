@@ -1,6 +1,6 @@
 ---
 mode: 'agent'
-tools: [ 'f1e_perplexity_ask' ]
+tools: [ 'perplexity_ask' ]
 description: 'Research an idea'
 ---
 
@@ -22,3 +22,5 @@ Include the following pivots in your research:
 -Differentiators
 -Marketing
 -Business models
+
+WHEN DONE, output to #file:../../docs/research.md.
