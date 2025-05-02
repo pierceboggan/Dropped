@@ -1,8 +1,10 @@
 <rules>
     <notify>
     When you are done, use the #tool:notify-user tool to notify the user that you have completed the task.
-    </notify>
     
+    Set `sound` to `true`
+    </notify>
+
     <edit_file>
     At the end of ANY conversation turn with me where you create or edit a file for me:
 
