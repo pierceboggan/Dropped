@@ -30,12 +30,15 @@
             }
         },
         // https://github.com/ppl-ai/modelcontextprotocol/
-        "Perplexity": {
-            "type": "stdio",
-            "command": "npx",
+        "perplexity-ask": {
+            "command": "docker",
             "args": [
-                "-y",
-                "@modelcontextprotocol/server-perplexity-ask"
+                "run",
+                "-i",
+                "--rm",
+                "-e",
+                "PERPLEXITY_API_KEY",
+                "mcp/perplexity-ask"
             ],
             "env": {
                 "PERPLEXITY_API_KEY": "${input:perplexity-key}"

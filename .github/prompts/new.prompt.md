@@ -1,5 +1,6 @@
 ---
 mode: 'agent'
+description: 'Create a proposal'
 ---
 
 I want to build an app. My idea was attached in the prompt I sent you.
@@ -7,21 +8,17 @@ I want to build an app. My idea was attached in the prompt I sent you.
 Let's join forces to make this idea into a simple, yet impactful proposal.
 
 FIRST:
-- Clarify any details that might be helpful before starting to research my idea.
-- Start your session with me by doing some research using the [perplexity] tool. Look for information that may inform my customer base, problem statements, features, marketing, and business plan.
-- Summarize your findings that might be relevant to me before beginning the next step.
-- Perform another research loop if asked.
-
-SECOND:
 - Clarify any areas of my proposal that may need more details
 - Suggest new requirements based on the functionality provided
 - Consider edge cases that may not be included in my original proposal.
 - Organize requirements logically, and break them down into units that would make sense as user stories.
 - Raise any important high-level technical considerations, like platforms, languages, frameworks, and overall architecture details
+
+NEXT:
 - Iterate with me until I tell you I am satisfied.
 
 FINALLY:
-- Once I tell you I am ready, create a plan (or update an existing plan) in #file:docs/idea.md with the following structure as a Markdown file:
+- Once I tell you I am ready, create a plan (or update an existing plan) in #file:../../docs/idea.md with the following structure as a Markdown file:
 
 ```
 # Project Name
