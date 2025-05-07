@@ -1,6 +1,6 @@
 ---
 mode: 'agent'
-description: 'Plan an implementation'
+description: 'Implement a plan step by step'
 ---
 Your task is to systematically implement each step of the provided plan, one at a time.
 
