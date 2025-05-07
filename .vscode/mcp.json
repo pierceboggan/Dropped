@@ -12,6 +12,12 @@
             "id": "github_token",
             "description": "GitHub Personal Access Token",
             "password": true
+        },
+        {
+            "type": "promptString",
+            "id": "supabase-access-token",
+            "description": "Supabase personal access token",
+            "password": true
         }
     ],
     "servers": {
@@ -66,6 +72,16 @@
                 "-y",
                 "mcp-notify"
             ]
+        },
+        "supabase": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@supabase/mcp-server-supabase@latest"
+            ],
+            "env": {
+                "SUPABASE_ACCESS_TOKEN": "${input:supabase-access-token}"
+            }
         }
     }
 }
