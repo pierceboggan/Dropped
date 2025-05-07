@@ -131,12 +131,12 @@ struct OnboardingView: View {
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                     
-                    Picker("Weight Unit", selection: $viewModel.selectedWeightUnit) {
+                    Picker("Imperial Unit", selection: $viewModel.selectedWeightUnit) {
                         Text("Pounds (lb)").tag(WeightUnit.pounds)
                         Text("Stones (st)").tag(WeightUnit.stones)
                     }
                     .pickerStyle(SegmentedPickerStyle())
-                    .onChange(of: viewModel.selectedWeightUnit) { newUnit in
+                    .onChange(of: viewModel.selectedWeightUnit) { _, newUnit in
                         viewModel.selectWeightUnit(newUnit)
                     }
                 }
@@ -145,10 +145,11 @@ struct OnboardingView: View {
         }
         .padding()
         .background(
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: 16)
                 .fill(cardBackground)
-                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+                .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
         )
+        .accessibilityIdentifier("unitSelectionView")
     }
     
     // Personal Metrics View
@@ -270,18 +271,15 @@ struct OnboardingView: View {
                 hasCompletedOnboarding = true
             }
         }) {
-            HStack {
-                Spacer()
-                Text("Generate Training Plan")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding()
-                Spacer()
-            }
-            .background(accentGradient)
-            .cornerRadius(12)
-            .shadow(color: Color.accentColor.opacity(0.3), radius: 8, x: 0, y: 4)
+            Text("Generate My Training Plan")
+                .font(.headline)
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+                .background(accentGradient)
+                .cornerRadius(12)
         }
+        .accessibilityIdentifier("generatePlanButton")
         .padding(.top, 16)
     }
 }
@@ -327,19 +325,15 @@ struct CustomTextField: View {
                 .keyboardType(keyboardType)
                 .padding()
                 .background(
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(Color(.systemGray6))
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(error != nil ? Color.red : Color.gray.opacity(0.3), lineWidth: 1)
                 )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(error != nil ? Color.red : Color.clear, lineWidth: 1)
-                )
+                .accessibilityIdentifier(placeholder)
             
             if let error = error {
                 Text(error)
                     .font(.caption)
                     .foregroundColor(.red)
-                    .padding(.leading, 4)
             }
         }
     }

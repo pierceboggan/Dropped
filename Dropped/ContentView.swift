@@ -13,8 +13,10 @@ struct ContentView: View {
     var body: some View {
         if hasCompletedOnboarding {
             PlanSummaryView(hasCompletedOnboarding: $hasCompletedOnboarding)
+                .accessibilityIdentifier("planSummaryView")
         } else {
             OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
+                .accessibilityIdentifier("onboardingView")
         }
     }
 }

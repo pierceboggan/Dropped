@@ -13,8 +13,10 @@ class SettingsViewModel: ObservableObject {
     @Published var isMetric: Bool
     
     init() {
-        self.userData = UserDataManager.shared.loadUserData()
-        if let storedUnit = WeightUnit(rawValue: userData.weightUnit) {
+        let loadedData = UserDataManager.shared.loadUserData()
+        self.userData = loadedData
+        
+        if let storedUnit = WeightUnit(rawValue: loadedData.weightUnit) {
             self.selectedWeightUnit = storedUnit
             self.isMetric = (storedUnit == .kilograms)
         } else {
@@ -111,7 +113,7 @@ struct SettingsView: View {
                             }
                             .pickerStyle(SegmentedPickerStyle())
                             .padding(.top, 8)
-                            .onChange(of: viewModel.selectedWeightUnit) { newUnit in
+                            .onChange(of: viewModel.selectedWeightUnit) { _, newUnit in
                                 viewModel.selectWeightUnit(newUnit)
                             }
                         }
