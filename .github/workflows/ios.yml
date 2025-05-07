@@ -38,12 +38,12 @@ jobs:
 
       - name: Build app
         run: |
-          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination "platform=iOS Simulator,name=iPhone 16 Pro,OS=18.2" build
+          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination "platform=iOS Simulator,id=23641635-86FF-4FCC-8174-D9AE2B008972" build
 
       - name: Run unit tests
         run: |
-          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination "platform=iOS Simulator,name=iPhone 16 Pro,OS=18.2" -only-testing:DroppedTests test
+          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination "platform=iOS Simulator,id=23641635-86FF-4FCC-8174-D9AE2B008972" -only-testing:DroppedTests test
 
       - name: Run UI tests
         run: |
-          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination "platform=iOS Simulator,name=iPhone 16 Pro,OS=18.2" -only-testing:DroppedUITests test
+          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination "platform=iOS Simulator,id=23641635-86FF-4FCC-8174-D9AE2B008972" -only-testing:DroppedUITests test
