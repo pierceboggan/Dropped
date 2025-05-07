@@ -7,6 +7,38 @@
 
 import Foundation
 
+enum WeightUnit: String, CaseIterable, Identifiable {
+    case pounds = "lb"
+    case kilograms = "kg"
+    case stones = "st"
+    
+    var id: String { self.rawValue }
+    
+    func convert(from value: Double, to targetUnit: WeightUnit) -> Double {
+        let valueInKg: Double
+        
+        // Convert input to kg first
+        switch self {
+        case .pounds:
+            valueInKg = value * 0.453592
+        case .kilograms:
+            valueInKg = value
+        case .stones:
+            valueInKg = value * 6.35029
+        }
+        
+        // Convert from kg to target unit
+        switch targetUnit {
+        case .pounds:
+            return valueInKg / 0.453592
+        case .kilograms:
+            return valueInKg
+        case .stones:
+            return valueInKg / 6.35029
+        }
+    }
+}
+
 enum TrainingGoal: String, CaseIterable, Identifiable {
     case getFaster = "Get Faster"
     case haveFun = "Have Fun"
@@ -17,12 +49,27 @@ enum TrainingGoal: String, CaseIterable, Identifiable {
 }
 
 struct UserData: Codable {
-    var weight: Double
+    var weight: Double  // Always stored in kg for consistency
+    var weightUnit: String // Store the preferred display unit
     var ftp: Int
     var trainingHoursPerWeek: Int
     var trainingGoal: String
     
-    static let defaultData = UserData(weight: 70.0, ftp: 200, trainingHoursPerWeek: 5, trainingGoal: TrainingGoal.haveFun.rawValue)
+    static let defaultData = UserData(
+        weight: 70.0, 
+        weightUnit: WeightUnit.pounds.rawValue,
+        ftp: 200, 
+        trainingHoursPerWeek: 5, 
+        trainingGoal: TrainingGoal.haveFun.rawValue
+    )
+    
+    // Helper function to get weight in the user's preferred unit
+    func displayWeight() -> Double {
+        if let unit = WeightUnit(rawValue: weightUnit) {
+            return WeightUnit.kilograms.convert(from: weight, to: unit)
+        }
+        return weight
+    }
 }
 
 class UserDataManager {
