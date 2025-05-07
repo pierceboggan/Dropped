@@ -80,7 +80,7 @@ jobs:
 
       - name: Clean Xcode Build Folder
         run: |
-          xcodebuild clean -project Dropped.xcodeproj -scheme Dropped -alltargets
+          xcodebuild clean -project Dropped.xcodeproj -scheme Dropped
 
       - name: Show Xcode Build Destinations
         run: |
