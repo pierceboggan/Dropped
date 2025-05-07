@@ -31,23 +31,33 @@ jobs:
         run: |
           echo "Available simulators:"
           xcrun simctl list
-          # Try to find an iPhone simulator and boot it, fallback gracefully if not found
-          SIMULATOR_UDID=$(xcrun simctl list devices available -j | jq -r '.devices | to_entries | map(.value) | flatten | map(select(.name | contains("iPhone"))) | first | .udid // empty')
+          # Use specified iPhone 16 Pro simulator, or find any available one if not found
+          PREFERRED_SIMULATOR_UDID="23641635-86FF-4FCC-8174-D9AE2B008972"
+          
+          if xcrun simctl list devices | grep -q "$PREFERRED_SIMULATOR_UDID"; then
+            SIMULATOR_UDID="$PREFERRED_SIMULATOR_UDID"
+          else
+            # Fallback to any available iPhone simulator
+            SIMULATOR_UDID=$(xcrun simctl list devices available -j | jq -r '.devices | to_entries | map(.value) | flatten | map(select(.name | contains("iPhone"))) | first | .udid // empty')
+          fi
+          
           if [ -n "$SIMULATOR_UDID" ]; then
             echo "Booting simulator with UDID: $SIMULATOR_UDID"
             xcrun simctl boot "$SIMULATOR_UDID" || echo "Could not boot simulator, may already be booted"
+            echo "SIMULATOR_UDID=$SIMULATOR_UDID" >> $GITHUB_ENV
           else
             echo "No available iPhone simulator found, will use default instead"
+            echo "SIMULATOR_UDID=dvtdevice-DVTiOSDeviceSimulatorPlaceholder-iphonesimulator:placeholder" >> $GITHUB_ENV
           fi
 
       - name: Build app
         run: |
-          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' build
+          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" build
 
       - name: Run unit tests
         run: |
-          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' -only-testing:DroppedTests test
+          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" -only-testing:DroppedTests test
 
       - name: Run UI tests
         run: |
-          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' -only-testing:DroppedUITests test
+          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" -only-testing:DroppedUITests test
