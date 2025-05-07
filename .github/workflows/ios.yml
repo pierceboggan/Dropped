@@ -48,7 +48,7 @@ jobs:
           xcrun simctl create "$SIM_NAME" "$DEVICE_TYPE" "$LATEST_IOS_RUNTIME"
           
           # Get the UDID of the newly created simulator
-          SIM_UDID=$(xcrun simctl list devices -j | jq -r --arg SIM_NAME "$SIM_NAME" '.devices[$LATEST_IOS_RUNTIME][] | select(.name == $SIM_NAME) | .udid')
+          SIM_UDID=$(xcrun simctl list devices -j | jq -r --arg SIM_NAME "$SIM_NAME" --arg RUNTIME_ID "$LATEST_IOS_RUNTIME" '.devices[$RUNTIME_ID][] | select(.name == $SIM_NAME) | .udid')
           
           if [ -z "$SIM_UDID" ] || [ "$SIM_UDID" == "null" ]; then
             echo "Error: Could not get UDID for created simulator $SIM_NAME."
