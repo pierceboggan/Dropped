@@ -78,6 +78,15 @@ jobs:
           # Make the UDID available to subsequent steps
           echo "SIMULATOR_UDID=$SIM_UDID" >> $GITHUB_ENV
 
+      - name: Clean Xcode Build Folder
+        run: |
+          xcodebuild clean -project Dropped.xcodeproj -scheme Dropped -alltargets
+
+      - name: Show Xcode Build Destinations
+        run: |
+          echo "Showing destinations for Dropped.xcodeproj - Dropped scheme:"
+          xcodebuild -showdestinations -project Dropped.xcodeproj -scheme Dropped
+
       - name: Build app
         env:
           SIMULATOR_UDID: ${{ env.SIMULATOR_UDID }}
