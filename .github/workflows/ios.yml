@@ -25,12 +25,12 @@ jobs:
 
       - name: Build app
         run: |
-          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' build
+          xcodebuild -project Dropped.xcdeproj -scheme Dropped -destination 'platform=iOS Simulator,id=dvtdevice-DVTiOSDeviceSimulatorPlaceholder-iphonesimulator:placeholder' build
 
       - name: Run unit tests
         run: |
-          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' -only-testing:DroppedTests test
+          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination 'platform=iOS Simulator,id=dvtdevice-DVTiOSDeviceSimulatorPlaceholder-iphonesimulator:placeholder' -only-testing:DroppedTests test
 
-      - name: Run UI tests
+      - name: Run UI testso
         run: |
-          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' -only-testing:DroppedUITests test
+          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination 'platform=iOS Simulator,id=dvtdevice-DVTiOSDeviceSimulatorPlaceholder-iphonesimulator:placeholder' -only-testing:DroppedUITests test
