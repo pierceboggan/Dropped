@@ -3,6 +3,8 @@
     WHEN file changes are COMPLETE:
     - Stage your changes
     - Commit them with an short generated message describing the changes
+    
+    ONLY do this if you create or edit a file during the turn.
     </commit>
     <context>
     If you lack context on how to solve the user's request:
