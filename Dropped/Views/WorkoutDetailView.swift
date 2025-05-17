@@ -14,6 +14,23 @@ struct WorkoutDetailView: View {
             Text("Intensity: \(workout.intensity)")
             Text(workout.description)
                 .padding(.top, 8)
+            if let notes = (workout as? HasNotes)?.notes {
+                if !notes.isEmpty {
+                    Text("Notes: \(notes)")
+                        .italic()
+                        .padding(.top, 8)
+                } else {
+                    Text("No additional notes.")
+                        .foregroundColor(.secondary)
+                        .italic()
+                        .padding(.top, 8)
+                }
+            } else {
+                Text("No additional notes.")
+                    .foregroundColor(.secondary)
+                    .italic()
+                    .padding(.top, 8)
+            }
             Spacer()
         }
         .padding()
