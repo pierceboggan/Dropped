@@ -2,6 +2,14 @@
 applyTo: "**"
 ---
 
+### When to use this file
+Use this to run the iOS simulator.
+
+RULES:
+
+- Only build and run app when expicitly asked to
+- Do not build and run the app until the plan is completed (unless asked to by user)
+
 ### Booting iOS Simulator
 To run this project, first check to see if the iOS simulator is booted. If it is not, use #tool:f1e_boot_simulator with input:
 ```json

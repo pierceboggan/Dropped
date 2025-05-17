@@ -21,7 +21,8 @@ THEN:
 - The plan should be structured, clear, and easy to follow.
 - Structure your plan as follows:
 
-```md
+Output as Markdown code block:
+```markdown
 # Implementation Plan for [Spec Name]
 
 - [ ] Step 1: [Brief title]

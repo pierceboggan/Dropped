@@ -109,5 +109,16 @@ struct WorkoutDetailView: View {
 }
 
 #Preview {
-    WorkoutDetailView(workout: WorkoutDay(day: "Monday", title: "Endurance Ride", description: "A steady ride at 70% FTP for aerobic development.", duration: 60, intensity: "Medium"))
+    WorkoutDetailView(workout: WorkoutDay(
+        day: "Monday",
+        title: "Endurance Ride",
+        description: "A steady ride at 70% FTP for aerobic development.",
+        duration: 60,
+        intensity: "Medium",
+        intervals: [
+            WorkoutInterval(name: "Warmup", duration: 10, targetFTP: "60% FTP"),
+            WorkoutInterval(name: "Endurance Block", duration: 45, targetFTP: "70% FTP"),
+            WorkoutInterval(name: "Cooldown", duration: 5, targetFTP: "60% FTP")
+        ]
+    ))
 }
