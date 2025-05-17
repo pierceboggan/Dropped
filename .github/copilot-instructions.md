@@ -3,7 +3,8 @@
     WHEN file changes are COMPLETE:
     - Stage your changes
     - Commit them with an short generated message describing the changes
-    
+    - Do this within a single terminal command using &&
+
     ONLY do this if you create or edit a file during the turn.
     </commit>
     <context>
