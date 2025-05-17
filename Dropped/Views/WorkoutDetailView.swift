@@ -42,6 +42,34 @@ struct WorkoutDetailView: View {
                         .padding(.top, 8)
                 }
 
+                // Workout preview section
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Preview")
+                        .font(.headline)
+                        .padding(.bottom, 4)
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.accentColor.opacity(0.1))
+                        .frame(height: 80)
+                        .overlay(
+                            HStack {
+                                Image(systemName: "bicycle")
+                                    .font(.largeTitle)
+                                    .foregroundColor(.accentColor)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Type: \(workout.title)")
+                                        .font(.subheadline)
+                                    Text("Duration: \(workout.duration) min")
+                                        .font(.subheadline)
+                                    Text("Intensity: \(workout.intensity)")
+                                        .font(.subheadline)
+                                }
+                                Spacer()
+                            }
+                            .padding(.horizontal)
+                        )
+                }
+                .padding(.top, 12)
+
                 Spacer(minLength: 20)
             }
             .padding()
