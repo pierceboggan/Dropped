@@ -11,38 +11,47 @@ struct WorkoutDetailView: View {
     let workout: WorkoutDay
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
-            Text(workout.title)
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .accessibilityLabel("Workout title: \(workout.title)")
-            
-            HStack {
-                Text(workout.day)
-                    .font(.headline)
-                    .foregroundColor(.secondary)
-                Spacer()
-                Text("\(workout.duration) min")
-                    .font(.headline)
-                    .foregroundColor(.secondary)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                Text(workout.title)
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .accessibilityLabel("Workout title: \(workout.title)")
+
+                HStack {
+                    Text(workout.day)
+                        .font(.headline)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Text("\(workout.duration) min")
+                        .font(.headline)
+                        .foregroundColor(.secondary)
+                }
+
+                HStack {
+                    Text("Intensity:")
+                        .fontWeight(.semibold)
+                    Text(workout.intensity)
+                        .foregroundColor(.accentColor)
+                }
+                .accessibilityElement(children: .combine)
+
+                if !workout.description.isEmpty {
+                    Text(workout.description)
+                        .font(.body)
+                        .padding(.top, 8)
+                }
+
+                Spacer(minLength: 20)
             }
-            
-            HStack {
-                Text("Intensity:")
-                    .fontWeight(.semibold)
-                Text(workout.intensity)
-                    .foregroundColor(.accentColor)
-            }
-            .accessibilityElement(children: .combine)
-            
-            if !workout.description.isEmpty {
-                Text(workout.description)
-                    .font(.body)
-                    .padding(.top, 8)
-            }
-            Spacer()
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color(.systemBackground))
+                    .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
+            )
+            .padding()
         }
-        .padding()
         .navigationTitle("Workout Details")
         .navigationBarTitleDisplayMode(.inline)
         .accessibilityElement(children: .contain)
