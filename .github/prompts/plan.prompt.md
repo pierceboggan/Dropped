@@ -33,5 +33,13 @@ THEN:
 [Additional steps...]
 ```
 
+- After the steps to implement the feature, add a step to build and run the app
+- Add a step to write unit and UI tests for the feature
+- Add a step to run all unit and UI tests as last step
+
+NEXT:
+
+- Iterate with me until I am satisifed with the plan
+
 FINALLY: 
 Output your plan in #folder:../../docs/plans/plan-name.md
