@@ -7,6 +7,13 @@
 
 import SwiftUI
 
+struct WorkoutInterval: Identifiable {
+    let id = UUID()
+    let name: String
+    let duration: Int // minutes
+    let targetFTP: String // e.g. "90% FTP" or "120W"
+}
+
 struct WorkoutDay: Identifiable {
     let id = UUID()
     let day: String
@@ -14,6 +21,7 @@ struct WorkoutDay: Identifiable {
     let description: String
     let duration: Int // minutes
     let intensity: String
+    let intervals: [WorkoutInterval]?
 }
 
 struct PlanSummaryView: View {
@@ -132,23 +140,168 @@ struct PlanSummaryView: View {
         // Basic logic to generate workouts based on goals and available time
         if hoursPerWeek <= 3 {
             // Minimal plan for those with little time
-            workouts.append(WorkoutDay(day: "Monday", title: "Recovery", description: "Light spinning to recover", duration: 30, intensity: "Low"))
-            workouts.append(WorkoutDay(day: "Wednesday", title: "Tempo", description: "Sustained effort at moderate intensity", duration: 45, intensity: "Medium"))
-            workouts.append(WorkoutDay(day: "Saturday", title: "Endurance", description: "Longer ride at conversational pace", duration: 60, intensity: "Medium-Low"))
+            workouts.append(WorkoutDay(
+                day: "Monday",
+                title: "Recovery",
+                description: "Light spinning to recover",
+                duration: 30,
+                intensity: "Low",
+                intervals: [
+                    WorkoutInterval(name: "Spin Easy", duration: 30, targetFTP: "<55% FTP")
+                ]
+            ))
+            workouts.append(WorkoutDay(
+                day: "Wednesday",
+                title: "Tempo",
+                description: "Sustained effort at moderate intensity",
+                duration: 45,
+                intensity: "Medium",
+                intervals: [
+                    WorkoutInterval(name: "Warmup", duration: 10, targetFTP: "60% FTP"),
+                    WorkoutInterval(name: "Tempo Block", duration: 30, targetFTP: "80-85% FTP"),
+                    WorkoutInterval(name: "Cooldown", duration: 5, targetFTP: "60% FTP")
+                ]
+            ))
+            workouts.append(WorkoutDay(
+                day: "Saturday",
+                title: "Endurance",
+                description: "Longer ride at conversational pace",
+                duration: 60,
+                intensity: "Medium-Low",
+                intervals: [
+                    WorkoutInterval(name: "Endurance Ride", duration: 60, targetFTP: "65-75% FTP")
+                ]
+            ))
         } else if hoursPerWeek <= 6 {
             // Moderate plan
-            workouts.append(WorkoutDay(day: "Monday", title: "Recovery", description: "Easy spin with high cadence", duration: 45, intensity: "Low"))
-            workouts.append(WorkoutDay(day: "Tuesday", title: "Intervals", description: "4x4 min at threshold with 2 min recovery", duration: 60, intensity: "High"))
-            workouts.append(WorkoutDay(day: "Thursday", title: "Tempo", description: "Sustained effort at 85-90% FTP", duration: 60, intensity: "Medium-High"))
-            workouts.append(WorkoutDay(day: "Saturday", title: "Endurance", description: "Longer ride with occasional efforts", duration: 90, intensity: "Medium"))
+            workouts.append(WorkoutDay(
+                day: "Monday",
+                title: "Recovery",
+                description: "Easy spin with high cadence",
+                duration: 45,
+                intensity: "Low",
+                intervals: [
+                    WorkoutInterval(name: "Spin Easy", duration: 45, targetFTP: "<55% FTP")
+                ]
+            ))
+            workouts.append(WorkoutDay(
+                day: "Tuesday",
+                title: "Intervals",
+                description: "4x4 min at threshold with 2 min recovery",
+                duration: 60,
+                intensity: "High",
+                intervals: [
+                    WorkoutInterval(name: "Warmup", duration: 10, targetFTP: "60% FTP"),
+                    WorkoutInterval(name: "Interval 1", duration: 4, targetFTP: "100% FTP"),
+                    WorkoutInterval(name: "Recovery 1", duration: 2, targetFTP: "60% FTP"),
+                    WorkoutInterval(name: "Interval 2", duration: 4, targetFTP: "100% FTP"),
+                    WorkoutInterval(name: "Recovery 2", duration: 2, targetFTP: "60% FTP"),
+                    WorkoutInterval(name: "Interval 3", duration: 4, targetFTP: "100% FTP"),
+                    WorkoutInterval(name: "Recovery 3", duration: 2, targetFTP: "60% FTP"),
+                    WorkoutInterval(name: "Interval 4", duration: 4, targetFTP: "100% FTP"),
+                    WorkoutInterval(name: "Recovery 4", duration: 2, targetFTP: "60% FTP"),
+                    WorkoutInterval(name: "Cooldown", duration: 10, targetFTP: "60% FTP")
+                ]
+            ))
+            workouts.append(WorkoutDay(
+                day: "Thursday",
+                title: "Tempo",
+                description: "Sustained effort at 85-90% FTP",
+                duration: 60,
+                intensity: "Medium-High",
+                intervals: [
+                    WorkoutInterval(name: "Warmup", duration: 10, targetFTP: "60% FTP"),
+                    WorkoutInterval(name: "Tempo Block", duration: 40, targetFTP: "85-90% FTP"),
+                    WorkoutInterval(name: "Cooldown", duration: 10, targetFTP: "60% FTP")
+                ]
+            ))
+            workouts.append(WorkoutDay(
+                day: "Saturday",
+                title: "Endurance",
+                description: "Longer ride with occasional efforts",
+                duration: 90,
+                intensity: "Medium",
+                intervals: [
+                    WorkoutInterval(name: "Endurance Ride", duration: 90, targetFTP: "65-75% FTP")
+                ]
+            ))
         } else {
             // Advanced plan for those with more time
-            workouts.append(WorkoutDay(day: "Monday", title: "Active Recovery", description: "Easy spinning, no intensity", duration: 45, intensity: "Low"))
-            workouts.append(WorkoutDay(day: "Tuesday", title: "VO2 Max", description: "5x3 min at 110-120% FTP with 3 min recovery", duration: 60, intensity: "Very High"))
-            workouts.append(WorkoutDay(day: "Wednesday", title: "Endurance", description: "Steady state riding at 65-75% FTP", duration: 90, intensity: "Medium-Low"))
-            workouts.append(WorkoutDay(day: "Thursday", title: "Threshold", description: "2x20 min at 95-100% FTP", duration: 75, intensity: "High"))
-            workouts.append(WorkoutDay(day: "Friday", title: "Recovery", description: "Light spinning, technique drills", duration: 45, intensity: "Low"))
-            workouts.append(WorkoutDay(day: "Sunday", title: "Long Ride", description: "Extended endurance with sweet spot intervals", duration: 120, intensity: "Medium"))
+            workouts.append(WorkoutDay(
+                day: "Monday",
+                title: "Active Recovery",
+                description: "Easy spinning, no intensity",
+                duration: 45,
+                intensity: "Low",
+                intervals: [
+                    WorkoutInterval(name: "Spin Easy", duration: 45, targetFTP: "<55% FTP")
+                ]
+            ))
+            workouts.append(WorkoutDay(
+                day: "Tuesday",
+                title: "VO2 Max",
+                description: "5x3 min at 110-120% FTP with 3 min recovery",
+                duration: 60,
+                intensity: "Very High",
+                intervals: [
+                    WorkoutInterval(name: "Warmup", duration: 10, targetFTP: "60% FTP"),
+                    WorkoutInterval(name: "VO2 Max 1", duration: 3, targetFTP: "115% FTP"),
+                    WorkoutInterval(name: "Recovery 1", duration: 3, targetFTP: "60% FTP"),
+                    WorkoutInterval(name: "VO2 Max 2", duration: 3, targetFTP: "115% FTP"),
+                    WorkoutInterval(name: "Recovery 2", duration: 3, targetFTP: "60% FTP"),
+                    WorkoutInterval(name: "VO2 Max 3", duration: 3, targetFTP: "115% FTP"),
+                    WorkoutInterval(name: "Recovery 3", duration: 3, targetFTP: "60% FTP"),
+                    WorkoutInterval(name: "VO2 Max 4", duration: 3, targetFTP: "115% FTP"),
+                    WorkoutInterval(name: "Recovery 4", duration: 3, targetFTP: "60% FTP"),
+                    WorkoutInterval(name: "VO2 Max 5", duration: 3, targetFTP: "115% FTP"),
+                    WorkoutInterval(name: "Cooldown", duration: 10, targetFTP: "60% FTP")
+                ]
+            ))
+            workouts.append(WorkoutDay(
+                day: "Wednesday",
+                title: "Endurance",
+                description: "Steady state riding at 65-75% FTP",
+                duration: 90,
+                intensity: "Medium-Low",
+                intervals: [
+                    WorkoutInterval(name: "Endurance Ride", duration: 90, targetFTP: "65-75% FTP")
+                ]
+            ))
+            workouts.append(WorkoutDay(
+                day: "Thursday",
+                title: "Threshold",
+                description: "2x20 min at 95-100% FTP",
+                duration: 75,
+                intensity: "High",
+                intervals: [
+                    WorkoutInterval(name: "Warmup", duration: 10, targetFTP: "60% FTP"),
+                    WorkoutInterval(name: "Threshold 1", duration: 20, targetFTP: "95-100% FTP"),
+                    WorkoutInterval(name: "Recovery", duration: 5, targetFTP: "60% FTP"),
+                    WorkoutInterval(name: "Threshold 2", duration: 20, targetFTP: "95-100% FTP"),
+                    WorkoutInterval(name: "Cooldown", duration: 10, targetFTP: "60% FTP")
+                ]
+            ))
+            workouts.append(WorkoutDay(
+                day: "Friday",
+                title: "Recovery",
+                description: "Light spinning, technique drills",
+                duration: 45,
+                intensity: "Low",
+                intervals: [
+                    WorkoutInterval(name: "Spin Easy", duration: 45, targetFTP: "<55% FTP")
+                ]
+            ))
+            workouts.append(WorkoutDay(
+                day: "Sunday",
+                title: "Long Ride",
+                description: "Extended endurance with sweet spot intervals",
+                duration: 120,
+                intensity: "Medium",
+                intervals: [
+                    WorkoutInterval(name: "Endurance Ride", duration: 100, targetFTP: "65-75% FTP"),
+                    WorkoutInterval(name: "Sweet Spot", duration: 20, targetFTP: "88-94% FTP")
+                ]
+            ))
         }
         
         // Adjust workouts based on goals
@@ -160,7 +313,8 @@ struct PlanSummaryView: View {
                     title: workouts[index].title,
                     description: "More focused efforts with short sprints",
                     duration: workouts[index].duration,
-                    intensity: "Medium-High"
+                    intensity: "Medium-High",
+                    intervals: workouts[index].intervals
                 )
                 workouts[index] = updatedWorkout
             }
@@ -172,7 +326,8 @@ struct PlanSummaryView: View {
                     title: workouts[index].title,
                     description: workouts[index].description + " (focus on steady effort)",
                     duration: Int(Double(workouts[index].duration) * 1.2), // 20% longer
-                    intensity: workouts[index].intensity
+                    intensity: workouts[index].intensity,
+                    intervals: workouts[index].intervals
                 )
                 workouts[index] = updatedWorkout
             }

@@ -70,6 +70,28 @@ struct WorkoutDetailView: View {
                 }
                 .padding(.top, 12)
 
+                // Intervals section
+                if let intervals = workout.intervals, !intervals.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Intervals")
+                            .font(.headline)
+                            .padding(.bottom, 2)
+                        ForEach(intervals) { interval in
+                            HStack {
+                                Text(interval.name)
+                                    .fontWeight(.medium)
+                                Spacer()
+                                Text("\(interval.duration) min")
+                                    .foregroundColor(.secondary)
+                                Text(interval.targetFTP)
+                                    .foregroundColor(.accentColor)
+                            }
+                            .padding(.vertical, 2)
+                        }
+                    }
+                    .padding(.top, 8)
+                }
+
                 Spacer(minLength: 20)
             }
             .padding()
