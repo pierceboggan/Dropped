@@ -7,13 +7,18 @@
 
 import SwiftUI
 
-struct WorkoutDay: Identifiable {
+protocol HasNotes {
+    var notes: String? { get }
+}
+
+struct WorkoutDay: Identifiable, HasNotes {
     let id = UUID()
     let day: String
     let title: String
     let description: String
     let duration: Int // minutes
     let intensity: String
+    let notes: String?
 }
 
 struct PlanSummaryView: View {
@@ -66,7 +71,9 @@ struct PlanSummaryView: View {
                             .padding(.horizontal)
                         
                         ForEach(workoutPlan) { workout in
-                            WorkoutCard(workout: workout)
+                            NavigationLink(destination: WorkoutDetailView(workout: workout)) {
+                                WorkoutCard(workout: workout)
+                            }
                         }
                     }
                     
@@ -129,15 +136,15 @@ struct PlanSummaryView: View {
         // Basic logic to generate workouts based on goals and available time
         if hoursPerWeek <= 3 {
             // Minimal plan for those with little time
-            workouts.append(WorkoutDay(day: "Monday", title: "Recovery", description: "Light spinning to recover", duration: 30, intensity: "Low"))
-            workouts.append(WorkoutDay(day: "Wednesday", title: "Tempo", description: "Sustained effort at moderate intensity", duration: 45, intensity: "Medium"))
-            workouts.append(WorkoutDay(day: "Saturday", title: "Endurance", description: "Longer ride at conversational pace", duration: 60, intensity: "Medium-Low"))
+            workouts.append(WorkoutDay(day: "Monday", title: "Recovery", description: "Light spinning to recover", duration: 30, intensity: "Low", notes: "Focus on smooth pedal strokes."))
+            workouts.append(WorkoutDay(day: "Wednesday", title: "Tempo", description: "Sustained effort at moderate intensity", duration: 45, intensity: "Medium", notes: nil))
+            workouts.append(WorkoutDay(day: "Saturday", title: "Endurance", description: "Longer ride at conversational pace", duration: 60, intensity: "Medium-Low", notes: "Try to keep your heart rate steady."))
         } else if hoursPerWeek <= 6 {
             // Moderate plan
-            workouts.append(WorkoutDay(day: "Monday", title: "Recovery", description: "Easy spin with high cadence", duration: 45, intensity: "Low"))
-            workouts.append(WorkoutDay(day: "Tuesday", title: "Intervals", description: "4x4 min at threshold with 2 min recovery", duration: 60, intensity: "High"))
-            workouts.append(WorkoutDay(day: "Thursday", title: "Tempo", description: "Sustained effort at 85-90% FTP", duration: 60, intensity: "Medium-High"))
-            workouts.append(WorkoutDay(day: "Saturday", title: "Endurance", description: "Longer ride with occasional efforts", duration: 90, intensity: "Medium"))
+            workouts.append(WorkoutDay(day: "Monday", title: "Recovery", description: "Easy spin with high cadence", duration: 45, intensity: "Low", notes: nil))
+            workouts.append(WorkoutDay(day: "Tuesday", title: "Intervals", description: "4x4 min at threshold with 2 min recovery", duration: 60, intensity: "High", notes: "Push hard but maintain form."))
+            workouts.append(WorkoutDay(day: "Thursday", title: "Tempo", description: "Sustained effort at 85-90% FTP", duration: 60, intensity: "Medium-High", notes: nil))
+            workouts.append(WorkoutDay(day: "Saturday", title: "Endurance", description: "Longer ride with occasional efforts", duration: 90, intensity: "Medium", notes: "Fuel well before and during ride."))
         } else {
             // Advanced plan for those with more time
             workouts.append(WorkoutDay(day: "Monday", title: "Active Recovery", description: "Easy spinning, no intensity", duration: 45, intensity: "Low"))
