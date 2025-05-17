@@ -1,10 +1,9 @@
 <rules>
-    <notify>
-    When you are done, use the #tool:notify-user tool to notify the user that you have completed the task.
-    
-    Set `sound` to `true`
-    </notify>
-    
+    <commit>
+    WHEN file changes are COMPLETE:
+    - Stage your changes
+    - Commit them with an short generated message describing the changes
+    </commit>
     <context>
     If you lack context on how to solve the user's request:
     
