@@ -64,9 +64,12 @@ struct PlanSummaryView: View {
                             .font(.title2)
                             .fontWeight(.bold)
                             .padding(.horizontal)
-                        
+
                         ForEach(workoutPlan) { workout in
-                            WorkoutCard(workout: workout)
+                            NavigationLink(destination: WorkoutDetailView(workout: workout)) {
+                                WorkoutCard(workout: workout)
+                            }
+                            .buttonStyle(PlainButtonStyle())
                         }
                     }
                     
