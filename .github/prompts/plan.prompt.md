@@ -10,6 +10,7 @@ RULES:
 - Do not generate real code for your plan, pseudocode is OK
 - For each step in your plan, include the objective of the step, the steps to achieve that objective, and any necessary pseudocode.
 - Call out any necessary user intervention required for each step
+- Consider accessibility part of each step and not a separate step
 
 FIRST:
 
