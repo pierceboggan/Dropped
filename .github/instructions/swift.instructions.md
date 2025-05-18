@@ -6,7 +6,8 @@ CODE RULES::
 
 - Make the UI look nice on the eyes
 - UI should feel consistent across app. For example, if going from one screen to the next in navigation, the visual elements should look like they belong together
-- Do not place new methods inside SwiftUI code block 
+- Place methods outside SwiftUI code blocks
+- Generate accessible UI by default
 
 DOCS RULES:
 
