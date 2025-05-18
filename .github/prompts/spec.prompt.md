@@ -6,7 +6,7 @@ description: 'Plan a feature'
 Your goal is to generate a functional spec for implementing a feature based on the provided idea:
 
 <idea>
-Add a detail view for weekly plan view to view individual workout details including intervals with watts and duration
+Add a detail view for weekly plan view to view individual workout details including intervals with watts and duration. Don't modify the UI for the weekly plan view.
 </idea>
 
 Before generating the spec plan, be sure to review the #file:../../docs/idea.md file to understand an overview of the project.
