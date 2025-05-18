@@ -5,14 +5,14 @@ description: 'Run the test suite'
 
 FIRST:
 
-- Run the unit tests in #file:../../DroppedTests
+- Run the unit tests with xcodebuild test
 - Ensure all test pass successful
 - If tests fail, review the error messages and fix the issues in the codebase
 - If tests pass, proceed to the next step
 
 THEN:
 
-- Run the integration tests in #file:../../DroppedUITests
+- Run the UI tests with xcodebuild test
 - Ensure all test pass successful
 - If tests fail, review the error messages and fix the issues in the codebase
 - If tests pass, proceed to the next step
