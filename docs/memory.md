@@ -19,7 +19,10 @@ This project is a SwiftUI-based iOS application structured as follows:
   - **AppIcon.appiconset/**: App icon images and metadata.
 
 #### Models/
-- **UserData.swift**: Defines the user data model and related logic.
+- **UserData.swift**: Defines the user data model and related logic. Also contains the `Interval`, `Workout`, and `WorkoutDay` models:
+  - `Interval`: Represents a single workout interval (power, duration, etc).
+  - `Workout`: Represents a workout, including title, date, summary, and intervals.
+  - `WorkoutDay`: Merges user data and workout data for a specific day, associating a user's state with a performed workout and optional notes.
 
 #### ViewModels/
 - **OnboardingViewModel.swift**: ViewModel for onboarding logic and state management.
