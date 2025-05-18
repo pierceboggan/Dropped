@@ -1,3 +1,20 @@
+/// Represents a single workout interval, including power (watts) and duration (seconds).
+struct Interval: Identifiable, Codable {
+    let id = UUID()
+    let watts: Int
+    let duration: TimeInterval // seconds
+    // Add more properties if needed (e.g., cadence, description)
+}
+
+/// Represents a workout, including overview and intervals.
+struct Workout: Identifiable, Codable {
+    let id = UUID()
+    let title: String
+    let date: Date
+    let summary: String
+    let intervals: [Interval]
+    // Add more properties if needed (e.g., type, notes)
+}
 //
 //  UserData.swift
 //  Dropped
