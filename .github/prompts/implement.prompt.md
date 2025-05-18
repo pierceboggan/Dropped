@@ -7,3 +7,5 @@ Your task is to implement each step of the provided plan, one at a time.
 The plan is just a suggestion to guide you in the right direction.
 
 You do not have to strictly follow it if it does nto make sense.
+
+Update the attached plan markdown file as you make progress.

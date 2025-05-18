@@ -1,0 +1,47 @@
+## Project Architecture Overview
+
+This project is a SwiftUI-based iOS application structured as follows:
+
+### Root Files
+- **README.md**: Project overview and setup instructions.
+
+### docs/
+- **idea.md**: Project ideas and brainstorming notes.
+- **memory.md**: (This file) Documentation of project architecture and file purposes.
+- **research.md**: Research notes and references for the project.
+
+### Dropped/
+- **ContentView.swift**: The main SwiftUI view for the app's content.
+- **Dropped.entitlements**: App entitlements configuration for permissions.
+- **DroppedApp.swift**: The main app entry point, sets up the SwiftUI app lifecycle.
+- **Assets.xcassets/**: Asset catalog for images, colors, and app icons.
+  - **AccentColor.colorset/**: Accent color definition.
+  - **AppIcon.appiconset/**: App icon images and metadata.
+
+#### Models/
+- **UserData.swift**: Defines the user data model and related logic.
+
+#### ViewModels/
+- **OnboardingViewModel.swift**: ViewModel for onboarding logic and state management.
+
+#### Views/
+- **InfoPopupView.swift**: SwiftUI view for displaying informational popups.
+- **OnboardingView.swift**: SwiftUI view for onboarding screens.
+- **PlanSummaryView.swift**: SwiftUI view summarizing user plans.
+- **SettingsView.swift**: SwiftUI view for app settings.
+
+### Dropped.xcodeproj/
+- **project.pbxproj**: Xcode project configuration file.
+- **project.xcworkspace/**: Xcode workspace data.
+  - **contents.xcworkspacedata**: Workspace metadata.
+- **xcuserdata/**: User-specific Xcode data (schemes, settings).
+  - **xcschemes/**: Xcode scheme management files.
+
+### DroppedTests/
+- **DroppedTests.swift**: General unit tests for the app.
+- **OnboardingViewModelTests.swift**: Unit tests for onboarding ViewModel.
+- **UserDataTests.swift**: Unit tests for user data model.
+
+### DroppedUITests/
+- **DroppedUITests.swift**: UI tests for the app.
+- **DroppedUITestsLaunchTests.swift**: UI launch tests for the app.
