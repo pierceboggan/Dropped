@@ -1,5 +1,5 @@
 ---
-applyTo: "../Dropped/**/*.swift"
+applyTo: "**/*.swift"
 ---
 
 ### Creating Tests
