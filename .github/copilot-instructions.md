@@ -6,7 +6,7 @@
     </memory>
     <commit>
     WHEN file changes are COMPLETE:
-    - Stage your changes
+    - Stage your changes with git add .
     - Commit them with an short generated message describing the changes
     - Do this within a single terminal command using &&
 
