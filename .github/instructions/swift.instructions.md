@@ -1,5 +1,5 @@
 ---
-applyTo: "**/*.swift"
+applyTo: "**"
 ---
 
 CODE RULES:: 
