@@ -8,4 +8,4 @@ The plan is just a suggestion to guide you in the right direction.
 
 You do not have to strictly follow it if it does nto make sense.
 
-Update the attached plan markdown file as you make progress.
+Check off each step as you complete it in the provided Markdown file with the plan.

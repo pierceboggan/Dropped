@@ -19,9 +19,9 @@ FIRST:
 THEN:
 - Create a detailed implementation plan that outlines the steps needed to achieve the objectives of the specification document.
 - The plan should be structured, clear, and easy to follow.
-- Structure your plan as follows:
+- Structure your plan as follows, and output as Markdown code block
 
-```md
+```markdown
 # Implementation Plan for [Spec Name]
 
 - [ ] Step 1: [Brief title]
