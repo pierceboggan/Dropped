@@ -60,7 +60,9 @@ struct PlanSummaryView: View {
                             .padding(.horizontal)
                         
                         ForEach(workoutPlan) { workout in
-                            WorkoutCard(workout: workout)
+                            NavigationLink(destination: WorkoutDetailView(workout: workout)) {
+                                WorkoutCard(workout: workout)
+                            }
                         }
                     }
                     

@@ -6,7 +6,7 @@
     - `/Users/pierce/Desktop/Dropped/Dropped/Views/WorkoutDetailView.swift`: Create a new SwiftUI view that will display workout details including title, date, summary, intervals list, and a power graph. Include accessibility labels and support for both light and dark mode.
   - **Dependencies**: None
 
-- [ ] Step 2: Implement navigation from PlanSummaryView to WorkoutDetailView
+- [x] Step 2: Implement navigation from PlanSummaryView to WorkoutDetailView
   - **Task**: Modify PlanSummaryView to navigate to WorkoutDetailView when a workout is tapped
   - **Files**:
     - `/Users/pierce/Desktop/Dropped/Dropped/Views/PlanSummaryView.swift`: Add navigation link to the workout items that redirects to WorkoutDetailView, passing the selected workout as a parameter
