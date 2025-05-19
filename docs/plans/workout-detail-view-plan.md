@@ -12,7 +12,7 @@
     - `/Users/pierce/Desktop/Dropped/Dropped/Views/PlanSummaryView.swift`: Add navigation link to the workout items that redirects to WorkoutDetailView, passing the selected workout as a parameter
   - **Dependencies**: WorkoutDetailView
 
-- [ ] Step 3: Implement the workout overview section
+- [x] Step 3: Implement the workout overview section
   - **Task**: Create the top section of the WorkoutDetailView that displays the workout title, date, and summary information
   - **Files**:
     - `/Users/pierce/Desktop/Dropped/Dropped/Views/WorkoutDetailView.swift`: Implement a header section with appropriate styling to display workout overview details

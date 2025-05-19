@@ -21,13 +21,9 @@ struct WorkoutDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                // Placeholder for header, intervals, and graph
-                Text("Workout Detail View")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .accessibilityAddTraits(.isHeader)
-                    .padding(.top)
-                // TODO: Add overview, intervals list, and graph in later steps
+                // Workout Overview Header
+                WorkoutOverviewHeader(workout: workout)
+                // TODO: Add intervals list and graph in later steps
             }
             .padding([.horizontal, .bottom])
         }
@@ -41,4 +37,38 @@ struct WorkoutDetailView: View {
 
 // MARK: - Components (add at bottom of file as needed)
 
-// Future components for intervals and graph will be placed here.
+/// Header view for displaying the workout's title, date, and summary.
+/// - Parameter workout: The workout to display.
+private struct WorkoutOverviewHeader: View {
+    let workout: Workout
+
+    var formattedDate: String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .full
+        formatter.timeStyle = .none
+        return formatter.string(from: workout.date)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(workout.title)
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .accessibilityAddTraits(.isHeader)
+                .accessibilityLabel("Workout title: \(workout.title)")
+
+            Text(formattedDate)
+                .font(.headline)
+                .foregroundColor(.secondary)
+                .accessibilityLabel("Date: \(formattedDate)")
+
+            Text(workout.summary)
+                .font(.body)
+                .foregroundColor(.primary)
+                .accessibilityLabel("Summary: \(workout.summary)")
+        }
+        .padding(.top)
+        .padding(.bottom, 8)
+        .accessibilityElement(children: .combine)
+    }
+}
