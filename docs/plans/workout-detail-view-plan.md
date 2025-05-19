@@ -24,7 +24,7 @@
     - `/Users/pierce/Desktop/Dropped/Dropped/Views/WorkoutDetailView.swift`: Implement a list view to display intervals with appropriate visual styling for different interval types
   - **Dependencies**: None
 
-- [ ] Step 5: Implement the power profile graph
+- [x] Step 5: Implement the power profile graph
   - **Task**: Create a graphical visualization of the workout's power profile over time
   - **Files**:
     - `/Users/pierce/Desktop/Dropped/Dropped/Views/WorkoutDetailGraph.swift`: Create a custom chart component that visualizes workout intervals as a power/time graph with different colors for different power zones

@@ -45,7 +45,19 @@ struct WorkoutDetailView: View {
                         .italic()
                         .padding(.vertical, 8)
                 }
-                // TODO: Add graph in later steps
+                // Power Profile Graph Section
+                if !workout.intervals.isEmpty {
+                    Text("Power Profile")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .padding(.top, 8)
+                        .accessibilityAddTraits(.isHeader)
+                        .accessibilityLabel("Power profile graph")
+
+                    WorkoutDetailGraph(intervals: workout.intervals)
+                        .frame(height: 180)
+                        .padding(.vertical, 4)
+                }
             }
             .padding([.horizontal, .bottom])
         }
