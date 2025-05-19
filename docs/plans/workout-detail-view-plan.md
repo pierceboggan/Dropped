@@ -37,7 +37,7 @@
     - `/Users/pierce/Desktop/Dropped/Dropped/Models/UserData.swift`: Add helper methods to the Interval or Workout model to calculate cumulative durations or other values needed for the graph
   - **Dependencies**: None
 
-- [ ] Step 7: Update memory.md with new file descriptions
+- [x] Step 7: Update memory.md with new file descriptions
   - **Task**: Update the project architecture documentation to include the new files
   - **Files**:
     - `/Users/pierce/Desktop/Dropped/docs/memory.md`: Add descriptions for WorkoutDetailView.swift and WorkoutDetailGraph.swift

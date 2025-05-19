@@ -36,8 +36,8 @@ This project is a SwiftUI-based iOS application structured as follows:
 - **OnboardingView.swift**: SwiftUI view for onboarding screens.
 - **PlanSummaryView.swift**: SwiftUI view summarizing user plans.
 - **SettingsView.swift**: SwiftUI view for app settings.
-- **WorkoutDetailView.swift**: SwiftUI view displaying detailed information about a specific workout, including overview, intervals list, and power graph. Created as part of the workout detail feature. Accessible, supports light/dark mode, and is visually consistent with the app.
-- **WorkoutDetailGraph.swift**: SwiftUI component for visualizing workout intervals as a power/time graph.
+**WorkoutDetailView.swift**: SwiftUI view displaying detailed information about a specific workout, including overview, intervals list, and power graph. Created as part of the workout detail feature. Accessible, supports light/dark mode, and is visually consistent with the app. Now also contains the `WorkoutDetailGraph` component for inline power/time graph visualization.
+**WorkoutDetailGraph.swift**: (No longer used; graph is now implemented inline in WorkoutDetailView.swift.)
 
 ### Dropped.xcodeproj/
 - **project.pbxproj**: Xcode project configuration file.
