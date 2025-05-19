@@ -36,7 +36,7 @@ THEN:
 
 - After the steps to implement the feature, add a step to build and run the app
 - Add a step to write unit and UI tests for the feature
-- Add a step to run all unit and UI tests as last step
+- Add a step to run all unit and UI tests as last step (with no -destination set to ensure active simulator is used)
 
 NEXT:
 

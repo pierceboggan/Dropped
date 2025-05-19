@@ -35,3 +35,4 @@ FINALLY:
 When satisfied:
 
 - Output your plan in #folder:../../docs/specs/feature-name.md
+- DO NOT start writing any code or implementation plans. Follow instructions.
