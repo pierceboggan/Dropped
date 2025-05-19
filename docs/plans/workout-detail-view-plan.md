@@ -31,7 +31,7 @@
     - `/Users/pierce/Desktop/Dropped/Dropped/Views/WorkoutDetailView.swift`: Integrate the graph component into the detail view
   - **Dependencies**: None
 
-- [ ] Step 6: Enhance models if needed for graphical visualization
+- [x] Step 6: Enhance models if needed for graphical visualization
   - **Task**: Update existing models or add helper methods to support graph rendering
   - **Files**:
     - `/Users/pierce/Desktop/Dropped/Dropped/Models/UserData.swift`: Add helper methods to the Interval or Workout model to calculate cumulative durations or other values needed for the graph

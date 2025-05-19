@@ -32,6 +32,18 @@ enum WorkoutStatus: String, Codable, Equatable {
 
 /// Represents a workout, including overview and intervals.
 struct Workout: Identifiable, Codable, Equatable {
+
+    /// Returns an array of cumulative durations (in seconds) for each interval, useful for graphing.
+    /// For example, if intervals are [5, 10, 15], returns [5, 15, 30].
+    var cumulativeDurations: [TimeInterval] {
+        var result: [TimeInterval] = []
+        var sum: TimeInterval = 0
+        for interval in intervals {
+            sum += interval.duration
+            result.append(sum)
+        }
+        return result
+    }
     let id: UUID
     let title: String
     let date: Date
