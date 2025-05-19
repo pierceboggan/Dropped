@@ -1,5 +1,5 @@
 ---
-mode: 'agent'
+mode: 'edit'
 description: 'Plan an implementation'
 ---
 
@@ -43,4 +43,6 @@ NEXT:
 - Iterate with me until I am satisifed with the plan
 
 FINALLY: 
-Output your plan in #folder:../../docs/plans/plan-name.md
+
+- Output your plan in #folder:../../docs/plans/plan-name.md
+- DO NOT start implementation without my permission.

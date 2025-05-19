@@ -23,7 +23,7 @@ This boots the iOS simulator if not already booted.
 To see project schemes, run #tool:f1e_list_schemes_project with input:
 ```json
 {
-  "projectPath": "/Users/pierce/Desktop/Build/Vibe-Spec-Coding/Dropped/Dropped.xcodeproj"
+  "projectPath": "/Users/pierce/Desktop/Dropped/Dropped.xcodeproj"
  }
 ```
 
@@ -31,7 +31,7 @@ To see project schemes, run #tool:f1e_list_schemes_project with input:
 To build and run the project, use #tool:f1e_ios_simulator_build_and_run_by_id_project with input:
 ```json
 {
-  "projectPath": "/Users/pierce/Desktop/Build/Vibe-Spec-Coding/Dropped/Dropped.xcodeproj",
+  "projectPath": "/Users/pierce/Desktop/Dropped/Dropped.xcodeproj",
   "scheme": "Dropped",
   "simulatorId": "286D88BB-AE8B-4455-B785-DCFCA22CB711"
 }

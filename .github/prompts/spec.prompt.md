@@ -1,5 +1,5 @@
 ---
-mode: 'agent'
+mode: 'edit'
 description: 'Plan a feature'
 ---
 
@@ -11,7 +11,6 @@ Add a detail view for weekly plan view to view individual workout details:
 - Workout overview
 - Intervals, including watts and duration (should match workout description from plan summary view)
 - Graphical view of intervals
-- Share workout to a friend via iMessage
 
 Don't modify the UI for the weekly plan view.
 </idea>
