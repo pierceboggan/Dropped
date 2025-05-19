@@ -18,7 +18,7 @@
     - `/Users/pierce/Desktop/Dropped/Dropped/Views/WorkoutDetailView.swift`: Implement a header section with appropriate styling to display workout overview details
   - **Dependencies**: None
 
-- [ ] Step 4: Implement the intervals list display
+- [x] Step 4: Implement the intervals list display
   - **Task**: Create a scrollable list component that displays each interval with power, duration, and zone information
   - **Files**:
     - `/Users/pierce/Desktop/Dropped/Dropped/Views/WorkoutDetailView.swift`: Implement a list view to display intervals with appropriate visual styling for different interval types
