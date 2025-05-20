@@ -1,55 +1,3 @@
-// MARK: - Power Profile Graph Component
-
-/// A SwiftUI view that visualizes workout intervals as a power/time bar graph.
-/// - Parameter intervals: The intervals to visualize.
-private struct WorkoutDetailGraph: View {
-    let intervals: [Interval]
-
-    // Calculate the total duration for scaling
-    private var totalDuration: Double {
-        intervals.reduce(0) { $0 + $1.duration }
-    }
-
-    // Assign a color for each interval based on power zone
-    private func color(for watts: Int) -> Color {
-        // Example zones: blue (easy), green (endurance), yellow (tempo), orange (threshold), red (VO2), purple (sprint)
-        switch watts {
-        case ..<120: return .blue
-        case 120..<180: return .green
-        case 180..<240: return .yellow
-        case 240..<300: return .orange
-        case 300..<400: return .red
-        default: return .purple
-        }
-    }
-
-    var body: some View {
-        GeometryReader { geometry in
-            let width = geometry.size.width
-            let height = geometry.size.height
-            let maxWatts = intervals.map { $0.watts }.max() ?? 1
-
-            HStack(alignment: .bottom, spacing: 0) {
-                ForEach(Array(intervals.enumerated()), id: \ .offset) { index, interval in
-                    let barWidth = CGFloat(interval.duration / totalDuration) * width
-                    let barHeight = CGFloat(interval.watts) / CGFloat(maxWatts) * (height - 24)
-                    Rectangle()
-                        .fill(color(for: interval.watts))
-                        .frame(width: barWidth, height: max(barHeight, 2))
-                        .accessibilityLabel("Interval \(index + 1), \(interval.watts) watts, \(Int(interval.duration)) seconds")
-                }
-            }
-            .frame(height: height)
-            .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color(.systemGray5))
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-        }
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel("Power profile graph for workout intervals")
-    }
-}
 //  WorkoutDetailView.swift
 //  Dropped
 //
@@ -198,5 +146,58 @@ private struct IntervalRow: View {
         )
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Interval \(index), Power \(interval.watts) watts, Duration \(formattedDuration)")
+    }
+}
+
+// MARK: - Power Profile Graph Component
+
+/// A SwiftUI view that visualizes workout intervals as a power/time bar graph.
+/// - Parameter intervals: The intervals to visualize.
+private struct WorkoutDetailGraph: View {
+    let intervals: [Interval]
+
+    // Calculate the total duration for scaling
+    private var totalDuration: Double {
+        intervals.reduce(0) { $0 + $1.duration }
+    }
+
+    // Assign a color for each interval based on power zone
+    private func color(for watts: Int) -> Color {
+        // Example zones: blue (easy), green (endurance), yellow (tempo), orange (threshold), red (VO2), purple (sprint)
+        switch watts {
+        case ..<120: return .blue
+        case 120..<180: return .green
+        case 180..<240: return .yellow
+        case 240..<300: return .orange
+        case 300..<400: return .red
+        default: return .purple
+        }
+    }
+
+    var body: some View {
+        GeometryReader { geometry in
+            let width = geometry.size.width
+            let height = geometry.size.height
+            let maxWatts = intervals.map { $0.watts }.max() ?? 1
+
+            HStack(alignment: .bottom, spacing: 0) {
+                ForEach(Array(intervals.enumerated()), id: \ .offset) { index, interval in
+                    let barWidth = CGFloat(interval.duration / totalDuration) * width
+                    let barHeight = CGFloat(interval.watts) / CGFloat(maxWatts) * (height - 24)
+                    Rectangle()
+                        .fill(color(for: interval.watts))
+                        .frame(width: barWidth, height: max(barHeight, 2))
+                        .accessibilityLabel("Interval \(index + 1), \(interval.watts) watts, \(Int(interval.duration)) seconds")
+                }
+            }
+            .frame(height: height)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color(.systemGray5))
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Power profile graph for workout intervals")
     }
 }
