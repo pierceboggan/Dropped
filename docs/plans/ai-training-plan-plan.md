@@ -1,6 +1,6 @@
 # Implementation Plan for AI-Powered Cycling Training Plan Generator
 
-- [ ] Step 1: Create WorkoutType Model and AIWorkoutGenerator Service
+- [x] Step 1: Create WorkoutType Model and AIWorkoutGenerator Service
   - **Task**: Define the workout types and create a service to communicate with OpenAI API
   - **Files**:
     - `Dropped/Models/WorkoutType.swift`: Create enum for workout types with descriptions
