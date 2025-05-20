@@ -7,13 +7,13 @@
     - `Dropped/Services/AIWorkoutGenerator.swift`: Create service for OpenAI API communication
   - **Dependencies**: None
 
-- [ ] Step 2: Create WorkoutGeneratorViewModel
+- [x] Step 2: Create WorkoutGeneratorViewModel
   - **Task**: Create ViewModel to handle the workout generation logic and state
   - **Files**:
     - `Dropped/ViewModels/WorkoutGeneratorViewModel.swift`: Create ViewModel with methods for workout type selection and workout generation
   - **Dependencies**: AIWorkoutGenerator service, UserData model
 
-- [ ] Step 3: Implement WorkoutGeneratorView
+- [x] Step 3: Implement WorkoutGeneratorView
   - **Task**: Create the main view for workout type selection and generation
   - **Files**:
     - `Dropped/Views/WorkoutGeneratorView.swift`: Create view with workout type selection UI and generate button
