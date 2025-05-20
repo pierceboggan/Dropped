@@ -29,6 +29,9 @@ This project is a SwiftUI-based iOS application structured as follows:
   - `Workout`: Represents a workout, including title, date, summary, and intervals.
   - `WorkoutDay`: Merges user data and workout data for a specific day, associating a user's state with a performed workout and optional notes.
 
+- **WorkoutType.swift**: Enum defining the types of cycling workouts (endurance, threshold, vo2Max, sprint, recovery) for user selection and AI prompt construction. Used in the workout generator feature.
+- **AIWorkoutGenerator.swift**: Service for generating structured cycling workouts using the OpenAI API. Handles prompt construction, API requests, and response parsing for the workout generator feature.
+
 #### ViewModels/
 - **OnboardingViewModel.swift**: ViewModel for onboarding logic and state management.
 
