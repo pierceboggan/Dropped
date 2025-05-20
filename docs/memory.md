@@ -9,6 +9,7 @@ This project is a SwiftUI-based iOS application structured as follows:
 - **idea.md**: Project ideas and brainstorming notes.
 - **memory.md**: (This file) Documentation of project architecture and file purposes.
 - **research.md**: Research notes and references for the project.
+    - **openai.md**: Guide for calling OpenAI APIs in Swift without SDKs.
 - **specs/**: Folder containing feature specifications.
   - **workout-detail-view.md**: Specification for the workout detail view feature.
 - **plans/**: Folder containing implementation plans.

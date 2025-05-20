@@ -6,13 +6,12 @@ description: 'Plan a feature'
 Your goal is to generate a functional spec for implementing a feature based on the provided idea:
 
 <idea>
-Add a detail view for weekly plan view to view individual workout details:
+Generate a training plan for cyclists with AI
 
-- Workout overview
-- Intervals, including watts and duration (should match workout description from plan summary view)
-- Graphical view of intervals
-
-Don't modify the UI for the weekly plan view.
+- It should take in the user's FTP (Functional Threshold Power)
+- Based on the workout type (like endurance, Threshold, VO2 max, etc.), it should generate a workout plan
+- The plan should include warm-up, main set, and cool down
+- Use OpenAI APIs to generate the plan
 </idea>
 
 Before generating the spec plan, be sure to review the #file:../../docs/idea.md file to understand an overview of the project.
