@@ -16,7 +16,7 @@ This project is a SwiftUI-based iOS application structured as follows:
   - **workout-detail-view-plan.md**: Implementation plan for the workout detail view feature.
 
 ### Dropped/
-- **ContentView.swift**: The main SwiftUI view for the app's content.
+- **ContentView.swift**: The main SwiftUI view for the app's content. Now includes navigation to the AI Workout Generator via a prominent navigation link.
 - **Dropped.entitlements**: App entitlements configuration for permissions.
 - **DroppedApp.swift**: The main app entry point, sets up the SwiftUI app lifecycle.
 - **Assets.xcassets/**: Asset catalog for images, colors, and app icons.

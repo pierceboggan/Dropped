@@ -19,7 +19,7 @@
     - `Dropped/Views/WorkoutGeneratorView.swift`: Create view with workout type selection UI and generate button
   - **Dependencies**: WorkoutGeneratorViewModel
 
-- [ ] Step 4: Implement Generated Workout Review and Acceptance
+- [x] Step 4: Implement Generated Workout Review and Acceptance
   - **Task**: Use existing WorkoutDetailView to display the generated workout and add accept/reject buttons
   - **Files**:
     - `Dropped/Views/WorkoutGeneratorReviewView.swift`: Create wrapper view for the existing WorkoutDetailView with accept/reject controls
