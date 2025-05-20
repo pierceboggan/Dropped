@@ -43,8 +43,8 @@ This project is a SwiftUI-based iOS application structured as follows:
  - **SettingsView.swift**: SwiftUI view for app settings.
  - **WorkoutGeneratorView.swift**: SwiftUI view for the AI-powered workout generator feature. Allows users to select a workout type, generate a workout using AI, and view loading/error states and the generated workout preview.
 - **WorkoutGeneratorReviewView.swift**: SwiftUI view for reviewing and accepting a generated workout. Wraps WorkoutDetailView, provides accessible Accept/Regenerate buttons, and smooth transitions.
- - **WorkoutDetailView.swift**: SwiftUI view displaying detailed information about a specific workout, including overview, intervals list, and power graph. Created as part of the workout detail feature. Accessible, supports light/dark mode, and is visually consistent with the app. Now also contains the `WorkoutDetailGraph` component for inline power/time graph visualization.
- - **WorkoutDetailGraph.swift**: (No longer used; graph is now implemented inline in WorkoutDetailView.swift.)
+ - **WorkoutDetailView.swift**: SwiftUI view displaying detailed information about a specific workout, including overview, intervals list, and power graph. Created as part of the workout detail feature. Accessible, supports light/dark mode, and is visually consistent with the app. Contains the `WorkoutDetailGraph` component for inline power/time graph visualization.
+ - ~~**WorkoutDetailGraph.swift**~~: (Deprecated; the graph is now implemented inline in WorkoutDetailView.swift as a private component.)
 
 ### Dropped.xcodeproj/
 - **project.pbxproj**: Xcode project configuration file.
