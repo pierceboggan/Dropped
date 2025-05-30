@@ -1,34 +1,161 @@
-# 🎉 Dropped
+# 🚴‍♂️ Dropped
 
-Welcome to **Dropped** – your next favorite iOS app!
+**The smart indoor cycling companion that generates personalized workouts in seconds.**
+
+> Transform your indoor training with AI-powered workout generation tailored to your fitness level and goals.
 
 ## 🚀 What is Dropped?
-Dropped is an iOS app built with Swift, designed to make your day a little brighter. Whether you're here to learn, contribute, or just explore, we're glad to have you!
 
-## 🛠️ Features
-- Native Swift codebase
-- Modern iOS design
-- Automated tests for quality
-- CI/CD with GitHub Actions
+Dropped is a SwiftUI-powered iOS app designed for indoor cyclists who want structured, personalized training without the complexity. Whether you're a beginner looking to build endurance or an experienced rider targeting specific power zones, Dropped creates custom workouts instantly using AI.
+
+### Why Choose Dropped?
+- **⚡ Instant Generation**: Get personalized workouts in seconds, not hours
+- **🎯 Goal-Focused**: Workouts tailored to your FTP, weight, and training objectives
+- **🤖 AI-Powered**: Leverages OpenAI to create scientifically-structured training plans
+- **📱 Native iOS**: Built with SwiftUI for a smooth, responsive experience
+- **🔒 Privacy-First**: All data stored locally on your device
+
+## ✨ Features
+
+### 🏋️‍♂️ Smart Workout Generation
+- **Multiple Workout Types**: Endurance, Threshold, VO2 Max, Sprint, and Recovery sessions
+- **Personalized Parameters**: Based on your FTP (Functional Threshold Power) and fitness goals
+- **Detailed Intervals**: Power targets, duration, and progression for each segment
+- **Visual Previews**: See your workout structure before you start
+
+### 📊 Comprehensive Workout Details
+- **Power Zone Visualization**: Interactive graphs showing intensity over time
+- **Interval Breakdown**: Clear structure with warm-up, main sets, and cool-down
+- **Accessibility Features**: VoiceOver support and high contrast modes
+- **Export Ready**: Save workouts for use with your favorite training apps
+
+### 🎨 Beautiful Design
+- **Modern SwiftUI Interface**: Clean, intuitive design that feels native to iOS
+- **Dark Mode Support**: Seamlessly adapts to your system preferences
+- **Responsive Layout**: Optimized for all iPhone sizes
+- **Smooth Animations**: Polished transitions and interactions
+
+## 📱 Screenshots
+
+*Coming soon! We're putting the finishing touches on the perfect workout generation experience.*
+
+## 🛠️ Technical Specifications
+
+- **Platform**: iOS 15.0+
+- **Framework**: SwiftUI with Combine
+- **Architecture**: MVVM pattern with clean separation of concerns
+- **AI Integration**: OpenAI API for workout generation
+- **Data Storage**: Local storage with UserDefaults and Core Data
+- **Testing**: Comprehensive unit and UI test coverage
+
+### Key Components
+- **Models**: Structured data models for workouts, intervals, and user preferences
+- **ViewModels**: Reactive view models managing state and business logic
+- **AI Service**: Dedicated service for intelligent workout generation
+- **Views**: Modular, reusable SwiftUI components
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Xcode 14.0+
+- iOS 15.0+ device or simulator
+- OpenAI API key (for workout generation)
+
+### Installation
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/Dropped.git
+   cd Dropped
+   ```
+
+2. **Open in Xcode**
+   ```bash
+   open Dropped.xcodeproj
+   ```
+
+3. **Configure API Keys**
+   - Add your OpenAI API key to the project configuration
+   - See `docs/openai.md` for detailed setup instructions
+
+4. **Build and Run**
+   - Select your target device or simulator
+   - Press `⌘+R` to build and run
 
 ## 🧪 Testing
-We love tests! Run them with:
 
-```sh
+We maintain high code quality with comprehensive testing:
+
+```bash
+# Run all tests
 xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' test
+
+# Run specific test suites
+xcodebuild test -project Dropped.xcodeproj -scheme Dropped -only-testing:DroppedTests
+xcodebuild test -project Dropped.xcodeproj -scheme Dropped -only-testing:DroppedUITests
 ```
 
+### Test Coverage
+- **Unit Tests**: Core business logic, data models, and view models
+- **UI Tests**: User flows, accessibility, and visual regression testing
+- **Integration Tests**: API integration and data persistence
+
+## 📖 Documentation
+
+- **[Project Architecture](docs/memory.md)**: Detailed overview of the codebase structure
+- **[AI Integration Guide](docs/openai.md)**: How to integrate with OpenAI APIs
+- **[Feature Specifications](docs/specs/)**: Detailed feature requirements and designs
+- **[Implementation Plans](docs/plans/)**: Step-by-step development roadmaps
+
 ## 🤝 Contributing
-Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
 
-## 📦 Getting Started
-1. Clone the repo
-2. Open `Dropped.xcodeproj` in Xcode
-3. Build & run on your favorite simulator
+We welcome contributions from the cycling and development community!
 
-## 💡 More coming soon!
-Stay tuned for updates, new features, and more fun. Feel free to update this README as the project grows!
+### How to Contribute
+1. **Fork the repository**
+2. **Create a feature branch** (`git checkout -b feature/amazing-feature`)
+3. **Make your changes** with appropriate tests
+4. **Commit your changes** (`git commit -m 'Add amazing feature'`)
+5. **Push to the branch** (`git push origin feature/amazing-feature`)
+6. **Open a Pull Request**
+
+### Development Guidelines
+- Follow Swift style guidelines and SwiftUI best practices
+- Write tests for new features and bug fixes
+- Update documentation for significant changes
+- Ensure accessibility compliance for all UI changes
+
+## �️ Roadmap
+
+### Phase 1: Core Features ✅
+- [x] Basic workout generation
+- [x] User onboarding flow
+- [x] Workout detail views
+- [x] AI integration
+
+### Phase 2: Enhanced Experience 🚧
+- [ ] Workout history tracking
+- [ ] Training plan templates
+- [ ] Export to popular cycling apps
+- [ ] Advanced analytics
+
+### Phase 3: Community Features 🔮
+- [ ] Workout sharing
+- [ ] Community challenges
+- [ ] Coach recommendations
+- [ ] Social features
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙋‍♂️ Support
+
+- **Issues**: [GitHub Issues](https://github.com/yourusername/Dropped/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/yourusername/Dropped/discussions)
+- **Email**: support@dropped.app
 
 ---
 
-Made with ❤️ by the Dropped team
+**Ready to drop into your best training yet?** 🚴‍♂️💨
+
+*Built with ❤️ by cyclists, for cyclists.*

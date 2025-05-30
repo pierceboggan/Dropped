@@ -3,7 +3,7 @@
 This project is a SwiftUI-based iOS application structured as follows:
 
 ### Root Files
-- **README.md**: Project overview and setup instructions.
+- **README.md**: Comprehensive project overview, features, setup instructions, and documentation for the Dropped indoor cycling app. Includes detailed descriptions of AI-powered workout generation, technical specifications, testing, contribution guidelines, and roadmap.
 
 ### docs/
 - **idea.md**: Project ideas and brainstorming notes.
