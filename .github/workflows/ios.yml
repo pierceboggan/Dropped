@@ -16,26 +16,71 @@ jobs:
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: latest
+          xcode-version: latest-stable
 
       - name: List available simulators
         run: |
           echo "Available simulators:"
-          xcrun simctl list devices
+          xcrun simctl list devices available
+          echo ""
+          echo "Available iOS runtimes:"
+          xcrun simctl list runtimes
 
       - name: Show build destinations
         run: |
           echo "Available build destinations:"
-          xcodebuild -project Dropped.xcodeproj -scheme Dropped -showdestinations
+          xcodebuild -project Dropped.xcodeproj -scheme Dropped -showdestinations || echo "Failed to show destinations"
 
       - name: Build app
         run: |
-          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination 'platform=iOS Simulator,OS=latest' build
+          echo "Attempting to build with iOS Simulator destination..."
+          xcodebuild -project Dropped.xcodeproj \
+            -scheme Dropped \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.0' \
+            clean build || \
+          xcodebuild -project Dropped.xcodeproj \
+            -scheme Dropped \
+            -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' \
+            clean build || \
+          xcodebuild -project Dropped.xcodeproj \
+            -scheme Dropped \
+            -destination 'generic/platform=iOS Simulator' \
+            clean build
 
       - name: Run unit tests
         run: |
-          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination 'platform=iOS Simulator,OS=latest' -only-testing:DroppedTests test
+          echo "Attempting to run unit tests..."
+          xcodebuild -project Dropped.xcodeproj \
+            -scheme Dropped \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.0' \
+            -only-testing:DroppedTests \
+            test || \
+          xcodebuild -project Dropped.xcodeproj \
+            -scheme Dropped \
+            -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' \
+            -only-testing:DroppedTests \
+            test || \
+          xcodebuild -project Dropped.xcodeproj \
+            -scheme Dropped \
+            -destination 'generic/platform=iOS Simulator' \
+            -only-testing:DroppedTests \
+            test
 
       - name: Run UI tests
         run: |
-          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination 'platform=iOS Simulator,OS=latest' -only-testing:DroppedUITests test
+          echo "Attempting to run UI tests..."
+          xcodebuild -project Dropped.xcodeproj \
+            -scheme Dropped \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.0' \
+            -only-testing:DroppedUITests \
+            test || \
+          xcodebuild -project Dropped.xcodeproj \
+            -scheme Dropped \
+            -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' \
+            -only-testing:DroppedUITests \
+            test || \
+          xcodebuild -project Dropped.xcodeproj \
+            -scheme Dropped \
+            -destination 'generic/platform=iOS Simulator' \
+            -only-testing:DroppedUITests \
+            test
