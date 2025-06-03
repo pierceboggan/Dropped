@@ -124,4 +124,16 @@ final class UserDataTests: XCTestCase {
         // Clean up
         manager.saveUserData(UserData.defaultData)
     }
+    
+    func testWeightUnitCases() throws {
+        // Verify we only have pounds and kilograms
+        let allCases = WeightUnit.allCases
+        XCTAssertEqual(allCases.count, 2, "Should only have 2 weight units")
+        XCTAssertTrue(allCases.contains(.pounds), "Should contain pounds")
+        XCTAssertTrue(allCases.contains(.kilograms), "Should contain kilograms")
+        
+        // Verify raw values
+        XCTAssertEqual(WeightUnit.pounds.rawValue, "lb")
+        XCTAssertEqual(WeightUnit.kilograms.rawValue, "kg")
+    }
 }
