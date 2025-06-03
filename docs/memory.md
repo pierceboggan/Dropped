@@ -9,11 +9,14 @@ This project is a SwiftUI-based iOS application structured as follows:
 - **idea.md**: Project ideas and brainstorming notes.
 - **memory.md**: (This file) Documentation of project architecture and file purposes.
 - **research.md**: Research notes and references for the project.
+- **feature-brainstorm.md**: Comprehensive brainstorming document for next features to add to the AI cycling app. Includes 16 prioritized feature categories ranging from core AI improvements to advanced VR training experiences, organized by implementation effort and user value.
     - **openai.md**: Guide for calling OpenAI APIs in Swift without SDKs.
 - **specs/**: Folder containing feature specifications.
   - **workout-detail-view.md**: Specification for the workout detail view feature.
+  - **ai-training-plan.md**: Specification for the AI-powered cycling training plan generator feature.
 - **plans/**: Folder containing implementation plans.
   - **workout-detail-view-plan.md**: Implementation plan for the workout detail view feature.
+  - **ai-training-plan.md**: Implementation plan for the AI-powered cycling training plan generator feature.
 
 ### Dropped/
 - **ContentView.swift**: The main SwiftUI view for the app's content. Now includes navigation to the AI Workout Generator via a prominent navigation link.
