@@ -16,7 +16,7 @@ This project is a SwiftUI-based iOS application structured as follows:
   - **workout-detail-view-plan.md**: Implementation plan for the workout detail view feature.
 
 ### Dropped/
-- **ContentView.swift**: The main SwiftUI view for the app's content. Now includes navigation to the AI Workout Generator via a prominent navigation link.
+- **ContentView.swift**: The main SwiftUI view for the app's content. Now directly shows the PlanSummaryView after onboarding completion, with AI Workout Generator accessible from the plan view.
 - **Dropped.entitlements**: App entitlements configuration for permissions.
 - **DroppedApp.swift**: The main app entry point, sets up the SwiftUI app lifecycle.
 - **Assets.xcassets/**: Asset catalog for images, colors, and app icons.
@@ -39,7 +39,7 @@ This project is a SwiftUI-based iOS application structured as follows:
 #### Views/
  - **InfoPopupView.swift**: SwiftUI view for displaying informational popups.
  - **OnboardingView.swift**: SwiftUI view for onboarding screens.
- - **PlanSummaryView.swift**: SwiftUI view summarizing user plans.
+ - **PlanSummaryView.swift**: SwiftUI view summarizing user plans. Now includes access to the AI Workout Generator via a toolbar button, making workout generation a one-off action from the plan summary view.
  - **SettingsView.swift**: SwiftUI view for app settings.
  - **WorkoutGeneratorView.swift**: SwiftUI view for the AI-powered workout generator feature. Allows users to select a workout type, generate a workout using AI, and view loading/error states and the generated workout preview.
 - **WorkoutGeneratorReviewView.swift**: SwiftUI view for reviewing and accepting a generated workout. Wraps WorkoutDetailView, provides accessible Accept/Regenerate buttons, and smooth transitions.
