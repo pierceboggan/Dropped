@@ -17,101 +17,20 @@ jobs:
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: latest
-          
-      - name: Install brew dependencies
-        run: |
-          brew install jq
 
-      - name: Verify Xcode version
+      - name: List available simulators
         run: |
-          xcodebuild -version
-          
-      - name: Set up simulator
-        run: |
-          echo "Available simulators before creation:"
+          echo "Available simulators:"
           xcrun simctl list devices
-          
-          LATEST_IOS_RUNTIME=$(xcrun simctl list runtimes ios -j | jq -r '.runtimes[-1].identifier')
-          if [ -z "$LATEST_IOS_RUNTIME" ] || [ "$LATEST_IOS_RUNTIME" == "null" ]; then
-            echo "Error: Could not determine the latest iOS runtime."
-            exit 1
-          fi
-          echo "Latest iOS runtime: $LATEST_IOS_RUNTIME"
-          
-          SIM_NAME="CI_iPhone"
-          DEVICE_TYPE="com.apple.CoreSimulator.SimDeviceType.iPhone-15"
-
-          echo "Deleting existing simulator named $SIM_NAME if present..."
-          xcrun simctl delete "$SIM_NAME" || echo "Simulator $SIM_NAME did not exist, or deletion failed (which is fine if it didn\'t exist)."
-
-          echo "Attempting to create simulator: $SIM_NAME with type $DEVICE_TYPE and runtime $LATEST_IOS_RUNTIME"
-          SIM_UDID_OUTPUT=$(xcrun simctl create "$SIM_NAME" "$DEVICE_TYPE" "$LATEST_IOS_RUNTIME")
-          echo "Create output: $SIM_UDID_OUTPUT"
-          
-          # Attempt to extract UDID directly from create output
-          if [[ "$SIM_UDID_OUTPUT" =~ ([0-9A-F]{8}-([0-9A-F]{4}-){3}[0-9A-F]{12}) ]]; then
-            SIM_UDID=${BASH_REMATCH[0]}
-            echo "Extracted UDID from create output: $SIM_UDID"
-          else
-            echo "Could not extract UDID from create output, attempting list devices..."
-            # Fallback to jq if regex fails (shouldn't be needed if create output is consistent)
-            SIM_UDID=$(xcrun simctl list devices -j | jq -r --arg SIM_NAME "$SIM_NAME" --arg RUNTIME_ID "$LATEST_IOS_RUNTIME" '.devices[$RUNTIME_ID][] | select(.name == $SIM_NAME) | .udid')
-          fi
-          
-          if [ -z "$SIM_UDID" ] || [ "$SIM_UDID" == "null" ]; then
-            echo "Error: Could not get UDID for created simulator $SIM_NAME."
-            echo "Listing all devices for debugging:"
-            xcrun simctl list devices -j
-            exit 1
-          fi
-          echo "Using UDID: $SIM_UDID for simulator $SIM_NAME"
-          
-          echo "Booting simulator $SIM_UDID..."
-          xcrun simctl boot "$SIM_UDID"
-          max_attempts=30
-          attempt_num=1
-          until $(xcrun simctl list devices | grep "$SIM_UDID" | grep -q 'Booted'); do
-            if [ "$attempt_num" -ge "$max_attempts" ]; then
-              echo "Simulator $SIM_UDID did not boot in time."
-              exit 1
-            fi
-            echo "Waiting for simulator $SIM_UDID to boot... (Attempt $attempt_num/$max_attempts)"
-            sleep 5
-            attempt_num=$((attempt_num+1))
-          done
-          echo "Simulator $SIM_UDID booted."
-          
-          echo "SIMULATOR_UDID_CREATED=$SIM_UDID" >> $GITHUB_ENV # For logging/debugging
-
-      - name: Clean Xcode Build Folder
-        run: |
-          xcodebuild clean -project Dropped.xcodeproj -scheme Dropped
-
-      - name: Show Xcode Build Destinations
-        run: |
-          echo "Showing destinations for Dropped.xcodeproj - Dropped scheme:"
-          xcodebuild -showdestinations -project Dropped.xcodeproj -scheme Dropped
 
       - name: Build app
-        env:
-          SIMULATOR_UDID_CREATED: ${{ env.SIMULATOR_UDID_CREATED }} # For logging
         run: |
-          echo "Attempting to build with generic placeholder, after creating and booting simulator $SIMULATOR_UDID_CREATED"
-          GENERIC_SIM_DESTINATION_ID="dvtdevice-DVTiOSDeviceSimulatorPlaceholder-iphonesimulator:placeholder"
-          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination "platform=iOS Simulator,id=$GENERIC_SIM_DESTINATION_ID" build
+          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' build
 
       - name: Run unit tests
-        env:
-          SIMULATOR_UDID_CREATED: ${{ env.SIMULATOR_UDID_CREATED }} # For logging
         run: |
-          echo "Attempting unit tests with generic placeholder, after creating and booting simulator $SIMULATOR_UDID_CREATED"
-          GENERIC_SIM_DESTINATION_ID="dvtdevice-DVTiOSDeviceSimulatorPlaceholder-iphonesimulator:placeholder"
-          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination "platform=iOS Simulator,id=$GENERIC_SIM_DESTINATION_ID" -only-testing:DroppedTests test
+          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' -only-testing:DroppedTests test
 
       - name: Run UI tests
-        env:
-          SIMULATOR_UDID_CREATED: ${{ env.SIMULATOR_UDID_CREATED }} # For logging
         run: |
-          echo "Attempting UI tests with generic placeholder, after creating and booting simulator $SIMULATOR_UDID_CREATED"
-          GENERIC_SIM_DESTINATION_ID="dvtdevice-DVTiOSDeviceSimulatorPlaceholder-iphonesimulator:placeholder"
-          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination "platform=iOS Simulator,id=$GENERIC_SIM_DESTINATION_ID" -only-testing:DroppedUITests test
+          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' -only-testing:DroppedUITests test
