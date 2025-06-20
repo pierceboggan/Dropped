@@ -59,15 +59,13 @@ struct WorkoutGeneratorView: View {
                 Button(action: {
                     viewModel.generateWorkout()
                 }) {
-                    ZStack {
-                        if viewModel.isLoading {
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle())
-                                .frame(maxWidth: .infinity)
-                        } else {
-                            Text("Generate Workout")
-                                .frame(maxWidth: .infinity)
-                        }
+                    if viewModel.isLoading {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle())
+                            .frame(maxWidth: .infinity)
+                    } else {
+                        Text("Generate Workout")
+                            .frame(maxWidth: .infinity)
                     }
                 }
                 .disabled(viewModel.isLoading)
