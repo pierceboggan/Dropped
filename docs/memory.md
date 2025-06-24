@@ -40,7 +40,7 @@ This project is a SwiftUI-based iOS application structured as follows:
  - **InfoPopupView.swift**: SwiftUI view for displaying informational popups.
  - **OnboardingView.swift**: SwiftUI view for onboarding screens.
  - **PlanSummaryView.swift**: SwiftUI view summarizing user plans.
- - **SettingsView.swift**: SwiftUI view for app settings.
+ - **SettingsView.swift**: SwiftUI view for app settings, including measurement unit preferences and an "About" section. Features a "Made with love in Park City, UT" section with heart and mountain icons.
  - **WorkoutGeneratorView.swift**: SwiftUI view for the AI-powered workout generator feature. Allows users to select a workout type, generate a workout using AI, and view loading/error states and the generated workout preview.
 - **WorkoutGeneratorReviewView.swift**: SwiftUI view for reviewing and accepting a generated workout. Wraps WorkoutDetailView, provides accessible Accept/Regenerate buttons, and smooth transitions.
  - **WorkoutDetailView.swift**: SwiftUI view displaying detailed information about a specific workout, including overview, intervals list, and power graph. Created as part of the workout detail feature. Accessible, supports light/dark mode, and is visually consistent with the app. Now also contains the `WorkoutDetailGraph` component for inline power/time graph visualization.

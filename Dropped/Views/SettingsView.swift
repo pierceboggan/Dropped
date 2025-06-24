@@ -149,6 +149,37 @@ struct SettingsView: View {
                     }
                     .padding(.vertical, 4)
                 }
+                
+                // Made with Love Section
+                Section {
+                    HStack {
+                        Spacer()
+                        VStack(spacing: 4) {
+                            HStack(spacing: 4) {
+                                Text("Made with")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Image(systemName: "heart.fill")
+                                    .font(.caption)
+                                    .foregroundColor(.red)
+                                Text("in Park City, UT")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            HStack(spacing: 2) {
+                                Image(systemName: "mountain.2.fill")
+                                    .font(.caption2)
+                                    .foregroundColor(.secondary)
+                                Image(systemName: "snow")
+                                    .font(.caption2)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        Spacer()
+                    }
+                    .padding(.vertical, 8)
+                }
             }
             .listStyle(InsetGroupedListStyle())
             .navigationTitle("Settings")
