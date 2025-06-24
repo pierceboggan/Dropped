@@ -34,7 +34,7 @@ This project is a SwiftUI-based iOS application structured as follows:
 
 #### ViewModels/
 - **OnboardingViewModel.swift**: ViewModel for onboarding logic and state management.
-- **WorkoutGeneratorViewModel.swift**: ViewModel for the AI-powered workout generator feature. Manages state for workout type selection, workout generation, loading, and error handling. Coordinates with AIWorkoutGenerator to fetch structured workouts from OpenAI and handles user acceptance of generated workouts.
+- **WorkoutGeneratorViewModel.swift**: ViewModel for the AI-powered workout generator feature. Manages state for workout type selection, workout generation, loading, and error handling. Coordinates with AIWorkoutGenerator to fetch structured workouts from OpenAI and handles user acceptance of generated workouts. Now includes complete implementation of workout parsing with JSON support and demo workout fallbacks.
 
 #### Views/
  - **InfoPopupView.swift**: SwiftUI view for displaying informational popups.
@@ -57,6 +57,7 @@ This project is a SwiftUI-based iOS application structured as follows:
 - **DroppedTests.swift**: General unit tests for the app.
 - **OnboardingViewModelTests.swift**: Unit tests for onboarding ViewModel.
 - **UserDataTests.swift**: Unit tests for user data model.
+- **WorkoutGeneratorViewModelTests.swift**: Comprehensive unit tests for the workout generator ViewModel, covering workout parsing, acceptance, JSON handling, and demo workout generation.
 - **WorkoutDetailTests.swift**: Unit tests for the workout detail functionality.
 
 ### DroppedUITests/

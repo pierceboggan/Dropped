@@ -82,17 +82,19 @@ struct WorkoutGeneratorView: View {
                         .accessibilityLabel("Error: \(error)")
                 }
 
-                // Generated workout preview (raw JSON for now)
-                if let workout = viewModel.generatedWorkout {
-                    ScrollView {
-                        Text(workout)
-                            .font(.system(.body, design: .monospaced))
-                            .padding()
-                            .background(Color(.systemGray6))
-                            .cornerRadius(8)
-                            .accessibilityLabel("Generated workout preview")
-                    }
-                    .frame(maxHeight: 200)
+                // Generated workout review
+                if let _ = viewModel.generatedWorkout {
+                    WorkoutGeneratorReviewView(
+                        viewModel: viewModel,
+                        onRegenerate: {
+                            viewModel.generateWorkout()
+                        },
+                        onAccept: {
+                            // Workout acceptance is handled by the review view
+                            // Could add navigation or feedback here
+                        }
+                    )
+                    .transition(.opacity.combined(with: .move(edge: .bottom)))
                 }
 
                 Spacer()

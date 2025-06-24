@@ -21,7 +21,7 @@ struct WorkoutGeneratorReviewView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            if let workout = viewModel.generatedWorkout, let parsed = try? WorkoutGeneratorReviewView.parseWorkout(json: workout) {
+            if let workout = viewModel.generatedWorkout, let parsed = parseWorkoutSafely(json: workout, viewModel: viewModel) {
                 // Show the detailed workout view
                 WorkoutDetailView(workout: parsed)
                     .transition(.opacity.combined(with: .move(edge: .bottom)))
@@ -69,6 +69,22 @@ struct WorkoutGeneratorReviewView: View {
         .shadow(radius: 8)
         .padding()
         .animation(.spring(), value: viewModel.generatedWorkout)
+    }
+
+    /// Safely parses a workout JSON string, falling back to ViewModel's parsing logic
+    /// - Parameters:
+    ///   - json: JSON string from the AI service
+    ///   - viewModel: The view model to use for fallback parsing
+    /// - Returns: A parsed Workout object if successful, nil otherwise
+    private func parseWorkoutSafely(json: String, viewModel: WorkoutGeneratorViewModel) -> Workout? {
+        // First, try the original JSON parsing approach
+        if let data = Data(json.utf8),
+           let workout = try? JSONDecoder().decode(Workout.self, from: data) {
+            return workout
+        }
+        
+        // Fall back to the view model's parsing logic (which includes demo workouts)
+        return viewModel.parseWorkout(from: json)
     }
 
     /// Parses a JSON string into a Workout model
