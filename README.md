@@ -61,51 +61,6 @@ Dropped is a SwiftUI-powered iOS app designed for indoor cyclists who want struc
 - iOS 15.0+ device or simulator
 - OpenAI API key (for workout generation)
 
-### Installation
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/Dropped.git
-   cd Dropped
-   ```
-
-2. **Open in Xcode**
-   ```bash
-   open Dropped.xcodeproj
-   ```
-
-3. **Configure API Keys**
-   - Add your OpenAI API key to the project configuration
-   - See `docs/openai.md` for detailed setup instructions
-
-4. **Build and Run**
-   - Select your target device or simulator
-   - Press `⌘+R` to build and run
-
-## 🧪 Testing
-
-We maintain high code quality with comprehensive testing:
-
-```bash
-# Run all tests
-xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' test
-
-# Run specific test suites
-xcodebuild test -project Dropped.xcodeproj -scheme Dropped -only-testing:DroppedTests
-xcodebuild test -project Dropped.xcodeproj -scheme Dropped -only-testing:DroppedUITests
-```
-
-### Test Coverage
-- **Unit Tests**: Core business logic, data models, and view models
-- **UI Tests**: User flows, accessibility, and visual regression testing
-- **Integration Tests**: API integration and data persistence
-
-## 📖 Documentation
-
-- **[Project Architecture](docs/memory.md)**: Detailed overview of the codebase structure
-- **[AI Integration Guide](docs/openai.md)**: How to integrate with OpenAI APIs
-- **[Feature Specifications](docs/specs/)**: Detailed feature requirements and designs
-- **[Implementation Plans](docs/plans/)**: Step-by-step development roadmaps
-
 ## 🤝 Contributing
 
 We welcome contributions from the cycling and development community!
@@ -123,26 +78,6 @@ We welcome contributions from the cycling and development community!
 - Write tests for new features and bug fixes
 - Update documentation for significant changes
 - Ensure accessibility compliance for all UI changes
-
-## �️ Roadmap
-
-### Phase 1: Core Features ✅
-- [x] Basic workout generation
-- [x] User onboarding flow
-- [x] Workout detail views
-- [x] AI integration
-
-### Phase 2: Enhanced Experience 🚧
-- [ ] Workout history tracking
-- [ ] Training plan templates
-- [ ] Export to popular cycling apps
-- [ ] Advanced analytics
-
-### Phase 3: Community Features 🔮
-- [ ] Workout sharing
-- [ ] Community challenges
-- [ ] Coach recommendations
-- [ ] Social features
 
 ## 📄 License
 

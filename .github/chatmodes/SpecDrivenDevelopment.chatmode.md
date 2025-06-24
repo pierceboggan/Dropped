@@ -1,0 +1,42 @@
+---
+description: 'Helps users build production-ready apps by first creating a PRD/specification, then a coding plan before starting to write code.'
+mode: 'agent'
+name: 'Spec Driven Development'
+tools: [ 'apply_patch', 'create_and_run_task', 'create_directory', 'create_file', 'create_new_workspace', 'fetch_webpage', 'file_search', 
+        'get_changed_files', 'get_errors', 'get_project_setup_info', 'get_python_environment_details', 'get_python_environment_info', 
+        'get_python_executable_details', 'get_python_executable_info', 'get_search_view_results', 'get_terminal_last_command', 'get_terminal_output', 
+        'get_terminal_selection', 'get_vscode_api', 'github_repo', 'grep_search', 'install_extension', 'install_python_package', 'install_python_packages', 
+        'list_code_usages', 'list_dir', 'open_simple_browser', 'read_file', 'run_in_terminal', 'semantic_search', 'test_failure', 'test_search', 
+        'think', 'update_user_preferences', 'vscode_installExtensions', 'vscode_searchExtensions_internal', 'configure_python_environment', 
+        'azure_activity_log-list', 'azure_ai-get_language_model_deployments', 'azure_ai-get_language_model_usage', 
+        'azure_ai-get_models_for_region', 'azure_ai-get_regions_for_model', 'azure_applens-diagnose_resource', 'azure_architecture-design_architecture', 
+        'azure_auth-get_auth_state', 'azure_auth-get_available_tenants', 'azure_auth-get_current_tenant', 'azure_auth-get_selected_subscriptions', 
+        'azure_auth-open_subscription_picker', 'azure_auth-set_current_tenant', 'azure_auth-sign_out_azure_user', 'azure_azd-up_deploy', 
+        'azure_bicep_schemas-get_bicep_resource_schema', 'azure_check_predeploy', 'azure_check_quota', 'azure_check_region', 
+        'azure_cli-generate_azure_cli_command', 'azure_config_deploymentpipeline', 'azure_development-get_azure_function_code_gen_best_practices', 
+        'azure_development-get_code_gen_best_practices', 'azure_development-get_deployment_best_practices', 'azure_development-get_swa_best_practices', 
+        'azure_dotnet_templates-get_tags', 'azure_dotnet_templates-get_templates_for_tag', 'azure_learn-get_ms_learn_documentation', 
+        'azure_mcp-describe_azure_mcp_cli_command', 'azure_mcp-invoke_azure_mcp_cli_command', 
+        'azure_resources-query_azure_resource_graph', 'azure_recommend_service_config', 'azure_terraform-get_best_practices', 
+        'mcp_azure_mcp_ser_azmcp-appconfig-account-list', 'mcp_azure_mcp_ser_azmcp-appconfig-kv-delete', 'mcp_azure_mcp_ser_azmcp-appconfig-kv-list', 
+        'mcp_azure_mcp_ser_azmcp-appconfig-kv-lock', 'mcp_azure_mcp_ser_azmcp-appconfig-kv-set', 'mcp_azure_mcp_ser_azmcp-appconfig-kv-show', 
+        'mcp_azure_mcp_ser_azmcp-appconfig-kv-unlock', 'mcp_azure_mcp_ser_azmcp-bestpractices-get', 'mcp_azure_mcp_ser_azmcp-cosmos-account-list', 
+        'mcp_azure_mcp_ser_azmcp-cosmos-database-container-item-query', 'mcp_azure_mcp_ser_azmcp-cosmos-database-container-list', 
+        'mcp_azure_mcp_ser_azmcp-cosmos-database-list', 'mcp_azure_mcp_ser_azmcp-extension-az', 'mcp_azure_mcp_ser_azmcp-extension-azd', 
+        'mcp_azure_mcp_ser_azmcp-group-list', 'mcp_azure_mcp_ser_azmcp-keyvault-key-create', 'mcp_azure_mcp_ser_azmcp-keyvault-key-get', 
+        'mcp_azure_mcp_ser_azmcp-keyvault-key-list', 'mcp_azure_mcp_ser_azmcp-kusto-cluster-get', 'mcp_azure_mcp_ser_azmcp-kusto-cluster-list', 
+        'mcp_azure_mcp_ser_azmcp-kusto-database-list', 'mcp_azure_mcp_ser_azmcp-kusto-query', 'mcp_azure_mcp_ser_azmcp-kusto-sample', 
+        'mcp_azure_mcp_ser_azmcp-kusto-table-list', 'mcp_azure_mcp_ser_azmcp-kusto-table-schema', 'mcp_azure_mcp_ser_azmcp-monitor-healthmodels-entity-gethealth', 
+        'mcp_azure_mcp_ser_azmcp-monitor-log-query', 'mcp_azure_mcp_ser_azmcp-monitor-table-list', 'mcp_azure_mcp_ser_azmcp-monitor-table-type-list', 
+        'mcp_azure_mcp_ser_azmcp-monitor-workspace-list', 'mcp_azure_mcp_ser_azmcp-postgres-database-list', 'mcp_azure_mcp_ser_azmcp-postgres-database-query', 
+        'mcp_azure_mcp_ser_azmcp-postgres-server-config', 'mcp_azure_mcp_ser_azmcp-postgres-server-list', 'mcp_azure_mcp_ser_azmcp-postgres-server-param', 
+        'mcp_azure_mcp_ser_azmcp-postgres-table-list', 'mcp_azure_mcp_ser_azmcp-postgres-table-schema', 'mcp_azure_mcp_ser_azmcp-redis-cache-accesspolicy-list', 
+        'mcp_azure_mcp_ser_azmcp-redis-cache-list', 'mcp_azure_mcp_ser_azmcp-redis-cluster-database-list', 'mcp_azure_mcp_ser_azmcp-redis-cluster-list', 
+        'mcp_azure_mcp_ser_azmcp-search-index-describe', 'mcp_azure_mcp_ser_azmcp-search-index-list', 'mcp_azure_mcp_ser_azmcp-search-index-query', 
+        'mcp_azure_mcp_ser_azmcp-search-service-list', 'mcp_azure_mcp_ser_azmcp-servicebus-queue-details', 'mcp_azure_mcp_ser_azmcp-servicebus-topic-details', 
+        'mcp_azure_mcp_ser_azmcp-servicebus-topic-subscription-details', 'mcp_azure_mcp_ser_azmcp-storage-account-list', 
+        'mcp_azure_mcp_ser_azmcp-storage-blob-container-details', 'mcp_azure_mcp_ser_azmcp-storage-blob-container-list', 'mcp_azure_mcp_ser_azmcp-storage-blob-list', 
+        'mcp_azure_mcp_ser_azmcp-storage-table-list', 'mcp_azure_mcp_ser_azmcp-subscription-list', 
+        'multi_tool_use.parallel'
+    ]
+---

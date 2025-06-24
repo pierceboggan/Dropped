@@ -11,9 +11,36 @@ final class DroppedUITests: XCTestCase {
     
     var app: XCUIApplication!
 
+    override class var runsForEachTargetApplicationUIConfiguration: Bool {
+        // This is set to true to ensure that each test method runs with a fresh app state.
+        return true
+    }
+    override class func setUp() {
+        // This method is called once before any test methods in the class are run.
+        // It is used to set up any shared state or configuration for the tests.
+        super.setUp()
+    }
+
+    override class func tearDown() {
+        // This method is called once after all test methods in the class have run.
+        // It is used to clean up any shared state or configuration.
+        super.tearDown()
+    }
+    // This method is called before each test method in the class.
+    @MainActor  
+
+
+
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         app = XCUIApplication()
+
+        // Ensure the app is in a clean state before each test
+        app.launchArguments = ["-resetUserDefaults"]
+        app.launchEnvironment = ["UITestMode": "true"]
+        // Launch the app
+
+        app.launch()
         
         // Reset the app state (wipe UserDefaults data)
         app.launchArguments = ["-resetUserDefaults"]
