@@ -179,6 +179,8 @@ struct SettingsView: View {
                         Spacer()
                     }
                     .padding(.vertical, 8)
+                    .accessibilityIdentifier("parkCitySection")
+                    .accessibilityLabel("Made with love in Park City, Utah")
                 }
             }
             .listStyle(InsetGroupedListStyle())
