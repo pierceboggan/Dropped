@@ -53,6 +53,7 @@ final class WorkoutGeneratorViewModelTests: XCTestCase {
         XCTAssertEqual(lastWorkout.title, "Endurance Workout", "Workout title should match the selected type")
         XCTAssertFalse(lastWorkout.intervals.isEmpty, "Workout should have intervals")
         XCTAssertTrue(lastWorkout.summary.contains("250"), "Summary should mention user's FTP")
+        XCTAssertEqual(lastWorkout.intervals.count, 3, "Endurance workout should have 3 intervals")
     }
     
     func testAcceptWorkoutWithNilJSONDoesNotCreateWorkout() throws {
@@ -83,22 +84,72 @@ final class WorkoutGeneratorViewModelTests: XCTestCase {
     }
     
     func testParseWorkoutCreatesCorrectIntervalsStructure() throws {
-        // Given: Default endurance workout type
-        viewModel.selectedWorkoutType = .endurance
+        // Given: Threshold workout type (which has a known structure)
+        viewModel.selectedWorkoutType = .threshold
         
         // When: parseWorkout is called
         let workout = viewModel.parseWorkout(from: "test json")
         
-        // Then: Workout should have expected interval structure
+        // Then: Workout should have expected interval structure for threshold
         XCTAssertNotNil(workout, "Workout should be created")
-        XCTAssertEqual(workout?.intervals.count, 7, "Workout should have 7 intervals (warmup, 3 work intervals, 2 recovery, cooldown)")
+        XCTAssertEqual(workout?.intervals.count, 5, "Threshold workout should have 5 intervals (warmup, work, recovery, work, cooldown)")
         
-        // Verify structure: warmup -> work -> recovery -> work -> recovery -> work -> cooldown
+        // Verify structure: warmup -> threshold -> recovery -> threshold -> cooldown
         let intervals = workout!.intervals
-        XCTAssertEqual(intervals[0].watts, 150, "First interval should be warmup at 150W")
-        XCTAssertEqual(intervals[0].duration, 300, "First interval should be 5 minutes")
-        XCTAssertEqual(intervals[6].watts, 150, "Last interval should be cooldown at 150W")
-        XCTAssertEqual(intervals[6].duration, 300, "Last interval should be 5 minutes")
+        XCTAssertEqual(intervals[0].duration, 300, "First interval should be 5-minute warmup")
+        XCTAssertEqual(intervals[1].duration, 480, "Second interval should be 8-minute threshold")
+        XCTAssertEqual(intervals[2].duration, 180, "Third interval should be 3-minute recovery")
+        XCTAssertEqual(intervals[3].duration, 480, "Fourth interval should be 8-minute threshold")
+        XCTAssertEqual(intervals[4].duration, 300, "Fifth interval should be 5-minute cooldown")
+        
+        // Verify power levels relative to FTP (250W)
+        XCTAssertEqual(intervals[0].watts, 150, "Warmup should be at 60% FTP (150W)")
+        XCTAssertEqual(intervals[1].watts, 237, "Threshold should be at 95% FTP (237W)")
+        XCTAssertEqual(intervals[2].watts, 175, "Recovery should be at 70% FTP (175W)")
+    }
+    
+    func testParseWorkoutHandlesValidJSON() throws {
+        // Given: Valid JSON workout data
+        let validJSON = """
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440000",
+            "title": "Custom JSON Workout",
+            "date": "2025-06-24T12:00:00Z",
+            "summary": "A custom workout from JSON",
+            "intervals": [
+                {
+                    "id": "550e8400-e29b-41d4-a716-446655440001",
+                    "watts": 200,
+                    "duration": 600
+                }
+            ],
+            "status": "scheduled"
+        }
+        """
+        
+        // When: parseWorkout is called with valid JSON
+        let workout = viewModel.parseWorkout(from: validJSON)
+        
+        // Then: Should parse the JSON correctly
+        XCTAssertNotNil(workout, "Should parse valid JSON")
+        XCTAssertEqual(workout?.title, "Custom JSON Workout", "Should use JSON title")
+        XCTAssertEqual(workout?.intervals.count, 1, "Should have one interval from JSON")
+        XCTAssertEqual(workout?.intervals.first?.watts, 200, "Should use watts from JSON")
+        XCTAssertEqual(workout?.intervals.first?.duration, 600, "Should use duration from JSON")
+    }
+    
+    func testParseWorkoutFallsBackToDemoForInvalidJSON() throws {
+        // Given: Invalid JSON and endurance workout type
+        viewModel.selectedWorkoutType = .endurance
+        let invalidJSON = "{ invalid json structure"
+        
+        // When: parseWorkout is called with invalid JSON
+        let workout = viewModel.parseWorkout(from: invalidJSON)
+        
+        // Then: Should fall back to demo workout
+        XCTAssertNotNil(workout, "Should create demo workout for invalid JSON")
+        XCTAssertEqual(workout?.title, "Endurance Workout", "Should use demo workout title")
+        XCTAssertEqual(workout?.intervals.count, 3, "Endurance demo should have 3 intervals")
     }
     
     func testDefaultWorkoutTypeIsEndurance() throws {

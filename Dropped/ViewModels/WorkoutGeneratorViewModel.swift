@@ -76,16 +76,14 @@ final class WorkoutGeneratorViewModel: ObservableObject {
     /// - Parameter json: JSON string from the AI service
     /// - Returns: A parsed Workout object if successful, nil otherwise
     func parseWorkout(from json: String) -> Workout? {
-        // For now, we'll create a simple workout with today's date for demo purposes
-        let intervals = [
-            Interval(watts: 150, duration: 300),  // 5-min warmup
-            Interval(watts: 250, duration: 180),  // 3-min interval
-            Interval(watts: 175, duration: 120),  // 2-min recovery
-            Interval(watts: 260, duration: 180),  // 3-min interval
-            Interval(watts: 175, duration: 120),  // 2-min recovery
-            Interval(watts: 270, duration: 180),  // 3-min interval
-            Interval(watts: 150, duration: 300)   // 5-min cooldown
-        ]
+        // First, try to parse the actual JSON from the AI service
+        if let data = Data(json.utf8),
+           let workout = try? JSONDecoder().decode(Workout.self, from: data) {
+            return workout
+        }
+        
+        // Fallback: create a demo workout based on the selected type and user FTP
+        let intervals = createDemoIntervals(for: selectedWorkoutType, ftp: userData.ftp)
         
         return Workout(
             title: "\(selectedWorkoutType.displayName) Workout",
@@ -93,6 +91,56 @@ final class WorkoutGeneratorViewModel: ObservableObject {
             summary: "AI-generated \(selectedWorkoutType.displayName.lowercased()) workout based on your FTP of \(userData.ftp) watts.",
             intervals: intervals
         )
+    }
+    
+    /// Creates demo intervals for a given workout type and FTP
+    /// - Parameters:
+    ///   - type: The workout type to generate intervals for
+    ///   - ftp: User's Functional Threshold Power
+    /// - Returns: Array of intervals appropriate for the workout type
+    private func createDemoIntervals(for type: WorkoutType, ftp: Int) -> [Interval] {
+        let ftpDouble = Double(ftp)
+        
+        switch type {
+        case .endurance:
+            return [
+                Interval(watts: Int(ftpDouble * 0.6), duration: 300),   // 5-min warmup at 60% FTP
+                Interval(watts: Int(ftpDouble * 0.7), duration: 1200),  // 20-min endurance at 70% FTP
+                Interval(watts: Int(ftpDouble * 0.6), duration: 300)    // 5-min cooldown at 60% FTP
+            ]
+        case .threshold:
+            return [
+                Interval(watts: Int(ftpDouble * 0.6), duration: 300),   // 5-min warmup
+                Interval(watts: Int(ftpDouble * 0.95), duration: 480),  // 8-min threshold
+                Interval(watts: Int(ftpDouble * 0.7), duration: 180),   // 3-min recovery
+                Interval(watts: Int(ftpDouble * 0.95), duration: 480),  // 8-min threshold
+                Interval(watts: Int(ftpDouble * 0.6), duration: 300)    // 5-min cooldown
+            ]
+        case .vo2Max:
+            return [
+                Interval(watts: Int(ftpDouble * 0.6), duration: 300),   // 5-min warmup
+                Interval(watts: Int(ftpDouble * 1.15), duration: 180),  // 3-min VO2max
+                Interval(watts: Int(ftpDouble * 0.7), duration: 120),   // 2-min recovery
+                Interval(watts: Int(ftpDouble * 1.15), duration: 180),  // 3-min VO2max
+                Interval(watts: Int(ftpDouble * 0.7), duration: 120),   // 2-min recovery
+                Interval(watts: Int(ftpDouble * 1.15), duration: 180),  // 3-min VO2max
+                Interval(watts: Int(ftpDouble * 0.6), duration: 300)    // 5-min cooldown
+            ]
+        case .sprint:
+            return [
+                Interval(watts: Int(ftpDouble * 0.6), duration: 300),   // 5-min warmup
+                Interval(watts: Int(ftpDouble * 1.5), duration: 15),    // 15-sec sprint
+                Interval(watts: Int(ftpDouble * 0.5), duration: 105),   // 1:45 recovery
+                Interval(watts: Int(ftpDouble * 1.5), duration: 15),    // 15-sec sprint
+                Interval(watts: Int(ftpDouble * 0.5), duration: 105),   // 1:45 recovery
+                Interval(watts: Int(ftpDouble * 1.5), duration: 15),    // 15-sec sprint
+                Interval(watts: Int(ftpDouble * 0.6), duration: 300)    // 5-min cooldown
+            ]
+        case .recovery:
+            return [
+                Interval(watts: Int(ftpDouble * 0.5), duration: 1800)   // 30-min easy recovery
+            ]
+        }
     }
 
     /// Returns a user-friendly error message
