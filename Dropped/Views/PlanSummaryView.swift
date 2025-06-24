@@ -105,22 +105,8 @@ struct PlanSummaryView: View {
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    HStack {
-                        NavigationLink(destination: {
-                            // Inject dependencies for the generator
-                            let userData = UserDataManager.shared.loadUserData()
-                            let aiGenerator = AIWorkoutGenerator(apiKey: "YOUR_OPENAI_API_KEY")
-                            let viewModel = WorkoutGeneratorViewModel(aiGenerator: aiGenerator, userData: userData)
-                            WorkoutGeneratorView(viewModel: viewModel)
-                        }) {
-                            Image(systemName: "bolt.circle")
-                                .accessibilityLabel("Generate AI Workout")
-                        }
-                        
-                        NavigationLink(destination: SettingsView()) {
-                            Image(systemName: "gear")
-                                .accessibilityLabel("Settings")
-                        }
+                    NavigationLink(destination: SettingsView()) {
+                        Image(systemName: "gear")
                     }
                 }
             }
