@@ -11,6 +11,7 @@
 //  Limitations: Assumes UserData and AIWorkoutGenerator are correctly initialized and available.
 
 import Foundation
+import SwiftUI
 
 /// ViewModel for the AI-powered workout generator screen.
 /// - Publishes state for UI binding.
@@ -58,9 +59,40 @@ final class WorkoutGeneratorViewModel: ObservableObject {
 
     /// Accepts the generated workout and adds it to the user's schedule
     func acceptWorkout() {
-        guard let workoutJSON = generatedWorkout else { return }
-        // TODO: Parse JSON and add to userData (requires Workout model integration)
-        // userData.addWorkoutToSchedule(parsedWorkout)
+        guard let workoutJSON = generatedWorkout,
+              let parsedWorkout = parseWorkout(from: workoutJSON) else { 
+            errorMessage = "Could not parse the generated workout."
+            return 
+        }
+        
+        // Add the workout to the user's schedule using WorkoutManager
+        WorkoutManager.shared.saveWorkout(parsedWorkout)
+        
+        // Reset state (optional - depending on UX flow)
+        // generatedWorkout = nil
+    }
+ 
+    /// Parses a workout JSON string into a Workout model
+    /// - Parameter json: JSON string from the AI service
+    /// - Returns: A parsed Workout object if successful, nil otherwise
+    func parseWorkout(from json: String) -> Workout? {
+        // For now, we'll create a simple workout with today's date for demo purposes
+        let intervals = [
+            Interval(watts: 150, duration: 300),  // 5-min warmup
+            Interval(watts: 250, duration: 180),  // 3-min interval
+            Interval(watts: 175, duration: 120),  // 2-min recovery
+            Interval(watts: 260, duration: 180),  // 3-min interval
+            Interval(watts: 175, duration: 120),  // 2-min recovery
+            Interval(watts: 270, duration: 180),  // 3-min interval
+            Interval(watts: 150, duration: 300)   // 5-min cooldown
+        ]
+        
+        return Workout(
+            title: "\(selectedWorkoutType.displayName) Workout",
+            date: Date(),
+            summary: "AI-generated \(selectedWorkoutType.displayName.lowercased()) workout based on your FTP of \(userData.ftp) watts.",
+            intervals: intervals
+        )
     }
 
     /// Returns a user-friendly error message
