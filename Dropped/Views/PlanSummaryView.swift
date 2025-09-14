@@ -12,6 +12,7 @@ import Foundation
 struct PlanSummaryView: View {
     @State private var userData: UserData
     @State private var workouts: [Workout] = []
+    @State private var showingWorkoutGenerator = false
     @Binding var hasCompletedOnboarding: Bool
     
     init(hasCompletedOnboarding: Binding<Bool>) {
@@ -104,11 +105,27 @@ struct PlanSummaryView: View {
                     }
                 }
                 
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        showingWorkoutGenerator = true
+                    }) {
+                        Image(systemName: "bolt.circle")
+                    }
+                    .accessibilityLabel("Generate AI Workout")
+                }
+                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink(destination: SettingsView()) {
                         Image(systemName: "gear")
                     }
                 }
+            }
+            .sheet(isPresented: $showingWorkoutGenerator) {
+                // Inject dependencies for the generator
+                let userData = UserDataManager.shared.loadUserData()
+                let aiGenerator = AIWorkoutGenerator(apiKey: "YOUR_OPENAI_API_KEY")
+                let viewModel = WorkoutGeneratorViewModel(aiGenerator: aiGenerator, userData: userData)
+                WorkoutGeneratorView(viewModel: viewModel)
             }
         }
     }
