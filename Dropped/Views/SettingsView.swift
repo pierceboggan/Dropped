@@ -104,19 +104,6 @@ struct SettingsView: View {
                                 }
                             }
                         }
-                        
-                        // If in imperial mode, show detailed options
-                        if !viewModel.isMetric {
-                            Picker("Imperial Unit", selection: $viewModel.selectedWeightUnit) {
-                                Text("Pounds (lb)").tag(WeightUnit.pounds)
-                                Text("Stones (st)").tag(WeightUnit.stones)
-                            }
-                            .pickerStyle(SegmentedPickerStyle())
-                            .padding(.top, 8)
-                            .onChange(of: viewModel.selectedWeightUnit) { _, newUnit in
-                                viewModel.selectWeightUnit(newUnit)
-                            }
-                        }
                     }
                     .padding(.vertical, 8)
                 }

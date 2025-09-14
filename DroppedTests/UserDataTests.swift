@@ -19,10 +19,6 @@ final class UserDataTests: XCTestCase {
         let kgToPoundsResult = WeightUnit.kilograms.convert(from: 70.0, to: .pounds)
         XCTAssertEqual(kgToPoundsResult, 154.324, accuracy: 0.001, "Converting 70 kg to lb should be about 154.32 lb")
         
-        // Test stones to kilograms
-        let stonesToKgResult = WeightUnit.stones.convert(from: 11.0, to: .kilograms)
-        XCTAssertEqual(stonesToKgResult, 69.85319, accuracy: 0.001, "Converting 11 st to kg should be about 69.85 kg")
-        
         // Test circular conversion (should get back to original value)
         let originalValue = 75.0
         let intermediate = WeightUnit.kilograms.convert(from: originalValue, to: .pounds)
@@ -72,17 +68,17 @@ final class UserDataTests: XCTestCase {
         // Weight should be converted to pounds for display
         XCTAssertEqual(poundsDisplayData.displayWeight(), 154.324, accuracy: 0.001, "70kg should display as approximately 154.32 pounds")
         
-        // Create test data with weight in kg and display unit set to stones
-        let stonesDisplayData = UserData(
+        // Create test data with weight in kg and display unit set to kg
+        let kgDisplayData = UserData(
             weight: 70.0,  // Weight in kg
-            weightUnit: WeightUnit.stones.rawValue,
+            weightUnit: WeightUnit.kilograms.rawValue,
             ftp: 200,
             trainingHoursPerWeek: 5,
             trainingGoal: TrainingGoal.haveFun.rawValue
         )
         
-        // Weight should be converted to stones for display
-        XCTAssertEqual(stonesDisplayData.displayWeight(), 11.023, accuracy: 0.001, "70kg should display as approximately 11.02 stones")
+        // Weight should remain in kg for display
+        XCTAssertEqual(kgDisplayData.displayWeight(), 70.0, accuracy: 0.001, "70kg should display as 70kg")
     }
     
     func testHasCompletedOnboarding() throws {
@@ -100,5 +96,44 @@ final class UserDataTests: XCTestCase {
         
         // Clean up
         UserDefaults.standard.removeObject(forKey: "com.dropped.userdata")
+    }
+    
+    func testStonesMigrationToLbs() throws {
+        // Test that users with stones get migrated to pounds
+        let manager = UserDataManager.shared
+        
+        // Create test data with stones (simulating old data)
+        let testDataWithStones = UserData(
+            weight: 70.0,
+            weightUnit: "st", // old stones unit
+            ftp: 200,
+            trainingHoursPerWeek: 5,
+            trainingGoal: TrainingGoal.haveFun.rawValue
+        )
+        
+        // Save the stones data
+        manager.saveUserData(testDataWithStones)
+        
+        // Load it back - should be migrated to pounds
+        let loadedData = manager.loadUserData()
+        
+        // Should be migrated to pounds
+        XCTAssertEqual(loadedData.weightUnit, WeightUnit.pounds.rawValue, "Stones should be migrated to pounds")
+        XCTAssertEqual(loadedData.weight, 70.0, "Weight value should remain the same (in kg)")
+        
+        // Clean up
+        manager.saveUserData(UserData.defaultData)
+    }
+    
+    func testWeightUnitCases() throws {
+        // Verify we only have pounds and kilograms
+        let allCases = WeightUnit.allCases
+        XCTAssertEqual(allCases.count, 2, "Should only have 2 weight units")
+        XCTAssertTrue(allCases.contains(.pounds), "Should contain pounds")
+        XCTAssertTrue(allCases.contains(.kilograms), "Should contain kilograms")
+        
+        // Verify raw values
+        XCTAssertEqual(WeightUnit.pounds.rawValue, "lb")
+        XCTAssertEqual(WeightUnit.kilograms.rawValue, "kg")
     }
 }

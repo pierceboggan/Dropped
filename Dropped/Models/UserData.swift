@@ -90,7 +90,6 @@ struct Workout: Identifiable, Codable, Equatable {
 enum WeightUnit: String, CaseIterable, Identifiable, Codable {
     case pounds = "lb"
     case kilograms = "kg"
-    case stones = "st"
     
     var id: String { self.rawValue }
     
@@ -103,8 +102,6 @@ enum WeightUnit: String, CaseIterable, Identifiable, Codable {
             valueInKg = value * 0.453592
         case .kilograms:
             valueInKg = value
-        case .stones:
-            valueInKg = value * 6.35029
         }
         
         // Convert from kg to target unit
@@ -113,8 +110,6 @@ enum WeightUnit: String, CaseIterable, Identifiable, Codable {
             return valueInKg / 0.453592
         case .kilograms:
             return valueInKg
-        case .stones:
-            return valueInKg / 6.35029
         }
     }
 }
@@ -199,6 +194,13 @@ class UserDataManager {
     }
     
     func loadUserData() -> UserData {
+        // Migrate any existing stones users to pounds
+        if userData.weightUnit == "st" {
+            var migratedData = userData
+            migratedData.weightUnit = WeightUnit.pounds.rawValue
+            self.userData = migratedData
+            return migratedData
+        }
         return userData
     }
     
