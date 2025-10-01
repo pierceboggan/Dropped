@@ -15,7 +15,7 @@ struct ContentView: View {
             NavigationView {
                 List {
                     NavigationLink(destination: PlanSummaryView(hasCompletedOnboarding: $hasCompletedOnboarding)) {
-                        Label("Weekly Plan", systemImage: "calendar")
+                        Label("My Workout Schedule", systemImage: "list.bullet.clipboard")
                     }
                     NavigationLink(destination: {
                         // Inject dependencies for the generator
