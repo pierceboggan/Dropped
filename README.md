@@ -29,6 +29,10 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 ## 💡 More coming soon!
 Stay tuned for updates, new features, and more fun. Feel free to update this README as the project grows!
 
+## 🙏 Special Thanks
+
+A huge thank you to **Anna** for all the incredible support, encouragement, and inspiration. Your contributions and belief in this project mean the world. We couldn't have done this without you! 💙
+
 ---
 
 Made with ❤️ by the Dropped team
