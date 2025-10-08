@@ -151,6 +151,16 @@ struct UserData: Codable, Equatable {
         }
         return weight
     }
+    
+    /// Add a workout to the user's schedule
+    /// - Parameter workout: The workout to add
+    /// - Returns: The saved workout
+    @discardableResult
+    func addWorkoutToSchedule(_ workout: Workout) -> Workout {
+        // Save the workout using the WorkoutManager
+        WorkoutManager.shared.saveWorkout(workout)
+        return workout
+    }
 }
 
 // MARK: - Integrated Models

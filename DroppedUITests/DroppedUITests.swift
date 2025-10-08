@@ -97,6 +97,83 @@ final class DroppedUITests: XCTestCase {
         }
     }
     
+    @MainActor
+    func testPlanSummaryViewDisplaysUserStats() throws {
+        // Complete onboarding
+        completeOnboarding()
+        
+        // Navigate to Weekly Plan
+        let weeklyPlanLink = app.buttons["Weekly Plan"]
+        XCTAssertTrue(weeklyPlanLink.waitForExistence(timeout: 5), "Weekly Plan link should exist")
+        weeklyPlanLink.tap()
+        
+        // Wait for plan summary to load
+        sleep(2)
+        
+        // Verify user stats are displayed
+        XCTAssertTrue(app.staticTexts["Your Stats"].exists, "User stats section should be displayed")
+        
+        // Verify workout plan is displayed
+        XCTAssertTrue(app.staticTexts["Your Weekly Plan"].exists, "Weekly plan should be displayed")
+        
+        // Verify at least one workout card exists
+        let workoutCards = app.buttons.matching(NSPredicate(format: "identifier CONTAINS 'workoutCard'"))
+        XCTAssertTrue(workoutCards.count > 0 || app.otherElements.containing(NSPredicate(format: "label CONTAINS 'Workout'")).count > 0, 
+                     "Should display workout cards")
+    }
+    
+    @MainActor
+    func testRestartOnboardingFlow() throws {
+        // Complete onboarding
+        completeOnboarding()
+        
+        // Navigate to Weekly Plan
+        let weeklyPlanLink = app.buttons["Weekly Plan"]
+        XCTAssertTrue(weeklyPlanLink.waitForExistence(timeout: 5), "Weekly Plan link should exist")
+        weeklyPlanLink.tap()
+        
+        // Wait for plan to load
+        sleep(2)
+        
+        // Find and tap restart button
+        let restartButton = app.buttons["Restart Onboarding"]
+        if restartButton.exists {
+            restartButton.tap()
+            
+            // Should return to onboarding
+            let onboardingHeader = app.staticTexts["Let's Get Started"]
+            XCTAssertTrue(onboardingHeader.waitForExistence(timeout: 3), "Should return to onboarding screen")
+        }
+    }
+    
+    @MainActor
+    func testNavigationBetweenMainScreens() throws {
+        // Complete onboarding
+        completeOnboarding()
+        
+        // Verify we're on the main navigation screen
+        XCTAssertTrue(app.buttons["Weekly Plan"].exists, "Weekly Plan option should exist")
+        XCTAssertTrue(app.buttons["AI Workout Generator"].exists, "AI Workout Generator option should exist")
+        
+        // Navigate to Weekly Plan
+        app.buttons["Weekly Plan"].tap()
+        sleep(1)
+        
+        // Go back
+        let backButton = app.navigationBars.buttons.element(boundBy: 0)
+        if backButton.exists {
+            backButton.tap()
+            sleep(1)
+        }
+        
+        // Navigate to AI Workout Generator
+        app.buttons["AI Workout Generator"].tap()
+        
+        // Verify we're on the generator screen
+        XCTAssertTrue(app.staticTexts["Select Workout Type"].waitForExistence(timeout: 3), 
+                     "Should navigate to workout generator")
+    }
+    
     // Helper method to quickly complete onboarding
     private func completeOnboarding() {
         app.launch()
