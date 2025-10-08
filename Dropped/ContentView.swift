@@ -26,6 +26,9 @@ struct ContentView: View {
                     }) {
                         Label("AI Workout Generator", systemImage: "bolt.circle")
                     }
+                    NavigationLink(destination: SettingsView()) {
+                        Label("Settings", systemImage: "gear")
+                    }
                 }
                 .navigationTitle("Dropped")
             }

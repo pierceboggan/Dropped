@@ -128,6 +128,27 @@ enum TrainingGoal: String, CaseIterable, Identifiable, Codable {
     var id: String { self.rawValue }
 }
 
+/// Represents the user's preferred color scheme for the app
+enum AppTheme: String, CaseIterable, Identifiable, Codable {
+    case system = "System"
+    case light = "Light"
+    case dark = "Dark"
+    
+    var id: String { self.rawValue }
+    
+    /// Returns the corresponding SwiftUI ColorScheme, or nil for system preference
+    var colorScheme: ColorScheme? {
+        switch self {
+        case .system:
+            return nil
+        case .light:
+            return .light
+        case .dark:
+            return .dark
+        }
+    }
+}
+
 /// User profile data including physical and training parameters
 struct UserData: Codable, Equatable {
     var weight: Double  // Always stored in kg for consistency
@@ -135,13 +156,15 @@ struct UserData: Codable, Equatable {
     var ftp: Int
     var trainingHoursPerWeek: Int
     var trainingGoal: String
+    var theme: String // Store the preferred theme
     
     static let defaultData = UserData(
         weight: 70.0, 
         weightUnit: WeightUnit.pounds.rawValue,
         ftp: 200, 
         trainingHoursPerWeek: 5, 
-        trainingGoal: TrainingGoal.haveFun.rawValue
+        trainingGoal: TrainingGoal.haveFun.rawValue,
+        theme: AppTheme.system.rawValue
     )
     
     /// Helper function to get weight in the user's preferred unit
@@ -150,6 +173,11 @@ struct UserData: Codable, Equatable {
             return WeightUnit.kilograms.convert(from: weight, to: unit)
         }
         return weight
+    }
+    
+    /// Helper function to get the user's preferred theme
+    func appTheme() -> AppTheme {
+        return AppTheme(rawValue: theme) ?? .system
     }
 }
 

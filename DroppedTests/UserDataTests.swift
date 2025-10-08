@@ -37,7 +37,8 @@ final class UserDataTests: XCTestCase {
             weightUnit: WeightUnit.kilograms.rawValue,
             ftp: 250,
             trainingHoursPerWeek: 8,
-            trainingGoal: TrainingGoal.getFaster.rawValue
+            trainingGoal: TrainingGoal.getFaster.rawValue,
+            theme: AppTheme.dark.rawValue
         )
         
         // Save test data
@@ -52,6 +53,7 @@ final class UserDataTests: XCTestCase {
         XCTAssertEqual(loadedData.ftp, testData.ftp, "Loaded FTP should match saved FTP")
         XCTAssertEqual(loadedData.trainingHoursPerWeek, testData.trainingHoursPerWeek, "Loaded training hours should match saved hours")
         XCTAssertEqual(loadedData.trainingGoal, testData.trainingGoal, "Loaded training goal should match saved goal")
+        XCTAssertEqual(loadedData.theme, testData.theme, "Loaded theme should match saved theme")
         
         // Clean up by resetting to default data
         UserDataManager.shared.saveUserData(UserData.defaultData)
@@ -66,7 +68,8 @@ final class UserDataTests: XCTestCase {
             weightUnit: WeightUnit.pounds.rawValue,
             ftp: 200,
             trainingHoursPerWeek: 5,
-            trainingGoal: TrainingGoal.haveFun.rawValue
+            trainingGoal: TrainingGoal.haveFun.rawValue,
+            theme: AppTheme.system.rawValue
         )
         
         // Weight should be converted to pounds for display
@@ -78,7 +81,8 @@ final class UserDataTests: XCTestCase {
             weightUnit: WeightUnit.stones.rawValue,
             ftp: 200,
             trainingHoursPerWeek: 5,
-            trainingGoal: TrainingGoal.haveFun.rawValue
+            trainingGoal: TrainingGoal.haveFun.rawValue,
+            theme: AppTheme.system.rawValue
         )
         
         // Weight should be converted to stones for display
@@ -100,5 +104,73 @@ final class UserDataTests: XCTestCase {
         
         // Clean up
         UserDefaults.standard.removeObject(forKey: "com.dropped.userdata")
+    }
+    
+    func testAppThemeEnum() throws {
+        // Test that all theme cases have valid color schemes
+        XCTAssertNil(AppTheme.system.colorScheme, "System theme should return nil color scheme")
+        XCTAssertEqual(AppTheme.light.colorScheme, .light, "Light theme should return .light color scheme")
+        XCTAssertEqual(AppTheme.dark.colorScheme, .dark, "Dark theme should return .dark color scheme")
+        
+        // Test theme raw values
+        XCTAssertEqual(AppTheme.system.rawValue, "System")
+        XCTAssertEqual(AppTheme.light.rawValue, "Light")
+        XCTAssertEqual(AppTheme.dark.rawValue, "Dark")
+        
+        // Test theme initialization from raw value
+        XCTAssertEqual(AppTheme(rawValue: "System"), .system)
+        XCTAssertEqual(AppTheme(rawValue: "Light"), .light)
+        XCTAssertEqual(AppTheme(rawValue: "Dark"), .dark)
+        XCTAssertNil(AppTheme(rawValue: "Invalid"))
+    }
+    
+    func testUserDataAppTheme() throws {
+        // Test appTheme() helper function
+        let systemThemeData = UserData(
+            weight: 70.0,
+            weightUnit: WeightUnit.kilograms.rawValue,
+            ftp: 200,
+            trainingHoursPerWeek: 5,
+            trainingGoal: TrainingGoal.haveFun.rawValue,
+            theme: AppTheme.system.rawValue
+        )
+        XCTAssertEqual(systemThemeData.appTheme(), .system, "appTheme() should return system theme")
+        
+        let lightThemeData = UserData(
+            weight: 70.0,
+            weightUnit: WeightUnit.kilograms.rawValue,
+            ftp: 200,
+            trainingHoursPerWeek: 5,
+            trainingGoal: TrainingGoal.haveFun.rawValue,
+            theme: AppTheme.light.rawValue
+        )
+        XCTAssertEqual(lightThemeData.appTheme(), .light, "appTheme() should return light theme")
+        
+        let darkThemeData = UserData(
+            weight: 70.0,
+            weightUnit: WeightUnit.kilograms.rawValue,
+            ftp: 200,
+            trainingHoursPerWeek: 5,
+            trainingGoal: TrainingGoal.haveFun.rawValue,
+            theme: AppTheme.dark.rawValue
+        )
+        XCTAssertEqual(darkThemeData.appTheme(), .dark, "appTheme() should return dark theme")
+        
+        // Test invalid theme defaults to system
+        let invalidThemeData = UserData(
+            weight: 70.0,
+            weightUnit: WeightUnit.kilograms.rawValue,
+            ftp: 200,
+            trainingHoursPerWeek: 5,
+            trainingGoal: TrainingGoal.haveFun.rawValue,
+            theme: "InvalidTheme"
+        )
+        XCTAssertEqual(invalidThemeData.appTheme(), .system, "Invalid theme should default to system")
+    }
+    
+    func testDefaultUserDataHasSystemTheme() throws {
+        // Verify that the default UserData uses system theme
+        XCTAssertEqual(UserData.defaultData.theme, AppTheme.system.rawValue, "Default user data should use system theme")
+        XCTAssertEqual(UserData.defaultData.appTheme(), .system, "Default user data appTheme() should return system")
     }
 }
