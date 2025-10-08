@@ -11,6 +11,7 @@ class SettingsViewModel: ObservableObject {
     @Published var userData: UserData
     @Published var selectedWeightUnit: WeightUnit
     @Published var isMetric: Bool
+    @Published var selectedTheme: ThemePreference
     
     init() {
         let loadedData = UserDataManager.shared.loadUserData()
@@ -22,6 +23,12 @@ class SettingsViewModel: ObservableObject {
         } else {
             self.selectedWeightUnit = .pounds
             self.isMetric = false
+        }
+        
+        if let storedTheme = ThemePreference(rawValue: loadedData.themePreference) {
+            self.selectedTheme = storedTheme
+        } else {
+            self.selectedTheme = .system
         }
     }
     
@@ -52,6 +59,16 @@ class SettingsViewModel: ObservableObject {
         }
     }
     
+    func selectTheme(_ theme: ThemePreference) {
+        if theme != selectedTheme {
+            selectedTheme = theme
+            userData.themePreference = theme.rawValue
+            UserDataManager.shared.saveUserData(userData)
+            // Update the theme manager to apply the new theme
+            ThemeManager.shared.updateColorScheme()
+        }
+    }
+    
     private func updatePreferredUnit() {
         // Keep the weight value in kg, just update the display unit
         userData.weightUnit = selectedWeightUnit.rawValue
@@ -66,6 +83,25 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             List {
+                // Appearance Section
+                Section(header: Text("Appearance")) {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Theme")
+                            .font(.headline)
+                        
+                        Picker("Theme", selection: $viewModel.selectedTheme) {
+                            ForEach(ThemePreference.allCases) { theme in
+                                Text(theme.rawValue).tag(theme)
+                            }
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        .onChange(of: viewModel.selectedTheme) { _, newTheme in
+                            viewModel.selectTheme(newTheme)
+                        }
+                    }
+                    .padding(.vertical, 8)
+                }
+                
                 // Measurement Units Section
                 Section(header: Text("Measurement Units")) {
                     // Weight Units

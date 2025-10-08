@@ -9,6 +9,8 @@ import SwiftUI
 
 @main
 struct DroppedApp: App {
+    @StateObject private var themeManager = ThemeManager.shared
+    
     init() {
         // Setup for UI testing
         if CommandLine.arguments.contains("-resetUserDefaults") {
@@ -23,6 +25,7 @@ struct DroppedApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .preferredColorScheme(themeManager.colorScheme)
         }
     }
 }
