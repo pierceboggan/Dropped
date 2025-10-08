@@ -37,7 +37,8 @@ final class UserDataTests: XCTestCase {
             weightUnit: WeightUnit.kilograms.rawValue,
             ftp: 250,
             trainingHoursPerWeek: 8,
-            trainingGoal: TrainingGoal.getFaster.rawValue
+            trainingGoal: TrainingGoal.getFaster.rawValue,
+            themePreference: ThemePreference.dark.rawValue
         )
         
         // Save test data
@@ -52,6 +53,7 @@ final class UserDataTests: XCTestCase {
         XCTAssertEqual(loadedData.ftp, testData.ftp, "Loaded FTP should match saved FTP")
         XCTAssertEqual(loadedData.trainingHoursPerWeek, testData.trainingHoursPerWeek, "Loaded training hours should match saved hours")
         XCTAssertEqual(loadedData.trainingGoal, testData.trainingGoal, "Loaded training goal should match saved goal")
+        XCTAssertEqual(loadedData.themePreference, testData.themePreference, "Loaded theme preference should match saved theme")
         
         // Clean up by resetting to default data
         UserDataManager.shared.saveUserData(UserData.defaultData)
@@ -66,7 +68,8 @@ final class UserDataTests: XCTestCase {
             weightUnit: WeightUnit.pounds.rawValue,
             ftp: 200,
             trainingHoursPerWeek: 5,
-            trainingGoal: TrainingGoal.haveFun.rawValue
+            trainingGoal: TrainingGoal.haveFun.rawValue,
+            themePreference: ThemePreference.system.rawValue
         )
         
         // Weight should be converted to pounds for display
@@ -78,7 +81,8 @@ final class UserDataTests: XCTestCase {
             weightUnit: WeightUnit.stones.rawValue,
             ftp: 200,
             trainingHoursPerWeek: 5,
-            trainingGoal: TrainingGoal.haveFun.rawValue
+            trainingGoal: TrainingGoal.haveFun.rawValue,
+            themePreference: ThemePreference.system.rawValue
         )
         
         // Weight should be converted to stones for display
@@ -100,5 +104,55 @@ final class UserDataTests: XCTestCase {
         
         // Clean up
         UserDefaults.standard.removeObject(forKey: "com.dropped.userdata")
+    }
+    
+    func testThemePreferenceDefault() throws {
+        // Default theme should be system
+        let defaultData = UserData.defaultData
+        XCTAssertEqual(defaultData.themePreference, ThemePreference.system.rawValue, "Default theme should be system")
+    }
+    
+    func testThemeManagerColorScheme() throws {
+        // Test light theme
+        let lightData = UserData(
+            weight: 70.0,
+            weightUnit: WeightUnit.kilograms.rawValue,
+            ftp: 200,
+            trainingHoursPerWeek: 5,
+            trainingGoal: TrainingGoal.haveFun.rawValue,
+            themePreference: ThemePreference.light.rawValue
+        )
+        UserDataManager.shared.saveUserData(lightData)
+        ThemeManager.shared.updateColorScheme()
+        XCTAssertEqual(ThemeManager.shared.colorScheme, .light, "Color scheme should be light")
+        
+        // Test dark theme
+        let darkData = UserData(
+            weight: 70.0,
+            weightUnit: WeightUnit.kilograms.rawValue,
+            ftp: 200,
+            trainingHoursPerWeek: 5,
+            trainingGoal: TrainingGoal.haveFun.rawValue,
+            themePreference: ThemePreference.dark.rawValue
+        )
+        UserDataManager.shared.saveUserData(darkData)
+        ThemeManager.shared.updateColorScheme()
+        XCTAssertEqual(ThemeManager.shared.colorScheme, .dark, "Color scheme should be dark")
+        
+        // Test system theme
+        let systemData = UserData(
+            weight: 70.0,
+            weightUnit: WeightUnit.kilograms.rawValue,
+            ftp: 200,
+            trainingHoursPerWeek: 5,
+            trainingGoal: TrainingGoal.haveFun.rawValue,
+            themePreference: ThemePreference.system.rawValue
+        )
+        UserDataManager.shared.saveUserData(systemData)
+        ThemeManager.shared.updateColorScheme()
+        XCTAssertNil(ThemeManager.shared.colorScheme, "Color scheme should be nil for system preference")
+        
+        // Clean up
+        UserDataManager.shared.saveUserData(UserData.defaultData)
     }
 }

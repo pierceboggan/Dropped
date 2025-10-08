@@ -88,7 +88,8 @@ class OnboardingViewModel: ObservableObject {
                 weightUnit: selectedWeightUnit.rawValue,
                 ftp: Int(ftp)!,
                 trainingHoursPerWeek: Int(trainingHoursPerWeek)!,
-                trainingGoal: selectedGoal.rawValue
+                trainingGoal: selectedGoal.rawValue,
+                themePreference: ThemePreference.system.rawValue
             )
             UserDataManager.shared.saveUserData(userData)
             return true

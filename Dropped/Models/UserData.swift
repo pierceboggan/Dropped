@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 // MARK: - Workout Data Models
 
@@ -128,6 +129,15 @@ enum TrainingGoal: String, CaseIterable, Identifiable, Codable {
     var id: String { self.rawValue }
 }
 
+/// Theme preference for the app
+enum ThemePreference: String, CaseIterable, Identifiable, Codable {
+    case light = "Light"
+    case dark = "Dark"
+    case system = "System"
+    
+    var id: String { self.rawValue }
+}
+
 /// User profile data including physical and training parameters
 struct UserData: Codable, Equatable {
     var weight: Double  // Always stored in kg for consistency
@@ -135,13 +145,15 @@ struct UserData: Codable, Equatable {
     var ftp: Int
     var trainingHoursPerWeek: Int
     var trainingGoal: String
+    var themePreference: String // Store the preferred theme
     
     static let defaultData = UserData(
         weight: 70.0, 
         weightUnit: WeightUnit.pounds.rawValue,
         ftp: 200, 
         trainingHoursPerWeek: 5, 
-        trainingGoal: TrainingGoal.haveFun.rawValue
+        trainingGoal: TrainingGoal.haveFun.rawValue,
+        themePreference: ThemePreference.system.rawValue
     )
     
     /// Helper function to get weight in the user's preferred unit
@@ -182,6 +194,33 @@ struct WorkoutDay: Identifiable, Codable, Equatable {
 }
 
 // MARK: - Data Managers
+
+/// Manager class for theme preferences
+class ThemeManager: ObservableObject {
+    static let shared = ThemeManager()
+    
+    @Published var colorScheme: ColorScheme?
+    
+    private init() {
+        updateColorScheme()
+    }
+    
+    func updateColorScheme() {
+        let userData = UserDataManager.shared.loadUserData()
+        if let themePreference = ThemePreference(rawValue: userData.themePreference) {
+            switch themePreference {
+            case .light:
+                colorScheme = .light
+            case .dark:
+                colorScheme = .dark
+            case .system:
+                colorScheme = nil
+            }
+        } else {
+            colorScheme = nil
+        }
+    }
+}
 
 /// Manager class for user data in-memory storage and retrieval
 class UserDataManager {
