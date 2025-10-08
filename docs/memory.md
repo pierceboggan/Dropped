@@ -56,10 +56,15 @@ This project is a SwiftUI-based iOS application structured as follows:
 ### DroppedTests/
 - **DroppedTests.swift**: General unit tests for the app.
 - **OnboardingViewModelTests.swift**: Unit tests for onboarding ViewModel.
-- **UserDataTests.swift**: Unit tests for user data model.
-- **WorkoutDetailTests.swift**: Unit tests for the workout detail functionality.
+- **UserDataTests.swift**: Unit tests for user data model and WorkoutManager.
+- **WorkoutDetailTests.swift**: Unit tests for the workout detail functionality including cumulative durations, average power calculations, and workout status.
+- **WorkoutGeneratorViewModelTests.swift**: Unit tests for the AI-powered workout generator ViewModel, testing state management, workout generation, and acceptance flows.
+- **AIWorkoutGeneratorTests.swift**: Unit tests for the AI workout generation service, testing workout creation with different FTP values and workout types.
+- **WorkoutTypeTests.swift**: Unit tests for the WorkoutType enum, verifying display names, descriptions, and raw values.
+- **WorkoutManagerTests.swift**: Unit tests for WorkoutManager and WorkoutDay models, testing save/load/delete operations and date range queries.
 
 ### DroppedUITests/
-- **DroppedUITests.swift**: UI tests for the app.
+- **DroppedUITests.swift**: UI tests for the app, including onboarding flow, plan summary view, and navigation between screens.
 - **DroppedUITestsLaunchTests.swift**: UI launch tests for the app.
-- **WorkoutDetailUITests.swift**: UI tests for the workout detail view.
+- **WorkoutDetailUITests.swift**: UI tests for the workout detail view, testing navigation, interval display, and accessibility.
+- **WorkoutGeneratorUITests.swift**: UI tests for the AI workout generator feature, testing workout type selection, generation flow, and accessibility.
