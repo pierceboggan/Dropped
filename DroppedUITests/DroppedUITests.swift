@@ -132,4 +132,82 @@ final class DroppedUITests: XCTestCase {
             }
         }
     }
+    
+    @MainActor
+    func testThemeSwitching() throws {
+        // Launch app and complete onboarding
+        app.launch()
+        
+        // Complete onboarding
+        let weightTextField = app.textFields["Weight"]
+        if weightTextField.waitForExistence(timeout: 5) {
+            weightTextField.tap()
+            weightTextField.typeText("70")
+        }
+        
+        let ftpTextField = app.textFields["FTP"]
+        if ftpTextField.waitForExistence(timeout: 5) {
+            ftpTextField.tap()
+            ftpTextField.typeText("220")
+        }
+        
+        let hoursTextField = app.textFields["Hours per week"]
+        if hoursTextField.waitForExistence(timeout: 5) {
+            hoursTextField.tap()
+            hoursTextField.typeText("8")
+        }
+        
+        let generateButton = app.buttons["generatePlanButton"]
+        if generateButton.waitForExistence(timeout: 5) {
+            generateButton.tap()
+        } else {
+            app.buttons["Generate My Training Plan"].tap()
+        }
+        
+        // Navigate to settings
+        let settingsButton = app.buttons["gear"]
+        if settingsButton.waitForExistence(timeout: 5) {
+            settingsButton.tap()
+        }
+        
+        // Verify settings screen is displayed
+        let settingsNav = app.navigationBars["Settings"]
+        XCTAssertTrue(settingsNav.waitForExistence(timeout: 5), "Should navigate to Settings")
+        
+        // Find and interact with theme picker
+        let themePicker = app.segmentedControls.firstMatch
+        XCTAssertTrue(themePicker.waitForExistence(timeout: 5), "Theme picker should exist")
+        
+        // Test selecting Light theme
+        let lightButton = themePicker.buttons["Light"]
+        if lightButton.exists {
+            lightButton.tap()
+            // Brief wait to allow theme to apply
+            Thread.sleep(forTimeInterval: 0.5)
+        }
+        
+        // Test selecting Dark theme
+        let darkButton = themePicker.buttons["Dark"]
+        if darkButton.exists {
+            darkButton.tap()
+            Thread.sleep(forTimeInterval: 0.5)
+        }
+        
+        // Test selecting System theme
+        let systemButton = themePicker.buttons["System"]
+        if systemButton.exists {
+            systemButton.tap()
+            Thread.sleep(forTimeInterval: 0.5)
+        }
+        
+        // Close settings
+        let doneButton = app.buttons["Done"]
+        if doneButton.exists {
+            doneButton.tap()
+        }
+        
+        // Verify we're back on the main screen
+        let trainingPlanNav = app.navigationBars["Your Training Plan"]
+        XCTAssertTrue(trainingPlanNav.waitForExistence(timeout: 5), "Should return to main screen")
+    }
 }
