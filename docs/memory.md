@@ -12,11 +12,12 @@ This project is a SwiftUI-based iOS application structured as follows:
     - **openai.md**: Guide for calling OpenAI APIs in Swift without SDKs.
 - **specs/**: Folder containing feature specifications.
   - **workout-detail-view.md**: Specification for the workout detail view feature.
+  - **calendar-view.md**: Specification for the calendar view feature showing all workouts for the month.
 - **plans/**: Folder containing implementation plans.
   - **workout-detail-view-plan.md**: Implementation plan for the workout detail view feature.
 
 ### Dropped/
-- **ContentView.swift**: The main SwiftUI view for the app's content. Now includes navigation to the AI Workout Generator via a prominent navigation link.
+- **ContentView.swift**: The main SwiftUI view for the app's content. Now includes navigation to the AI Workout Generator and the Calendar view via prominent navigation links.
 - **Dropped.entitlements**: App entitlements configuration for permissions.
 - **DroppedApp.swift**: The main app entry point, sets up the SwiftUI app lifecycle.
 - **Assets.xcassets/**: Asset catalog for images, colors, and app icons.
@@ -41,6 +42,7 @@ This project is a SwiftUI-based iOS application structured as follows:
  - **OnboardingView.swift**: SwiftUI view for onboarding screens.
  - **PlanSummaryView.swift**: SwiftUI view summarizing user plans.
  - **SettingsView.swift**: SwiftUI view for app settings.
+ - **CalendarView.swift**: SwiftUI view displaying a monthly calendar grid showing all workouts for the current month. Users can tap on workout days to navigate to a detail view showing all workouts for that day, and then navigate to individual workout details. Accessible, supports light/dark mode, and visually consistent with the app.
  - **WorkoutGeneratorView.swift**: SwiftUI view for the AI-powered workout generator feature. Allows users to select a workout type, generate a workout using AI, and view loading/error states and the generated workout preview.
 - **WorkoutGeneratorReviewView.swift**: SwiftUI view for reviewing and accepting a generated workout. Wraps WorkoutDetailView, provides accessible Accept/Regenerate buttons, and smooth transitions.
  - **WorkoutDetailView.swift**: SwiftUI view displaying detailed information about a specific workout, including overview, intervals list, and power graph. Created as part of the workout detail feature. Accessible, supports light/dark mode, and is visually consistent with the app. Now also contains the `WorkoutDetailGraph` component for inline power/time graph visualization.
@@ -63,3 +65,4 @@ This project is a SwiftUI-based iOS application structured as follows:
 - **DroppedUITests.swift**: UI tests for the app.
 - **DroppedUITestsLaunchTests.swift**: UI launch tests for the app.
 - **WorkoutDetailUITests.swift**: UI tests for the workout detail view.
+- **CalendarViewUITests.swift**: UI tests for the calendar view, ensuring proper navigation and interaction with the calendar interface.
