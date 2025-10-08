@@ -11,6 +11,7 @@ class SettingsViewModel: ObservableObject {
     @Published var userData: UserData
     @Published var selectedWeightUnit: WeightUnit
     @Published var isMetric: Bool
+    @Published var selectedTheme: AppTheme
     
     init() {
         let loadedData = UserDataManager.shared.loadUserData()
@@ -23,6 +24,8 @@ class SettingsViewModel: ObservableObject {
             self.selectedWeightUnit = .pounds
             self.isMetric = false
         }
+        
+        self.selectedTheme = AppTheme(rawValue: loadedData.theme) ?? .system
     }
     
     func toggleUnitSystem() {
@@ -57,6 +60,15 @@ class SettingsViewModel: ObservableObject {
         userData.weightUnit = selectedWeightUnit.rawValue
         UserDataManager.shared.saveUserData(userData)
     }
+    
+    func updateTheme(_ theme: AppTheme) {
+        selectedTheme = theme
+        userData.theme = theme.rawValue
+        UserDataManager.shared.saveUserData(userData)
+        
+        // Notify observers that the theme has changed
+        NotificationCenter.default.post(name: NSNotification.Name("ThemeDidChange"), object: nil)
+    }
 }
 
 struct SettingsView: View {
@@ -66,6 +78,29 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             List {
+                // Appearance Section
+                Section(header: Text("Appearance")) {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Theme")
+                            .font(.headline)
+                        
+                        Picker("Theme", selection: $viewModel.selectedTheme) {
+                            ForEach(AppTheme.allCases) { theme in
+                                HStack {
+                                    Image(systemName: themeIcon(for: theme))
+                                    Text(theme.rawValue)
+                                }
+                                .tag(theme)
+                            }
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        .onChange(of: viewModel.selectedTheme) { _, newTheme in
+                            viewModel.updateTheme(newTheme)
+                        }
+                    }
+                    .padding(.vertical, 8)
+                }
+                
                 // Measurement Units Section
                 Section(header: Text("Measurement Units")) {
                     // Weight Units
@@ -162,6 +197,18 @@ struct SettingsView: View {
             }
         }
     }
+    
+    /// Returns an appropriate icon for the given theme
+    private func themeIcon(for theme: AppTheme) -> String {
+        switch theme {
+        case .system:
+            return "sparkles"
+        case .light:
+            return "sun.max.fill"
+        case .dark:
+            return "moon.fill"
+        }
+    }
 }
 
 struct UnitSelectionButton: View {
@@ -187,8 +234,4 @@ struct UnitSelectionButton: View {
         )
         .foregroundColor(isSelected ? .white : .primary)
     }
-}
-
-#Preview {
-    SettingsView()
 }

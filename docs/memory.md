@@ -16,9 +16,9 @@ This project is a SwiftUI-based iOS application structured as follows:
   - **workout-detail-view-plan.md**: Implementation plan for the workout detail view feature.
 
 ### Dropped/
-- **ContentView.swift**: The main SwiftUI view for the app's content. Now includes navigation to the AI Workout Generator via a prominent navigation link.
+- **ContentView.swift**: The main SwiftUI view for the app's content. Now includes navigation to the AI Workout Generator and Settings via navigation links.
 - **Dropped.entitlements**: App entitlements configuration for permissions.
-- **DroppedApp.swift**: The main app entry point, sets up the SwiftUI app lifecycle.
+- **DroppedApp.swift**: The main app entry point, sets up the SwiftUI app lifecycle. Contains ThemeManager class that observes and applies user's theme preference (system, light, or dark) across the entire app.
 - **Assets.xcassets/**: Asset catalog for images, colors, and app icons.
   - **AccentColor.colorset/**: Accent color definition.
   - **AppIcon.appiconset/**: App icon images and metadata.
@@ -28,6 +28,8 @@ This project is a SwiftUI-based iOS application structured as follows:
   - `Interval`: Represents a single workout interval (power, duration, etc).
   - `Workout`: Represents a workout, including title, date, summary, and intervals.
   - `WorkoutDay`: Merges user data and workout data for a specific day, associating a user's state with a performed workout and optional notes.
+  - `AppTheme`: Enum defining available app themes (system, light, dark) with helper methods to convert to SwiftUI ColorScheme.
+  - `UserData` now includes a `theme` field to persist user's color scheme preference.
 
 - **WorkoutType.swift**: Enum defining the types of cycling workouts (endurance, threshold, vo2Max, sprint, recovery) for user selection and AI prompt construction. Used in the workout generator feature.
 - **AIWorkoutGenerator.swift**: Service for generating structured cycling workouts using the OpenAI API. Handles prompt construction, API requests, and response parsing for the workout generator feature.
@@ -40,7 +42,7 @@ This project is a SwiftUI-based iOS application structured as follows:
  - **InfoPopupView.swift**: SwiftUI view for displaying informational popups.
  - **OnboardingView.swift**: SwiftUI view for onboarding screens.
  - **PlanSummaryView.swift**: SwiftUI view summarizing user plans.
- - **SettingsView.swift**: SwiftUI view for app settings.
+ - **SettingsView.swift**: SwiftUI view for app settings. Includes theme selection (system, light, dark) via segmented picker in the Appearance section, and unit preference settings for weight measurements.
  - **WorkoutGeneratorView.swift**: SwiftUI view for the AI-powered workout generator feature. Allows users to select a workout type, generate a workout using AI, and view loading/error states and the generated workout preview.
 - **WorkoutGeneratorReviewView.swift**: SwiftUI view for reviewing and accepting a generated workout. Wraps WorkoutDetailView, provides accessible Accept/Regenerate buttons, and smooth transitions.
  - **WorkoutDetailView.swift**: SwiftUI view displaying detailed information about a specific workout, including overview, intervals list, and power graph. Created as part of the workout detail feature. Accessible, supports light/dark mode, and is visually consistent with the app. Now also contains the `WorkoutDetailGraph` component for inline power/time graph visualization.
@@ -63,3 +65,4 @@ This project is a SwiftUI-based iOS application structured as follows:
 - **DroppedUITests.swift**: UI tests for the app.
 - **DroppedUITestsLaunchTests.swift**: UI launch tests for the app.
 - **WorkoutDetailUITests.swift**: UI tests for the workout detail view.
+- **ThemeUITests.swift**: UI tests for theme switching functionality. Tests the ability to select and persist theme preferences.
