@@ -30,7 +30,7 @@ request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
 let chatRequest = ChatRequest(
-    model: "gpt-3.5-turbo",
+    model: "gpt-4o-mini",
     messages: [
         ["role": "user", "content": "Hello!"]
     ]
