@@ -12,6 +12,7 @@ This project is a SwiftUI-based iOS application structured as follows:
     - **openai.md**: Guide for calling OpenAI APIs in Swift without SDKs.
 - **specs/**: Folder containing feature specifications.
   - **workout-detail-view.md**: Specification for the workout detail view feature.
+  - **calendar-view.md**: Specification for the calendar view feature showing all workouts for the month.
 - **plans/**: Folder containing implementation plans.
   - **workout-detail-view-plan.md**: Implementation plan for the workout detail view feature.
 
