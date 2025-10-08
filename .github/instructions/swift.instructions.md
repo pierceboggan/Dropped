@@ -1,12 +1,11 @@
 ---
-applyTo: "**"
+applyTo: "**/*.swift"
 ---
 
-CODE RULES:: 
+CODE RULES:
 
-- Make the UI look nice on the eyes
 - UI should feel consistent across app. For example, if going from one screen to the next in navigation, the visual elements should look like they belong together
-- Generate accessible UI by default
+- Generate accessible UI
 - When creating new components, always place them at the bottom of the file (not in a SwiftUI code block)
 - Do not use Swift previews in the code, they are not supported in this environment
 
