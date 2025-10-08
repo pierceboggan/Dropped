@@ -24,7 +24,7 @@ enum AIWorkoutGeneratorError: Error {
 final class AIWorkoutGenerator {
     private let apiKey: String
     private let endpoint = URL(string: "https://api.openai.com/v1/chat/completions")!
-    private let model = "gpt-3.5-turbo"
+    private let model = "gpt-4o-mini"
 
     /// Initialize with OpenAI API key
     init(apiKey: String) {
