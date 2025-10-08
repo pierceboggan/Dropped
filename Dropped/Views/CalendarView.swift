@@ -186,6 +186,7 @@ private struct CalendarDayCell: View {
         )
         .accessibilityElement(children: .combine)
         .accessibilityLabel(day != nil ? "Day \(day!)\(hasWorkouts ? ", \(workouts.count) workout\(workouts.count > 1 ? "s" : "")" : "")" : "")
+        .accessibilityIdentifier(day != nil ? "CalendarDay\(day!)" : "")
     }
 }
 

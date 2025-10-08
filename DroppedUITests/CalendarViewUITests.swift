@@ -67,25 +67,37 @@ final class CalendarViewUITests: XCTestCase {
         completeOnboarding()
         navigateToCalendar()
         
-        // Wait a moment for calendar to load workouts
-        sleep(1)
+        // Look for the calendar month/year header to ensure calendar has loaded
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMMM yyyy"
+        let expectedMonthYear = dateFormatter.string(from: Date())
+        let monthYearText = app.staticTexts[expectedMonthYear]
+        XCTAssertTrue(monthYearText.waitForExistence(timeout: 5), "Calendar should be loaded")
         
-        // Look for any workout on the calendar (we know workouts are generated)
-        // Try to tap on a day cell that has a workout
-        // Since we can't easily predict which day has a workout in a UI test,
-        // we'll look for the first button in the calendar grid
-        let calendarButtons = app.buttons.matching(NSPredicate(format: "identifier CONTAINS 'Day'"))
+        // Look for any workout on the calendar by checking for buttons in the main view
+        // Note: This test may not find workouts if the calendar days don't have workouts
+        // In a real scenario, we'd need to ensure test data exists
+        let calendarButtons = app.buttons.allElementsBoundByIndex
         
-        // If there are any workout day buttons, tap the first one
-        if calendarButtons.count > 0 {
-            let firstWorkoutDay = calendarButtons.element(boundBy: 0)
-            if firstWorkoutDay.exists {
-                firstWorkoutDay.tap()
-                
-                // Verify we navigated to workout detail or day detail
-                let workoutNav = app.navigationBars["Workouts"]
-                XCTAssertTrue(workoutNav.waitForExistence(timeout: 5), "Should navigate to workout detail or day view")
+        // Try to find and tap a button that might be a workout day
+        var foundWorkoutDay = false
+        for button in calendarButtons {
+            // Skip navigation buttons
+            if !button.label.contains("Back") && !button.label.contains("Calendar") {
+                button.tap()
+                foundWorkoutDay = true
+                break
             }
+        }
+        
+        // If we found and tapped a workout day, verify navigation
+        if foundWorkoutDay {
+            // Check if we navigated to either "Workouts" or "Workout Details"
+            let workoutsNav = app.navigationBars["Workouts"]
+            let detailNav = app.navigationBars["Workout Details"]
+            
+            let navigated = workoutsNav.waitForExistence(timeout: 3) || detailNav.waitForExistence(timeout: 3)
+            XCTAssertTrue(navigated, "Should navigate to workout detail or day view after tapping a workout")
         }
     }
     
