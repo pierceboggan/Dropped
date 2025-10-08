@@ -16,7 +16,6 @@ class OnboardingViewModel: ObservableObject {
     @Published var selectedGoal: TrainingGoal = .haveFun
     @Published var selectedWeightUnit: WeightUnit = .pounds // Default to American units
     @Published var isMetric: Bool = false
-    @Published var showStonesOption: Bool = false
     
     @Published var weightError: String? = nil
     @Published var ftpError: String? = nil
@@ -32,8 +31,6 @@ class OnboardingViewModel: ObservableObject {
                 self.selectedWeightUnit = storedUnit
                 // Set isMetric based on the stored unit preference
                 self.isMetric = (storedUnit == .kilograms)
-                // Set showStonesOption if stones was previously selected
-                self.showStonesOption = (storedUnit == .stones)
             }
             
             // Convert the stored weight (in kg) to the selected unit and format it
@@ -104,19 +101,16 @@ class OnboardingViewModel: ObservableObject {
         if isMetric {
             convertWeight(to: .kilograms)
             selectedWeightUnit = .kilograms
-            showStonesOption = false
         } else {
-            // If switching to imperial, use previously selected imperial unit or default to pounds
+            // If switching to imperial, use pounds
             if selectedWeightUnit == .kilograms {
                 convertWeight(to: .pounds)
                 selectedWeightUnit = .pounds
             }
-            // Allow showing stones option when in imperial mode
-            showStonesOption = true
         }
     }
     
-    // Handle weight unit selection within the same system (e.g., between pounds and stones)
+    // Handle weight unit selection within the same system (e.g., between pounds and kilograms)
     func selectWeightUnit(_ unit: WeightUnit) {
         if unit != selectedWeightUnit {
             convertWeight(to: unit)

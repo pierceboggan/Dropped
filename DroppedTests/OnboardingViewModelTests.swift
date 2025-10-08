@@ -137,17 +137,6 @@ final class OnboardingViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.selectedWeightUnit, .pounds, "Default unit should be pounds")
         viewModel.weight = "154.0" // in pounds
         
-        // Switch to stones
-        viewModel.selectWeightUnit(.stones)
-        
-        // Check state
-        XCTAssertEqual(viewModel.selectedWeightUnit, .stones, "Unit should be stones")
-        XCTAssertFalse(viewModel.isMetric, "Should still be imperial")
-        
-        // Check weight conversion (154 lb ≈ 11 stones)
-        let convertedWeight = Double(viewModel.weight) ?? 0
-        XCTAssertEqual(convertedWeight, 11.0, accuracy: 0.1, "Weight should be converted from lb to stones")
-        
         // Switch to kilograms
         viewModel.selectWeightUnit(.kilograms)
         
@@ -155,9 +144,20 @@ final class OnboardingViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.selectedWeightUnit, .kilograms, "Unit should be kilograms")
         XCTAssertTrue(viewModel.isMetric, "Should be metric")
         
-        // Check weight conversion (11 stones ≈ 69.85 kg)
+        // Check weight conversion (154 lb ≈ 69.85 kg)
         let convertedToKgWeight = Double(viewModel.weight) ?? 0
-        XCTAssertEqual(convertedToKgWeight, 69.9, accuracy: 0.1, "Weight should be converted from stones to kg")
+        XCTAssertEqual(convertedToKgWeight, 69.9, accuracy: 0.1, "Weight should be converted from lb to kg")
+        
+        // Switch back to pounds
+        viewModel.selectWeightUnit(.pounds)
+        
+        // Check state
+        XCTAssertEqual(viewModel.selectedWeightUnit, .pounds, "Unit should be pounds")
+        XCTAssertFalse(viewModel.isMetric, "Should be imperial")
+        
+        // Check weight conversion (69.9 kg ≈ 154 lb)
+        let convertedBackToLbWeight = Double(viewModel.weight) ?? 0
+        XCTAssertEqual(convertedBackToLbWeight, 154.0, accuracy: 0.1, "Weight should be converted from kg back to lb")
     }
     
     func testSaveUserData() throws {

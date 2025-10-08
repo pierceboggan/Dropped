@@ -123,25 +123,6 @@ struct OnboardingView: View {
                     )
                 }
             }
-            
-            // Weight unit refinement if in imperial mode
-            if !viewModel.isMetric && viewModel.showStonesOption {
-                HStack(spacing: 12) {
-                    Text("Weight Unit:")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    
-                    Picker("Imperial Unit", selection: $viewModel.selectedWeightUnit) {
-                        Text("Pounds (lb)").tag(WeightUnit.pounds)
-                        Text("Stones (st)").tag(WeightUnit.stones)
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                    .onChange(of: viewModel.selectedWeightUnit) { _, newUnit in
-                        viewModel.selectWeightUnit(newUnit)
-                    }
-                }
-                .padding(.top, 8)
-            }
         }
         .padding()
         .background(
