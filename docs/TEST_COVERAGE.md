@@ -44,7 +44,7 @@ This document provides an overview of all tests added to ensure comprehensive co
 **Tests**:
 - `testGeneratorInitialization()` - Verifies service initialization
 - `testGenerateWorkoutSuccess()` - Tests successful workout generation
-- `testGenerateWorkoutWithDifferentTypes()` - Tests all workout types (endurance, threshold, VO2 max, sprint, recovery)
+- `testGenerateWorkoutWithDifferentTypes()` - Tests all workout types (endurance, threshold, vo2Max, sprint, recovery)
 - `testGenerateWorkoutWithDifferentFTP()` - Tests generation with various FTP values
 - `testGenerateWorkoutCallbackOnMainQueue()` - Verifies async callback execution
 - `testWorkoutJSONStructure()` - Validates JSON structure and parsing
@@ -96,10 +96,10 @@ This document provides an overview of all tests added to ensure comprehensive co
 **Purpose**: Tests user data model and manager (existing tests + new additions)
 
 **New Tests Added**:
-- `testAddWorkoutToSchedule()` - Tests adding workouts to user schedule
-- `testWorkoutManagerSaveAndLoad()` - Tests WorkoutManager save/load operations
-- `testWorkoutManagerDelete()` - Tests workout deletion
-- `testWorkoutManagerUpdate()` - Tests updating existing workouts
+- `testAddWorkoutToSchedule()` - Tests adding workouts to user schedule, verifying data persistence, ID consistency, and WorkoutManager integration
+- `testWorkoutManagerSaveAndLoad()` - Tests WorkoutManager save/load operations with data integrity verification
+- `testWorkoutManagerDelete()` - Tests workout deletion and cleanup
+- `testWorkoutManagerUpdate()` - Tests updating existing workouts and verifying changes persist
 
 **Coverage**: User data, weight conversions, WorkoutManager integration
 
@@ -194,4 +194,4 @@ This document provides an overview of all tests added to ensure comprehensive co
 - Unit Tests: 8 files
 - UI Tests: 4 files
 
-### Estimated Test Count: 100+ individual test cases
+### Estimated Test Count: 77+ test functions across all test files
