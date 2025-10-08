@@ -13,7 +13,7 @@ The Dropped app now supports light, dark, and system theme preferences. Users ca
    - System theme returns `nil` to use the device's system preference
 
 2. **ThemeManager** (`Dropped/DroppedApp.swift`)
-   - Observable object that manages the current theme state
+   - Observable class defined within DroppedApp.swift that manages the current theme state
    - Loads the user's theme preference on initialization
    - Listens for theme changes via NotificationCenter
    - Automatically updates when theme preference changes
@@ -77,7 +77,7 @@ The Dropped app now supports light, dark, and system theme preferences. Users ca
 ### Migration
 - Existing users will default to system theme
 - No data migration required as the field has a default value
-- OnboardingViewModel sets system theme for new users
+- New users are assigned system theme as default during onboarding
 
 ## Accessibility
 - Theme icons provide visual cues for each option
