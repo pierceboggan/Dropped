@@ -58,11 +58,9 @@ This project is a SwiftUI-based iOS application structured as follows:
 - **DroppedTests.swift**: General unit tests for the app.
 - **OnboardingViewModelTests.swift**: Unit tests for onboarding ViewModel.
 - **UserDataTests.swift**: Unit tests for user data model.
-- **WorkoutDetailTests.swift**: Unit tests for the workout detail functionality.
 - **WorkoutsListTests.swift**: Unit tests for the workouts list functionality, including WorkoutManager operations and status filtering.
 
 ### DroppedUITests/
 - **DroppedUITests.swift**: UI tests for the app.
 - **DroppedUITestsLaunchTests.swift**: UI launch tests for the app.
-- **WorkoutDetailUITests.swift**: UI tests for the workout detail view.
 - **WorkoutsListUITests.swift**: UI tests for the workouts list view, including navigation and filter functionality.
