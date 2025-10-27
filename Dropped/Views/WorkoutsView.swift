@@ -21,7 +21,7 @@ import SwiftUI
 struct WorkoutsView: View {
     @State private var workouts: [Workout] = []
     @State private var selectedFilter: WorkoutStatus? = nil
-    @State private var userData: UserData = UserDataManager.shared.loadUserData()
+    @State private var userData: UserData = UserData.defaultData
     
     // Filtered workouts based on selected status
     private var filteredWorkouts: [Workout] {
