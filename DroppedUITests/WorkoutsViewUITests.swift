@@ -86,8 +86,8 @@ final class WorkoutsViewUITests: XCTestCase {
         if filterButton.waitForExistence(timeout: 5) {
             filterButton.tap()
             
-            // Check that menu items appear
-            sleep(1)
+            // Wait for menu to appear - check if menu items are displayed
+            let menuAppeared = app.menuItems.firstMatch.waitForExistence(timeout: 3) || app.buttons.firstMatch.waitForExistence(timeout: 3)
             
             // Menu should have options - we can verify by checking if menu items exist
             // The menu will contain sort and filter options
@@ -109,12 +109,11 @@ final class WorkoutsViewUITests: XCTestCase {
             workoutsLink.tap()
         }
         
-        // Should show either workouts from the plan or an empty state
-        // After onboarding, the plan generates workouts, so we expect to see them
-        sleep(1)
+        // Wait for workouts view to load
+        let workoutsView = app.otherElements["workoutsView"]
+        XCTAssertTrue(workoutsView.waitForExistence(timeout: 5), "Workouts view should load")
         
         // Just verify the view loads successfully
-        let workoutsView = app.otherElements["workoutsView"]
         XCTAssertTrue(workoutsView.exists, "Workouts view should be displayed")
     }
     
@@ -130,7 +129,8 @@ final class WorkoutsViewUITests: XCTestCase {
         }
         
         // Wait for view to load
-        sleep(2)
+        let workoutsView = app.otherElements["workoutsView"]
+        XCTAssertTrue(workoutsView.waitForExistence(timeout: 5), "Workouts view should load")
         
         // Try to find and tap on a workout card
         // Look for common workout title patterns
@@ -192,6 +192,7 @@ final class WorkoutsViewUITests: XCTestCase {
         }
         
         // Wait for navigation to complete
-        sleep(2)
+        let planNav = app.navigationBars["Your Training Plan"]
+        XCTAssertTrue(planNav.waitForExistence(timeout: 5), "Should navigate to training plan")
     }
 }
