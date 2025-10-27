@@ -65,3 +65,4 @@ This project is a SwiftUI-based iOS application structured as follows:
 - **DroppedUITests.swift**: UI tests for the app.
 - **DroppedUITestsLaunchTests.swift**: UI launch tests for the app.
 - **WorkoutDetailUITests.swift**: UI tests for the workout detail view.
+- **WorkoutsListUITests.swift**: UI tests for the workouts list view, including navigation and filter functionality.
