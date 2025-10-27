@@ -21,6 +21,7 @@ import SwiftUI
 struct WorkoutsView: View {
     @State private var workouts: [Workout] = []
     @State private var selectedFilter: WorkoutStatus? = nil
+    @State private var userData: UserData = UserDataManager.shared.loadUserData()
     
     // Filtered workouts based on selected status
     private var filteredWorkouts: [Workout] {
@@ -106,10 +107,10 @@ struct WorkoutsView: View {
                                 .padding(.top, 8)
                                 .accessibilityAddTraits(.isHeader)
                             
-                            // Workouts for this date
-                            ForEach(groupedWorkouts[date] ?? []) { workout in
+                            // Workouts for this date, sorted by time
+                            ForEach((groupedWorkouts[date] ?? []).sorted(by: { $0.date < $1.date })) { workout in
                                 NavigationLink(destination: WorkoutDetailView(workout: workout)) {
-                                    WorkoutListCard(workout: workout)
+                                    WorkoutListCard(workout: workout, userData: userData)
                                 }
                                 .buttonStyle(PlainButtonStyle())
                             }
@@ -130,6 +131,7 @@ struct WorkoutsView: View {
     // Load workouts from WorkoutManager
     private func loadWorkouts() {
         workouts = WorkoutManager.shared.loadWorkouts()
+        userData = UserDataManager.shared.loadUserData()
     }
     
     // Format date for section headers
@@ -179,6 +181,7 @@ private struct FilterPill: View {
 /// Card view for displaying workout information in the list
 private struct WorkoutListCard: View {
     let workout: Workout
+    let userData: UserData
     
     // Status badge color
     private var statusColor: Color {
@@ -196,7 +199,6 @@ private struct WorkoutListCard: View {
     
     // Intensity color based on average power
     private var intensityColor: Color {
-        let userData = UserDataManager.shared.loadUserData()
         let avgPower = workout.averagePower
         let ftpPercent = userData.ftp > 0 ?
             Double(avgPower) / Double(userData.ftp) : 0.75
