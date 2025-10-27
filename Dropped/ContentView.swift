@@ -17,6 +17,9 @@ struct ContentView: View {
                     NavigationLink(destination: PlanSummaryView(hasCompletedOnboarding: $hasCompletedOnboarding)) {
                         Label("Training Plan", systemImage: "calendar.badge.clock")
                     }
+                    NavigationLink(destination: WorkoutsView()) {
+                        Label("Workouts", systemImage: "figure.indoor.cycle")
+                    }
                     NavigationLink(destination: {
                         // Inject dependencies for the generator
                         let userData = UserDataManager.shared.loadUserData()
