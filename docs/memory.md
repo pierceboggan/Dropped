@@ -45,6 +45,7 @@ This project is a SwiftUI-based iOS application structured as follows:
 - **WorkoutGeneratorReviewView.swift**: SwiftUI view for reviewing and accepting a generated workout. Wraps WorkoutDetailView, provides accessible Accept/Regenerate buttons, and smooth transitions.
  - **WorkoutDetailView.swift**: SwiftUI view displaying detailed information about a specific workout, including overview, intervals list, and power graph. Created as part of the workout detail feature. Accessible, supports light/dark mode, and is visually consistent with the app. Now also contains the `WorkoutDetailGraph` component for inline power/time graph visualization.
  - **WorkoutDetailGraph.swift**: (No longer used; graph is now implemented inline in WorkoutDetailView.swift.)
+ - **WorkoutsListView.swift**: SwiftUI view for displaying a list of all workouts. Shows workouts from WorkoutManager with filtering by status (All, Scheduled, Completed, Skipped). Provides navigation to workout details and handles empty state gracefully.
 
 ### Dropped.xcodeproj/
 - **project.pbxproj**: Xcode project configuration file.
@@ -57,9 +58,9 @@ This project is a SwiftUI-based iOS application structured as follows:
 - **DroppedTests.swift**: General unit tests for the app.
 - **OnboardingViewModelTests.swift**: Unit tests for onboarding ViewModel.
 - **UserDataTests.swift**: Unit tests for user data model.
-- **WorkoutDetailTests.swift**: Unit tests for the workout detail functionality.
+- **WorkoutsListTests.swift**: Unit tests for the workouts list functionality, including WorkoutManager operations and status filtering.
 
 ### DroppedUITests/
 - **DroppedUITests.swift**: UI tests for the app.
 - **DroppedUITestsLaunchTests.swift**: UI launch tests for the app.
-- **WorkoutDetailUITests.swift**: UI tests for the workout detail view.
+- **WorkoutsListUITests.swift**: UI tests for the workouts list view, including navigation and filter functionality.
