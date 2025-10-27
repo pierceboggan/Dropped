@@ -16,7 +16,7 @@ This project is a SwiftUI-based iOS application structured as follows:
   - **workout-detail-view-plan.md**: Implementation plan for the workout detail view feature.
 
 ### Dropped/
-- **ContentView.swift**: The main SwiftUI view for the app's content. Now includes navigation to the AI Workout Generator via a prominent navigation link.
+- **ContentView.swift**: The main SwiftUI view for the app's content. Includes navigation to the Training Plan, Workouts list, and AI Workout Generator via prominent navigation links.
 - **Dropped.entitlements**: App entitlements configuration for permissions.
 - **DroppedApp.swift**: The main app entry point, sets up the SwiftUI app lifecycle.
 - **Assets.xcassets/**: Asset catalog for images, colors, and app icons.
@@ -45,6 +45,7 @@ This project is a SwiftUI-based iOS application structured as follows:
 - **WorkoutGeneratorReviewView.swift**: SwiftUI view for reviewing and accepting a generated workout. Wraps WorkoutDetailView, provides accessible Accept/Regenerate buttons, and smooth transitions.
  - **WorkoutDetailView.swift**: SwiftUI view displaying detailed information about a specific workout, including overview, intervals list, and power graph. Created as part of the workout detail feature. Accessible, supports light/dark mode, and is visually consistent with the app. Now also contains the `WorkoutDetailGraph` component for inline power/time graph visualization.
  - **WorkoutDetailGraph.swift**: (No longer used; graph is now implemented inline in WorkoutDetailView.swift.)
+ - **WorkoutsView.swift**: SwiftUI view for displaying a comprehensive list of all workouts. Features include filtering by workout status (scheduled, completed, skipped), sorting by date or title, and navigation to individual workout details. Includes WorkoutsViewModel for state management and WorkoutListCard component for displaying workout information in a list format.
 
 ### Dropped.xcodeproj/
 - **project.pbxproj**: Xcode project configuration file.
@@ -58,8 +59,10 @@ This project is a SwiftUI-based iOS application structured as follows:
 - **OnboardingViewModelTests.swift**: Unit tests for onboarding ViewModel.
 - **UserDataTests.swift**: Unit tests for user data model.
 - **WorkoutDetailTests.swift**: Unit tests for the workout detail functionality.
+- **WorkoutsViewModelTests.swift**: Unit tests for WorkoutsViewModel including filtering and sorting functionality.
 
 ### DroppedUITests/
 - **DroppedUITests.swift**: UI tests for the app.
 - **DroppedUITestsLaunchTests.swift**: UI launch tests for the app.
 - **WorkoutDetailUITests.swift**: UI tests for the workout detail view.
+- **WorkoutsViewUITests.swift**: UI tests for the workouts list view, including navigation, filtering, and interaction with workout cards.
