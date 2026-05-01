@@ -254,6 +254,7 @@ class WorkoutManager {
     static let shared = WorkoutManager()
     private let workoutsKey = "com.dropped.workouts"
     private let workoutDaysKey = "com.dropped.workoutDays"
+    private let workoutLogsKey = "com.dropped.workoutLogs"
     private let defaults: UserDefaults
     
     /// Internal so tests can construct an isolated instance.
@@ -355,6 +356,54 @@ class WorkoutManager {
     func resetWorkouts() {
         defaults.removeObject(forKey: workoutsKey)
         defaults.removeObject(forKey: workoutDaysKey)
+        defaults.removeObject(forKey: workoutLogsKey)
+    }
+
+    // MARK: - WorkoutLog Management
+
+    /// Persist a completion log. Replaces any existing log with the same `id`,
+    /// otherwise appends the new entry.
+    func saveLog(_ log: WorkoutLog) {
+        var logs = loadLogs()
+
+        if let index = logs.firstIndex(where: { $0.id == log.id }) {
+            logs[index] = log
+        } else {
+            logs.append(log)
+        }
+
+        saveLogs(logs)
+    }
+
+    /// Load every persisted `WorkoutLog`. Returns an empty array when none
+    /// exist or the stored payload is unreadable.
+    func loadLogs() -> [WorkoutLog] {
+        guard let data = defaults.data(forKey: workoutLogsKey),
+              let logs = try? JSONDecoder().decode([WorkoutLog].self, from: data) else {
+            return []
+        }
+
+        return logs
+    }
+
+    /// Look up the most recent log for a given workout ID.
+    ///
+    /// The current model assumes one log per workout, but the API is keyed by
+    /// `workoutID` (not log id) so we can safely relax that invariant later
+    /// without changing call sites.
+    func log(forWorkoutID workoutID: UUID) -> WorkoutLog? {
+        loadLogs()
+            .filter { $0.workoutID == workoutID }
+            .max(by: { $0.completedAt < $1.completedAt })
+    }
+
+    /// Remove every log associated with a workout. No-op when no logs match.
+    func deleteLog(forWorkoutID workoutID: UUID) {
+        var logs = loadLogs()
+        let originalCount = logs.count
+        logs.removeAll { $0.workoutID == workoutID }
+        guard logs.count != originalCount else { return }
+        saveLogs(logs)
     }
 
     private func saveWorkouts(_ workouts: [Workout]) {
@@ -373,5 +422,14 @@ class WorkoutManager {
         }
 
         defaults.set(data, forKey: workoutDaysKey)
+    }
+
+    private func saveLogs(_ logs: [WorkoutLog]) {
+        guard let data = try? JSONEncoder().encode(logs) else {
+            assertionFailure("Failed to encode workout logs.")
+            return
+        }
+
+        defaults.set(data, forKey: workoutLogsKey)
     }
 }

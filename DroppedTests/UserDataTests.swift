@@ -118,11 +118,19 @@ final class UserDataTests: XCTestCase {
         )
 
         WorkoutManager.shared.saveWorkout(workout)
+        WorkoutManager.shared.saveLog(WorkoutLog(
+            workoutID: workout.id,
+            completedAt: Date(),
+            perceivedExertion: 6,
+            userDataSnapshot: UserData.defaultData
+        ))
 
         XCTAssertEqual(WorkoutManager.shared.loadWorkouts(), [workout], "Saved workouts should load from persisted storage")
+        XCTAssertFalse(WorkoutManager.shared.loadLogs().isEmpty, "Log fixture should persist before reset")
 
         WorkoutManager.shared.resetWorkouts()
 
         XCTAssertTrue(WorkoutManager.shared.loadWorkouts().isEmpty, "Reset should clear persisted workouts")
+        XCTAssertTrue(WorkoutManager.shared.loadLogs().isEmpty, "Reset should also clear persisted logs")
     }
 }
