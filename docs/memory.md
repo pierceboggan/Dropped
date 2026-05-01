@@ -37,6 +37,11 @@ This project is a SwiftUI-based iOS cycling training application.
 - **WorkoutGeneratorViewModel.swift**: AI workout generator state, loading/error handling, and generated-workout acceptance into persisted workout storage.
 - **WorkoutLogViewModel.swift**: Form-state owner for the workout-completion sheet. Validates RPE, manages optional metric toggles, and bridges save / delete to `WorkoutManager`.
 - **FTPTestResultViewModel.swift**: Validates a rider's FTP-test result entry, computes the new FTP, and persists it via injected `UserDataManager`/`WorkoutManager` (also marks the source test workout completed).
+- **IntervalPlayerViewModel.swift**: Pure, testable state machine for the in-app interval player. Drives interval progression via an injectable wall-clock and emits `IntervalPlayerCueIntent` values for audio/haptic side effects.
+
+#### Dropped/Services/
+
+- **IntervalCueService.swift**: Translates `IntervalPlayerCueIntent` values into AVFoundation system sounds, `UIImpactFeedbackGenerator` haptics, and `AVSpeechSynthesizer` spoken cues. Configures the shared `AVAudioSession` for playback during a session.
 
 #### Dropped/Views/
 
@@ -44,7 +49,8 @@ This project is a SwiftUI-based iOS cycling training application.
 - **OnboardingView.swift**: Rider profile setup screen.
 - **PlanSummaryView.swift**: Training plan summary, generated workout cards (with completion badges), settings entry point, and onboarding reset.
 - **SettingsView.swift**: Settings screen for preferred weight units and app information.
-- **WorkoutDetailView.swift**: Detailed workout screen with overview, completion summary, interval list, inline power/time graph, and the "Mark Complete" / "Edit Log" CTA.
+- **WorkoutDetailView.swift**: Detailed workout screen with overview, completion summary, interval list, inline power/time graph, a "Start workout" CTA that presents the full-screen interval player, and the "Mark Complete" / "Edit Log" CTA.
+- **IntervalPlayerView.swift**: Full-screen guided interval player. Hosts `IntervalPlayerViewModel`, drives a 10 Hz timer, plays cues via `IntervalCueService`, keeps the screen awake (`isIdleTimerDisabled`), and exposes pause/resume/skip/end-early controls.
 - **WorkoutGeneratorView.swift**: AI workout type selection and generation screen.
 - **WorkoutGeneratorReviewView.swift**: Review surface for accepting or regenerating an AI-generated workout.
 - **WorkoutLogSheet.swift**: Modal form for logging a completed workout — RPE, optional avg power / HR / duration override, notes, and "Remove Log" when editing.
@@ -65,6 +71,7 @@ This project is a SwiftUI-based iOS cycling training application.
 - **PowerZonesTests.swift**: Unit tests for Coggan zone boundary classification, watt-range computation across FTPs (including FTP=0), and `UserData.powerZones`.
 - **FTPTestWorkoutsTests.swift**: Unit tests for the structure of built-in FTP test workouts and `Workout` codable backward compatibility for the new `testKind` field.
 - **FTPTestResultViewModelTests.swift**: Unit tests for the result-entry view model using isolated `UserDefaults`, covering profile updates, validation, and the source-workout completion side effect.
+- **IntervalPlayerViewModelTests.swift**: Unit tests for the interval player state machine: lifecycle, tick advancement across boundaries (including multi-interval jumps), countdown cue de-duplication, pause/resume across simulated background gaps, skip, end-early, natural completion, progress monotonicity, and watts/%FTP calculations.
 
 ### DroppedUITests/
 

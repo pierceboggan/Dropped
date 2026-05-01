@@ -11,6 +11,8 @@ struct WorkoutDetailView: View {
     @State private var isShowingLogSheet = false
     /// Drives presentation of the FTP-test result entry sheet (test workouts only).
     @State private var showingResultEntry = false
+    /// Controls presentation of the full-screen interval player.
+    @State private var isPlayerPresented: Bool = false
 
     var body: some View {
         ScrollView {
@@ -23,6 +25,7 @@ struct WorkoutDetailView: View {
                 if let log {
                     WorkoutLogSummaryCard(log: log, plannedDuration: workout.totalDuration)
                 }
+                startWorkoutButton
                 intervalsSection
                 powerProfileSection
                 completionCTA
@@ -43,6 +46,12 @@ struct WorkoutDetailView: View {
                let testType = FTPTestType(rawValue: testTypeRaw) {
                 FTPTestResultEntryView(testType: testType, sourceWorkout: workout)
             }
+        }
+        .fullScreenCover(isPresented: $isPlayerPresented) {
+            IntervalPlayerView(
+                workout: workout,
+                ftp: UserDataManager.shared.loadUserData().ftp
+            )
         }
     }
 
@@ -85,6 +94,33 @@ struct WorkoutDetailView: View {
             .cornerRadius(12)
         }
         .accessibilityIdentifier("logFTPTestResultButton")
+    }
+
+    /// Primary CTA that launches the guided interval player. Disabled when the
+    /// workout has no intervals to play.
+    private var startWorkoutButton: some View {
+        Button {
+            isPlayerPresented = true
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: "play.fill")
+                Text("Start workout")
+                    .fontWeight(.semibold)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 14)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(workout.intervals.isEmpty ? Color.gray.opacity(0.4) : Color.accentColor)
+            )
+            .foregroundColor(.white)
+        }
+        .buttonStyle(.plain)
+        .disabled(workout.intervals.isEmpty)
+        .accessibilityLabel("Start workout")
+        .accessibilityHint(workout.intervals.isEmpty
+            ? "This workout has no intervals to play"
+            : "Begins a guided interval session")
     }
 
     /// List of workout intervals, or an empty state if the workout has none.
