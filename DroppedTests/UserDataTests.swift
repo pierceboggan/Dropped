@@ -9,6 +9,15 @@ import XCTest
 @testable import Dropped
 
 final class UserDataTests: XCTestCase {
+    override func setUpWithError() throws {
+        UserDataManager.shared.resetUserData()
+        WorkoutManager.shared.resetWorkouts()
+    }
+
+    override func tearDownWithError() throws {
+        UserDataManager.shared.resetUserData()
+        WorkoutManager.shared.resetWorkouts()
+    }
     
     func testWeightUnitConversion() throws {
         // Test pounds to kilograms
@@ -53,8 +62,7 @@ final class UserDataTests: XCTestCase {
         XCTAssertEqual(loadedData.trainingHoursPerWeek, testData.trainingHoursPerWeek, "Loaded training hours should match saved hours")
         XCTAssertEqual(loadedData.trainingGoal, testData.trainingGoal, "Loaded training goal should match saved goal")
         
-        // Clean up by resetting to default data
-        UserDataManager.shared.saveUserData(UserData.defaultData)
+        UserDataManager.shared.resetUserData()
     }
     
     func testUserDataDisplayWeight() throws {
@@ -86,9 +94,6 @@ final class UserDataTests: XCTestCase {
     }
     
     func testHasCompletedOnboarding() throws {
-        // Remove any existing user data
-        UserDefaults.standard.removeObject(forKey: "com.dropped.userdata")
-        
         // Initially should indicate onboarding not completed
         XCTAssertFalse(UserDataManager.shared.hasCompletedOnboarding(), "Onboarding should not be completed after clearing data")
         
@@ -98,7 +103,26 @@ final class UserDataTests: XCTestCase {
         // Should now indicate onboarding is completed
         XCTAssertTrue(UserDataManager.shared.hasCompletedOnboarding(), "Onboarding should be completed after saving data")
         
-        // Clean up
-        UserDefaults.standard.removeObject(forKey: "com.dropped.userdata")
+        UserDataManager.shared.resetUserData()
+    }
+
+    func testWorkoutManagerSaveLoadAndReset() throws {
+        let workout = Workout(
+            title: "Endurance",
+            date: Date(),
+            summary: "Steady endurance ride",
+            intervals: [
+                Interval(watts: 140, duration: 300),
+                Interval(watts: 180, duration: 900)
+            ]
+        )
+
+        WorkoutManager.shared.saveWorkout(workout)
+
+        XCTAssertEqual(WorkoutManager.shared.loadWorkouts(), [workout], "Saved workouts should load from persisted storage")
+
+        WorkoutManager.shared.resetWorkouts()
+
+        XCTAssertTrue(WorkoutManager.shared.loadWorkouts().isEmpty, "Reset should clear persisted workouts")
     }
 }

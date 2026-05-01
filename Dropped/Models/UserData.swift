@@ -183,60 +183,88 @@ struct WorkoutDay: Identifiable, Codable, Equatable {
 
 // MARK: - Data Managers
 
-/// Manager class for user data in-memory storage and retrieval
+/// Manager class for persisted user data storage and retrieval.
 class UserDataManager {
     static let shared = UserDataManager()
+    private let userDataKey = "com.dropped.userdata"
+    private let onboardingCompletedKey = "com.dropped.hasCompletedOnboarding"
+    private let defaults: UserDefaults
     
-    // In-memory storage of user data
-    private var userData: UserData = UserData.defaultData
-    private var hasOnboardingCompleted: Bool = false
-    
-    private init() {}
+    private init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
+    }
     
     func saveUserData(_ userData: UserData) {
-        self.userData = userData
-        self.hasOnboardingCompleted = true
+        guard let data = try? JSONEncoder().encode(userData) else {
+            assertionFailure("Failed to encode user data.")
+            return
+        }
+
+        defaults.set(data, forKey: userDataKey)
+        defaults.set(true, forKey: onboardingCompletedKey)
     }
     
     func loadUserData() -> UserData {
+        guard let data = defaults.data(forKey: userDataKey),
+              let userData = try? JSONDecoder().decode(UserData.self, from: data) else {
+            return UserData.defaultData
+        }
+
         return userData
     }
     
     func hasCompletedOnboarding() -> Bool {
-        return hasOnboardingCompleted
+        defaults.bool(forKey: onboardingCompletedKey) && defaults.data(forKey: userDataKey) != nil
+    }
+
+    func resetUserData() {
+        defaults.removeObject(forKey: userDataKey)
+        defaults.removeObject(forKey: onboardingCompletedKey)
     }
 }
 
-/// Manager class for workout data in-memory storage and retrieval
+/// Manager class for persisted workout data storage and retrieval.
 class WorkoutManager {
     static let shared = WorkoutManager()
+    private let workoutsKey = "com.dropped.workouts"
+    private let workoutDaysKey = "com.dropped.workoutDays"
+    private let defaults: UserDefaults
     
-    // In-memory storage
-    private var workouts: [Workout] = []
-    private var workoutDays: [WorkoutDay] = []
-    
-    private init() {}
+    private init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
+    }
     
     // MARK: - Workout Management
     
     /// Save a workout to memory
     func saveWorkout(_ workout: Workout) {
+        var workouts = loadWorkouts()
+
         // Update existing workout or add new one
         if let index = workouts.firstIndex(where: { $0.id == workout.id }) {
             workouts[index] = workout
         } else {
             workouts.append(workout)
         }
+
+        saveWorkouts(workouts)
     }
     
     /// Load all saved workouts
     func loadWorkouts() -> [Workout] {
+        guard let data = defaults.data(forKey: workoutsKey),
+              let workouts = try? JSONDecoder().decode([Workout].self, from: data) else {
+            return []
+        }
+
         return workouts
     }
     
     /// Delete a workout by ID
     func deleteWorkout(withID id: UUID) {
+        var workouts = loadWorkouts()
         workouts.removeAll { $0.id == id }
+        saveWorkouts(workouts)
         
         // Also clean up any workout days referencing this workout
         deleteWorkoutDays(withWorkoutID: id)
@@ -244,7 +272,7 @@ class WorkoutManager {
     
     /// Get workouts for a specific date range
     func getWorkouts(from startDate: Date, to endDate: Date) -> [Workout] {
-        return workouts.filter { 
+        return loadWorkouts().filter {
             let workoutDate = $0.date
             return workoutDate >= startDate && workoutDate <= endDate
         }
@@ -254,27 +282,38 @@ class WorkoutManager {
     
     /// Save a workout day that links user data with a workout
     func saveWorkoutDay(_ workoutDay: WorkoutDay) {
+        var workoutDays = loadWorkoutDays()
+
         // Update existing or add new
         if let index = workoutDays.firstIndex(where: { $0.id == workoutDay.id }) {
             workoutDays[index] = workoutDay
         } else {
             workoutDays.append(workoutDay)
         }
+
+        saveWorkoutDays(workoutDays)
     }
     
     /// Load all workout days
     func loadWorkoutDays() -> [WorkoutDay] {
+        guard let data = defaults.data(forKey: workoutDaysKey),
+              let workoutDays = try? JSONDecoder().decode([WorkoutDay].self, from: data) else {
+            return []
+        }
+
         return workoutDays
     }
     
     /// Delete workout days associated with a specific workout
     private func deleteWorkoutDays(withWorkoutID id: UUID) {
+        var workoutDays = loadWorkoutDays()
         workoutDays.removeAll { $0.workout.id == id }
+        saveWorkoutDays(workoutDays)
     }
     
     /// Get workout days for a specific date range
     func getWorkoutDays(from startDate: Date, to endDate: Date) -> [WorkoutDay] {
-        return workoutDays.filter {
+        return loadWorkoutDays().filter {
             let date = $0.date
             return date >= startDate && date <= endDate
         }
@@ -284,5 +323,28 @@ class WorkoutManager {
     func createWorkoutDay(for workout: Workout, notes: String? = nil) -> WorkoutDay {
         let userData = UserDataManager.shared.loadUserData()
         return WorkoutDay(userData: userData, workout: workout, notes: notes)
+    }
+
+    func resetWorkouts() {
+        defaults.removeObject(forKey: workoutsKey)
+        defaults.removeObject(forKey: workoutDaysKey)
+    }
+
+    private func saveWorkouts(_ workouts: [Workout]) {
+        guard let data = try? JSONEncoder().encode(workouts) else {
+            assertionFailure("Failed to encode workouts.")
+            return
+        }
+
+        defaults.set(data, forKey: workoutsKey)
+    }
+
+    private func saveWorkoutDays(_ workoutDays: [WorkoutDay]) {
+        guard let data = try? JSONEncoder().encode(workoutDays) else {
+            assertionFailure("Failed to encode workout days.")
+            return
+        }
+
+        defaults.set(data, forKey: workoutDaysKey)
     }
 }

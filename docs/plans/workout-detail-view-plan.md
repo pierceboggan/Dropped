@@ -1,5 +1,7 @@
 # Implementation Plan for Workout Detail View
 
+> Historical plan. The shipped implementation keeps the power graph inline as a private component in `WorkoutDetailView.swift`; there is no standalone graph file.
+
 - [x] Step 1: Create the WorkoutDetailView file
   - **Task**: Create a new SwiftUI view file that will serve as the detailed view for individual workouts
   - **Files**:
@@ -27,8 +29,7 @@
 - [x] Step 5: Implement the power profile graph
   - **Task**: Create a graphical visualization of the workout's power profile over time
   - **Files**:
-    - `/Users/pierce/Desktop/Dropped/Dropped/Views/WorkoutDetailGraph.swift`: Create a custom chart component that visualizes workout intervals as a power/time graph with different colors for different power zones
-    - `/Users/pierce/Desktop/Dropped/Dropped/Views/WorkoutDetailView.swift`: Integrate the graph component into the detail view
+    - `/Users/pierce/Desktop/Dropped/Dropped/Views/WorkoutDetailView.swift`: Include a custom chart component that visualizes workout intervals as a power/time graph with different colors for different power zones
   - **Dependencies**: None
 
 - [x] Step 6: Enhance models if needed for graphical visualization
@@ -40,7 +41,7 @@
 - [x] Step 7: Update memory.md with new file descriptions
   - **Task**: Update the project architecture documentation to include the new files
   - **Files**:
-    - `/Users/pierce/Desktop/Dropped/docs/memory.md`: Add descriptions for WorkoutDetailView.swift and WorkoutDetailGraph.swift
+    - `/Users/pierce/Desktop/Dropped/docs/memory.md`: Add a description for WorkoutDetailView.swift
   - **Dependencies**: None
 
 - [ ] Step 8: Build and run the app

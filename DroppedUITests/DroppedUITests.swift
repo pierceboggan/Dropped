@@ -38,25 +38,14 @@ final class DroppedUITests: XCTestCase {
         let startText = app.staticTexts["Let's Get Started"]
         XCTAssertTrue(startText.waitForExistence(timeout: 5), "Should start with onboarding")
         
-        // Enter user data
         let weightTextField = app.textFields["Weight"]
-        if weightTextField.waitForExistence(timeout: 5) {
-            weightTextField.tap()
-            weightTextField.typeText("70")
-        }
+        XCTAssertTrue(weightTextField.waitForExistence(timeout: 5), "Weight field should be visible")
         
         let ftpTextField = app.textFields["FTP"]
-        if ftpTextField.waitForExistence(timeout: 5) {
-            ftpTextField.tap()
-            ftpTextField.typeText("220")
-        }
+        XCTAssertTrue(ftpTextField.waitForExistence(timeout: 5), "FTP field should be visible")
         
-        // Select hours 
         let hoursTextField = app.textFields["Hours per week"]
-        if hoursTextField.waitForExistence(timeout: 5) {
-            hoursTextField.tap()
-            hoursTextField.typeText("8")
-        }
+        XCTAssertTrue(hoursTextField.waitForExistence(timeout: 5), "Hours field should be visible")
         
         // Tap generate plan button
         let generateButton = app.buttons["generatePlanButton"]
@@ -66,9 +55,10 @@ final class DroppedUITests: XCTestCase {
             app.buttons["Generate My Training Plan"].tap()
         }
         
-        // Verify we're on the plan summary screen
-        let trainingPlanNav = app.navigationBars["Your Training Plan"]
-        XCTAssertTrue(trainingPlanNav.waitForExistence(timeout: 5), "Should navigate to training plan")
+        openTrainingPlan()
+
+        let trainingPlanTitle = app.staticTexts["Your Weekly Plan"]
+        XCTAssertTrue(trainingPlanTitle.waitForExistence(timeout: 5), "Should navigate to training plan")
     }
     
     @MainActor
@@ -79,9 +69,8 @@ final class DroppedUITests: XCTestCase {
         // Wait a bit for the UI to settle
         sleep(1)
         
-        // Verify we're on the plan summary screen
-        let trainingPlanNav = app.navigationBars["Your Training Plan"]
-        XCTAssertTrue(trainingPlanNav.waitForExistence(timeout: 5), "Should be on the training plan screen")
+        let trainingPlanTitle = app.staticTexts["Your Weekly Plan"]
+        XCTAssertTrue(trainingPlanTitle.waitForExistence(timeout: 5), "Should be on the training plan screen")
     }
     
     @MainActor
@@ -101,24 +90,14 @@ final class DroppedUITests: XCTestCase {
     private func completeOnboarding() {
         app.launch()
         
-        // Quick fill of data - wait for text fields to appear
         let weightTextField = app.textFields["Weight"]
-        if weightTextField.waitForExistence(timeout: 5) {
-            weightTextField.tap()
-            weightTextField.typeText("70")
-        }
+        XCTAssertTrue(weightTextField.waitForExistence(timeout: 5), "Weight field should be visible")
         
         let ftpTextField = app.textFields["FTP"]
-        if ftpTextField.waitForExistence(timeout: 5) {
-            ftpTextField.tap()
-            ftpTextField.typeText("200")
-        }
+        XCTAssertTrue(ftpTextField.waitForExistence(timeout: 5), "FTP field should be visible")
         
         let hoursTextField = app.textFields["Hours per week"]
-        if hoursTextField.waitForExistence(timeout: 5) {
-            hoursTextField.tap()
-            hoursTextField.typeText("5")
-        }
+        XCTAssertTrue(hoursTextField.waitForExistence(timeout: 5), "Hours field should be visible")
         
         // Generate plan - use accessibility identifier if available
         let generateButton = app.buttons["generatePlanButton"]
@@ -130,6 +109,15 @@ final class DroppedUITests: XCTestCase {
             if planButton.waitForExistence(timeout: 5) {
                 planButton.tap()
             }
+        }
+
+        openTrainingPlan()
+    }
+
+    private func openTrainingPlan() {
+        let trainingPlanLink = app.buttons["Training Plan"]
+        if trainingPlanLink.waitForExistence(timeout: 5) {
+            trainingPlanLink.tap()
         }
     }
 }

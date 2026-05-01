@@ -1,5 +1,7 @@
 # Implementation Plan for AI-Powered Cycling Training Plan Generator
 
+> Historical plan. The current implementation saves accepted generated workouts through `WorkoutManager` and `WorkoutDay`; `UserData` does not own a workout schedule API.
+
 - [x] Step 1: Create WorkoutType Model and AIWorkoutGenerator Service
   - **Task**: Define the workout types and create a service to communicate with OpenAI API
   - **Files**:
@@ -143,7 +145,8 @@ class WorkoutGeneratorViewModel: ObservableObject {
     
     func acceptWorkout() {
         guard let workout = generatedWorkout else { return }
-        userData.addWorkoutToSchedule(workout)
+        workoutManager.saveWorkout(workout)
+        workoutManager.saveWorkoutDay(WorkoutDay(userData: userData, workout: workout))
     }
 }
 ```
@@ -196,16 +199,16 @@ Add navigation to the new WorkoutGeneratorView:
 // Add navigation link to WorkoutGeneratorView
 ```
 
-### Step 6: Update UserData Model
+### Step 6: Update Workout Storage
 
-Update the UserData model to handle adding workouts to the schedule:
+Use `WorkoutManager` to persist accepted generated workouts:
 
 ```swift
-// UserData.swift pseudocode additions
-func addWorkoutToSchedule(_ workout: Workout) {
-    // Create WorkoutDay from workout
-    // Add to top of schedule
-    // Save changes
+// WorkoutGeneratorViewModel.swift pseudocode
+func acceptWorkout() {
+    guard let workout = generatedWorkout else { return }
+    workoutManager.saveWorkout(workout)
+    workoutManager.saveWorkoutDay(WorkoutDay(userData: userData, workout: workout))
 }
 ```
 
