@@ -12,6 +12,7 @@ import Foundation
 struct PlanSummaryView: View {
     @State private var userData: UserData
     @State private var workouts: [Workout] = []
+    @State private var logsByWorkoutID: [UUID: WorkoutLog] = [:]
     @Binding var hasCompletedOnboarding: Bool
     
     init(hasCompletedOnboarding: Binding<Bool>) {
@@ -61,7 +62,7 @@ struct PlanSummaryView: View {
                         
                         ForEach(workoutPlan) { workout in
                             NavigationLink(destination: WorkoutDetailView(workout: workout)) {
-                                WorkoutCard(workout: workout)
+                                WorkoutCard(workout: workout, log: logsByWorkoutID[workout.id])
                             }
                         }
                     }
@@ -72,6 +73,7 @@ struct PlanSummaryView: View {
                         UserDataManager.shared.resetUserData()
                         WorkoutManager.shared.resetWorkouts()
                         workouts = []
+                        logsByWorkoutID = [:]
                         hasCompletedOnboarding = false
                     }) {
                         HStack {
@@ -128,6 +130,23 @@ struct PlanSummaryView: View {
             }
             workouts = generatedWorkouts
         }
+
+        refreshLogs()
+    }
+
+    /// Loads completion logs and indexes them by `workoutID` so cards can look
+    /// up their state in O(1).
+    private func refreshLogs() {
+        let logs = WorkoutManager.shared.loadLogs()
+        var index: [UUID: WorkoutLog] = [:]
+        for log in logs {
+            // Keep the most recent log per workout in case multiple ever exist.
+            if let existing = index[log.workoutID], existing.completedAt > log.completedAt {
+                continue
+            }
+            index[log.workoutID] = log
+        }
+        logsByWorkoutID = index
     }
     
     /// Generates a workout plan based on user's training hours per week and goal
@@ -420,7 +439,9 @@ struct StatCard: View {
 /// Card view for displaying workout information
 struct WorkoutCard: View {
     let workout: Workout
-    
+    /// Optional completion log; when present, the card renders a completion badge.
+    var log: WorkoutLog? = nil
+
     var intensityColor: Color {
         // Calculate intensity from intervals
         let avgPower = workout.averagePower
@@ -474,6 +495,10 @@ struct WorkoutCard: View {
                     .foregroundColor(.primary)
                 
                 Spacer()
+
+                if let log {
+                    completionBadge(for: log)
+                }
                 
                 Text(durationText)
                     .font(.subheadline)
@@ -516,6 +541,33 @@ struct WorkoutCard: View {
         .padding(.horizontal)
         .padding(.bottom, 5)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(dayOfWeek), \(workout.title) workout. \(durationText). Intensity: \(intensityText). \(workout.summary)")
+        .accessibilityLabel(accessibilitySummary)
+    }
+
+    /// Compact "Completed · RPE n" badge shown on logged workouts.
+    private func completionBadge(for log: WorkoutLog) -> some View {
+        HStack(spacing: 4) {
+            Image(systemName: "checkmark.seal.fill")
+                .foregroundColor(.green)
+                .font(.caption)
+            Text("RPE \(log.perceivedExertion)")
+                .font(.caption)
+                .fontWeight(.semibold)
+                .foregroundColor(.green)
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(
+            RoundedRectangle(cornerRadius: 6)
+                .fill(Color.green.opacity(0.12))
+        )
+    }
+
+    private var accessibilitySummary: String {
+        var summary = "\(dayOfWeek), \(workout.title) workout. \(durationText). Intensity: \(intensityText). \(workout.summary)"
+        if let log {
+            summary += ". Completed, RPE \(log.perceivedExertion) of 10."
+        }
+        return summary
     }
 }

@@ -5,18 +5,57 @@ struct WorkoutDetailView: View {
     /// The workout to display.
     let workout: Workout
 
+    /// The persisted completion log for this workout, if one exists.
+    @State private var log: WorkoutLog?
+    /// Drives presentation of the `WorkoutLogSheet`.
+    @State private var isShowingLogSheet = false
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 WorkoutOverviewHeader(workout: workout)
+                if let log {
+                    WorkoutLogSummaryCard(log: log, plannedDuration: workout.totalDuration)
+                }
                 intervalsSection
                 powerProfileSection
+                completionCTA
             }
             .padding([.horizontal, .bottom])
         }
         .background(Color(UIColor.systemBackground))
         .navigationTitle("Workout Details")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear(perform: refreshLog)
+        .sheet(isPresented: $isShowingLogSheet) {
+            WorkoutLogSheet(workout: workout, existingLog: log) {
+                refreshLog()
+            }
+        }
+    }
+
+    /// CTA toggles between marking complete and editing an existing log.
+    private var completionCTA: some View {
+        Button {
+            isShowingLogSheet = true
+        } label: {
+            HStack {
+                Image(systemName: log == nil ? "checkmark.circle" : "square.and.pencil")
+                Text(log == nil ? "Mark Complete" : "Edit Log")
+                    .font(.headline)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 14)
+            .foregroundColor(.white)
+            .background((log == nil ? Color.green : Color.blue).gradient)
+            .cornerRadius(12)
+        }
+        .accessibilityLabel(log == nil ? "Mark workout complete" : "Edit completion log")
+        .padding(.top, 8)
+    }
+
+    private func refreshLog() {
+        log = WorkoutManager.shared.log(forWorkoutID: workout.id)
     }
 
     /// List of workout intervals, or an empty state if the workout has none.
@@ -134,6 +173,95 @@ private struct IntervalRow: View {
         )
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Interval \(index), Power \(interval.watts) watts, Duration \(formattedDuration)")
+    }
+}
+
+/// Summary card shown at the top of the detail view when a log exists.
+private struct WorkoutLogSummaryCard: View {
+    let log: WorkoutLog
+    let plannedDuration: TimeInterval
+
+    private var formattedDate: String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter.string(from: log.completedAt)
+    }
+
+    private var formattedDuration: String {
+        let minutes = Int(log.effectiveDuration(planned: plannedDuration) / 60)
+        return "\(minutes) min"
+    }
+
+    private var accessibilitySummary: String {
+        var parts: [String] = ["Completed \(formattedDate)", "RPE \(log.perceivedExertion) of 10"]
+        if let avgPower = log.averagePower { parts.append("Average power \(avgPower) watts") }
+        if let avgHR = log.averageHeartRate { parts.append("Average heart rate \(avgHR) bpm") }
+        parts.append("Duration \(formattedDuration)")
+        if let notes = log.notes { parts.append("Notes: \(notes)") }
+        return parts.joined(separator: ". ")
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                Image(systemName: "checkmark.seal.fill")
+                    .foregroundColor(.green)
+                Text("Completed")
+                    .font(.headline)
+                Spacer()
+                Text(formattedDate)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+
+            HStack(spacing: 12) {
+                LogMetric(label: "RPE", value: "\(log.perceivedExertion)/10")
+                LogMetric(label: "Duration", value: formattedDuration)
+                if let avgPower = log.averagePower {
+                    LogMetric(label: "Avg Power", value: "\(avgPower) W")
+                }
+                if let avgHR = log.averageHeartRate {
+                    LogMetric(label: "Avg HR", value: "\(avgHR) bpm")
+                }
+            }
+
+            if let notes = log.notes {
+                Text(notes)
+                    .font(.body)
+                    .foregroundColor(.primary)
+                    .padding(.top, 4)
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.green.opacity(0.08))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.green.opacity(0.4), lineWidth: 1)
+        )
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(accessibilitySummary)
+    }
+}
+
+/// Compact metric chip used inside `WorkoutLogSummaryCard`.
+private struct LogMetric: View {
+    let label: String
+    let value: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(label)
+                .font(.caption)
+                .foregroundColor(.secondary)
+            Text(value)
+                .font(.subheadline)
+                .fontWeight(.semibold)
+        }
+        .accessibilityHidden(true)
     }
 }
 
