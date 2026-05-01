@@ -94,24 +94,21 @@ jobs:
 
       - name: Build app
         env:
-          SIMULATOR_UDID_CREATED: ${{ env.SIMULATOR_UDID_CREATED }} # For logging
+          SIMULATOR_UDID_CREATED: ${{ env.SIMULATOR_UDID_CREATED }}
         run: |
-          echo "Attempting to build with generic placeholder, after creating and booting simulator $SIMULATOR_UDID_CREATED"
-          GENERIC_SIM_DESTINATION_ID="dvtdevice-DVTiOSDeviceSimulatorPlaceholder-iphonesimulator:placeholder"
-          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination "platform=iOS Simulator,id=$GENERIC_SIM_DESTINATION_ID" build
+          echo "Building with booted simulator $SIMULATOR_UDID_CREATED"
+          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination "platform=iOS Simulator,id=$SIMULATOR_UDID_CREATED" build
 
       - name: Run unit tests
         env:
-          SIMULATOR_UDID_CREATED: ${{ env.SIMULATOR_UDID_CREATED }} # For logging
+          SIMULATOR_UDID_CREATED: ${{ env.SIMULATOR_UDID_CREATED }}
         run: |
-          echo "Attempting unit tests with generic placeholder, after creating and booting simulator $SIMULATOR_UDID_CREATED"
-          GENERIC_SIM_DESTINATION_ID="dvtdevice-DVTiOSDeviceSimulatorPlaceholder-iphonesimulator:placeholder"
-          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination "platform=iOS Simulator,id=$GENERIC_SIM_DESTINATION_ID" -only-testing:DroppedTests test
+          echo "Running unit tests with booted simulator $SIMULATOR_UDID_CREATED"
+          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination "platform=iOS Simulator,id=$SIMULATOR_UDID_CREATED" -only-testing:DroppedTests test
 
       - name: Run UI tests
         env:
-          SIMULATOR_UDID_CREATED: ${{ env.SIMULATOR_UDID_CREATED }} # For logging
+          SIMULATOR_UDID_CREATED: ${{ env.SIMULATOR_UDID_CREATED }}
         run: |
-          echo "Attempting UI tests with generic placeholder, after creating and booting simulator $SIMULATOR_UDID_CREATED"
-          GENERIC_SIM_DESTINATION_ID="dvtdevice-DVTiOSDeviceSimulatorPlaceholder-iphonesimulator:placeholder"
-          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination "platform=iOS Simulator,id=$GENERIC_SIM_DESTINATION_ID" -only-testing:DroppedUITests test
+          echo "Running UI tests with booted simulator $SIMULATOR_UDID_CREATED"
+          xcodebuild -project Dropped.xcodeproj -scheme Dropped -destination "platform=iOS Simulator,id=$SIMULATOR_UDID_CREATED" -only-testing:DroppedUITests test
