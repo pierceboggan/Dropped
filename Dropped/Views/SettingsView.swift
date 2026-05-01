@@ -11,11 +11,19 @@ class SettingsViewModel: ObservableObject {
     @Published var userData: UserData
     @Published var selectedWeightUnit: WeightUnit
     @Published var isMetric: Bool
-    
-    init() {
-        let loadedData = UserDataManager.shared.loadUserData()
+    @Published var healthSyncStatus: String?
+    @Published var isRequestingHealthAuth: Bool = false
+
+    private let healthKitService: HealthKitServicing
+    private let userDataManager: UserDataManager
+
+    init(healthKitService: HealthKitServicing = HealthKitService.shared,
+         userDataManager: UserDataManager = .shared) {
+        self.healthKitService = healthKitService
+        self.userDataManager = userDataManager
+        let loadedData = userDataManager.loadUserData()
         self.userData = loadedData
-        
+
         if let storedUnit = WeightUnit(rawValue: loadedData.weightUnit) {
             self.selectedWeightUnit = storedUnit
             self.isMetric = (storedUnit == .kilograms)
@@ -24,6 +32,8 @@ class SettingsViewModel: ObservableObject {
             self.isMetric = false
         }
     }
+
+    var isHealthAvailable: Bool { healthKitService.isAvailable }
     
     func toggleUnitSystem() {
         isMetric.toggle()
@@ -55,12 +65,36 @@ class SettingsViewModel: ObservableObject {
     private func updatePreferredUnit() {
         // Keep the weight value in kg, just update the display unit
         userData.weightUnit = selectedWeightUnit.rawValue
-        UserDataManager.shared.saveUserData(userData)
+        userDataManager.saveUserData(userData)
+    }
+
+    @MainActor
+    func requestHealthAuthorization() async {
+        guard healthKitService.isAvailable else {
+            healthSyncStatus = "Apple Health is not available on this device."
+            UserDefaults.standard.set(false, forKey: WorkoutManager.healthSyncEnabledKey)
+            return
+        }
+        isRequestingHealthAuth = true
+        defer { isRequestingHealthAuth = false }
+        do {
+            try await healthKitService.requestAuthorization()
+            let updated = await healthKitService.syncBodyMassToProfile(using: userDataManager)
+            userData = userDataManager.loadUserData()
+            healthSyncStatus = updated
+                ? "Permissions granted. Profile weight updated from Health."
+                : "Permissions granted."
+        } catch {
+            // Roll back the toggle so the app doesn't think sync is on after a denial/failure.
+            UserDefaults.standard.set(false, forKey: WorkoutManager.healthSyncEnabledKey)
+            healthSyncStatus = "Couldn't authorize Apple Health: \(error.localizedDescription)"
+        }
     }
 }
 
 struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
+    @AppStorage(WorkoutManager.healthSyncEnabledKey) private var healthSyncEnabled: Bool = false
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
@@ -128,6 +162,40 @@ struct SettingsView: View {
                     }
                     NavigationLink(destination: FTPTestsView()) {
                         Label("Take an FTP test", systemImage: "bolt.heart")
+                    }
+                }
+
+                // Apple Health Section
+                Section(header: Text("Apple Health"),
+                        footer: Text(viewModel.isHealthAvailable
+                                     ? "When enabled, completed cycling workouts are written to Health and your weight stays in sync."
+                                     : "Apple Health isn't available on this device.")) {
+                    Toggle("Sync with Apple Health", isOn: $healthSyncEnabled)
+                        .disabled(!viewModel.isHealthAvailable)
+                        .onChange(of: healthSyncEnabled) { _, isOn in
+                            guard isOn else { return }
+                            Task { await viewModel.requestHealthAuthorization() }
+                        }
+
+                    Button {
+                        Task { await viewModel.requestHealthAuthorization() }
+                    } label: {
+                        HStack {
+                            Text("Re-request Permissions")
+                            Spacer()
+                            if viewModel.isRequestingHealthAuth {
+                                ProgressView()
+                            } else {
+                                Image(systemName: "arrow.triangle.2.circlepath")
+                            }
+                        }
+                    }
+                    .disabled(!viewModel.isHealthAvailable || viewModel.isRequestingHealthAuth)
+
+                    if let status = viewModel.healthSyncStatus {
+                        Text(status)
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
                     }
                 }
 

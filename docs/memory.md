@@ -24,12 +24,13 @@ This project is a SwiftUI-based iOS cycling training application.
 
 #### Dropped/Models/
 
-- **UserData.swift**: Core user, workout, interval, and workout-day models. Also contains persisted `UserDataManager` and `WorkoutManager` storage helpers (workouts, workout days, and completion logs). `Workout` carries an optional `testKind` marker (back-compat decoded) for built-in tests; `UserData` exposes a computed `powerZones` property.
+- **UserData.swift**: Core user, workout, interval, and workout-day models. Also contains persisted `UserDataManager` and `WorkoutManager` storage helpers (workouts, workout days, and completion logs). `Workout` carries an optional `testKind` marker (back-compat decoded) for built-in tests; `UserData` exposes a computed `powerZones` property and `weightUpdatedAt` for HealthKit-sourced weight sync. `UserDataManager.updateWeightFromHealth(kg:sampleDate:)` syncs weight from HealthKit, and `WorkoutManager.markWorkoutCompleted(_:summary:)` writes completed cycling workouts to HealthKit when `WorkoutManager.healthSyncEnabledKey` is enabled.
 - **WorkoutType.swift**: Enum defining AI workout types: endurance, threshold, VO2 max, sprint, and recovery.
 - **AIWorkoutGenerator.swift**: OpenAI chat-completions client for generated workouts. Reads API keys from configuration, requests a strict JSON schema, and converts responses into `Workout` models.
 - **WorkoutLog.swift**: Persisted record of a completed workout (RPE, optional avg power / HR / duration override, notes, plus a `UserData` snapshot). Exposes derived `effectiveDuration`, `intensityFactor`, and `estimatedTSS` for future TSS / charts / streak surfaces.
 - **PowerZones.swift**: `PowerZone` enum (Coggan Z1–Z7 with %FTP bounds, names, colors) and `PowerZones` struct that maps an FTP value to per-zone watt ranges.
 - **FTPTest.swift**: `FTPTestType` enum (`.twentyMinute`, `.ramp`), `FTPCalculator` (FTP from 20-min avg or ramp final-minute power), and `FTPTestWorkouts` factory that builds standard `Workout` instances for each protocol.
+- **HealthKitService.swift**: HealthKit integration. Defines the `HealthKitServicing` protocol, default `HealthKitService` implementation backed by `HKHealthStore` + `HKWorkoutBuilder`, the `CompletedWorkoutSummary` value type used to write cycling workouts, energy estimation helpers, and a `syncBodyMassToProfile(using:)` extension that pushes newer Health weights into `UserDataManager`. Simulator/macOS-safe via availability gates.
 
 #### Dropped/ViewModels/
 
@@ -66,6 +67,7 @@ This project is a SwiftUI-based iOS cycling training application.
 
 - **OnboardingViewModelTests.swift**: Unit tests for onboarding validation, unit conversion, and user-data saving.
 - **UserDataTests.swift**: Unit tests for unit conversion, user-data persistence, onboarding completion, and workout/log persistence reset behavior.
+- **HealthKitServiceTests.swift**: Unit tests for the HealthKit integration. Uses a `MockHealthKitService` to verify body-mass sync logic, energy estimation math, and `WorkoutManager.markWorkoutCompleted` write-through behavior driven by the Health-sync toggle.
 - **WorkoutLogTests.swift**: Unit tests for the `WorkoutLog` model (RPE clamping, notes normalization, derived IF/TSS) and the `WorkoutManager` log persistence APIs.
 - **FTPCalculatorTests.swift**: Unit tests for FTP-from-test math (20-minute and ramp formulas, rounding boundaries, non-positive guards).
 - **PowerZonesTests.swift**: Unit tests for Coggan zone boundary classification, watt-range computation across FTPs (including FTP=0), and `UserData.powerZones`.

@@ -156,13 +156,29 @@ struct UserData: Codable, Equatable {
     var ftp: Int
     var trainingHoursPerWeek: Int
     var trainingGoal: String
+    var weightUpdatedAt: Date?
+
+    init(weight: Double,
+         weightUnit: String,
+         ftp: Int,
+         trainingHoursPerWeek: Int,
+         trainingGoal: String,
+         weightUpdatedAt: Date? = nil) {
+        self.weight = weight
+        self.weightUnit = weightUnit
+        self.ftp = ftp
+        self.trainingHoursPerWeek = trainingHoursPerWeek
+        self.trainingGoal = trainingGoal
+        self.weightUpdatedAt = weightUpdatedAt
+    }
     
     static let defaultData = UserData(
         weight: 70.0, 
         weightUnit: WeightUnit.pounds.rawValue,
         ftp: 200, 
         trainingHoursPerWeek: 5, 
-        trainingGoal: TrainingGoal.haveFun.rawValue
+        trainingGoal: TrainingGoal.haveFun.rawValue,
+        weightUpdatedAt: nil
     )
     
     /// Helper function to get weight in the user's preferred unit
@@ -247,19 +263,45 @@ class UserDataManager {
         defaults.removeObject(forKey: userDataKey)
         defaults.removeObject(forKey: onboardingCompletedKey)
     }
+
+    /// Update the stored user weight from a HealthKit reading.
+    /// We only overwrite when:
+    ///   - the profile already has a `weightUpdatedAt` and the HK sample is newer, OR
+    ///   - the profile has no `weightUpdatedAt` (never sourced from Health) AND the HK sample is recent
+    ///     (within the last 30 days), so we don't clobber a fresh manual entry with stale Health data.
+    /// Returns true if an update was applied.
+    @discardableResult
+    func updateWeightFromHealth(kg: Double, sampleDate: Date, now: Date = Date()) -> Bool {
+        var current = loadUserData()
+        if let existing = current.weightUpdatedAt {
+            guard sampleDate > existing else { return false }
+        } else {
+            // No prior Health-sourced weight. Be conservative: only accept recent samples.
+            let thirtyDays: TimeInterval = 30 * 24 * 60 * 60
+            guard now.timeIntervalSince(sampleDate) <= thirtyDays else { return false }
+        }
+        current.weight = kg
+        current.weightUpdatedAt = sampleDate
+        saveUserData(current)
+        return true
+    }
 }
 
 /// Manager class for persisted workout data storage and retrieval.
 class WorkoutManager {
     static let shared = WorkoutManager()
+    static let healthSyncEnabledKey = "com.dropped.healthSyncEnabled"
     private let workoutsKey = "com.dropped.workouts"
     private let workoutDaysKey = "com.dropped.workoutDays"
     private let workoutLogsKey = "com.dropped.workoutLogs"
     private let defaults: UserDefaults
-    
+    private let healthKitService: HealthKitServicing
+
     /// Internal so tests can construct an isolated instance.
-    init(defaults: UserDefaults = .standard) {
+    init(defaults: UserDefaults = .standard,
+         healthKitService: HealthKitServicing = HealthKitService.shared) {
         self.defaults = defaults
+        self.healthKitService = healthKitService
     }
 
     // MARK: - Workout Management
@@ -351,6 +393,29 @@ class WorkoutManager {
     func createWorkoutDay(for workout: Workout, notes: String? = nil) -> WorkoutDay {
         let userData = UserDataManager.shared.loadUserData()
         return WorkoutDay(userData: userData, workout: workout, notes: notes)
+    }
+
+    /// Mark a workout completed and, if Health sync is enabled, write it to HealthKit.
+    /// Persisted status is updated regardless of HealthKit success/failure.
+    /// Returns the resulting completed workout for callers that need it.
+    @discardableResult
+    func markWorkoutCompleted(_ workout: Workout,
+                              summary: CompletedWorkoutSummary) async -> Workout {
+        let completed = Workout(
+            id: workout.id,
+            title: workout.title,
+            date: workout.date,
+            summary: workout.summary,
+            intervals: workout.intervals,
+            status: .completed,
+            testKind: workout.testKind
+        )
+        saveWorkout(completed)
+
+        if defaults.bool(forKey: WorkoutManager.healthSyncEnabledKey) {
+            try? await healthKitService.saveCyclingWorkout(summary)
+        }
+        return completed
     }
 
     func resetWorkouts() {
