@@ -24,15 +24,23 @@ This project is a SwiftUI-based iOS cycling training application.
 
 #### Dropped/Models/
 
-- **UserData.swift**: Core user, workout, interval, and workout-day models. Also contains persisted `UserDataManager` and `WorkoutManager` storage helpers. `UserDataManager` exposes `updateWeightFromHealth(kg:sampleDate:)` for HealthKit sync, and `WorkoutManager` exposes `markWorkoutCompleted(_:summary:)` which writes to HealthKit when the user has enabled `WorkoutManager.healthSyncEnabledKey`.
+- **UserData.swift**: Core user, workout, interval, and workout-day models. Also contains persisted `UserDataManager` and `WorkoutManager` storage helpers. `Workout` carries an optional `testKind` marker (back-compat decoded) for built-in tests; `UserData` exposes a computed `powerZones` property and `weightUpdatedAt` for HealthKit-sourced weight sync. `UserDataManager.updateWeightFromHealth(kg:sampleDate:)` syncs weight from HealthKit, and `WorkoutManager.markWorkoutCompleted(_:summary:)` writes completed cycling workouts to HealthKit when `WorkoutManager.healthSyncEnabledKey` is enabled.
 - **WorkoutType.swift**: Enum defining AI workout types: endurance, threshold, VO2 max, sprint, and recovery.
 - **AIWorkoutGenerator.swift**: OpenAI chat-completions client for generated workouts. Reads API keys from configuration, requests a strict JSON schema, and converts responses into `Workout` models.
+- **PowerZones.swift**: `PowerZone` enum (Coggan Z1–Z7 with %FTP bounds, names, colors) and `PowerZones` struct that maps an FTP value to per-zone watt ranges.
+- **FTPTest.swift**: `FTPTestType` enum (`.twentyMinute`, `.ramp`), `FTPCalculator` (FTP from 20-min avg or ramp final-minute power), and `FTPTestWorkouts` factory that builds standard `Workout` instances for each protocol.
 - **HealthKitService.swift**: HealthKit integration. Defines the `HealthKitServicing` protocol, default `HealthKitService` implementation backed by `HKHealthStore` + `HKWorkoutBuilder`, the `CompletedWorkoutSummary` value type used to write cycling workouts, energy estimation helpers, and a `syncBodyMassToProfile(using:)` extension that pushes newer Health weights into `UserDataManager`. Simulator/macOS-safe via availability gates.
 
 #### Dropped/ViewModels/
 
 - **OnboardingViewModel.swift**: Onboarding validation, unit conversion, and profile-save logic.
 - **WorkoutGeneratorViewModel.swift**: AI workout generator state, loading/error handling, and generated-workout acceptance into persisted workout storage.
+- **FTPTestResultViewModel.swift**: Validates a rider's FTP-test result entry, computes the new FTP, and persists it via injected `UserDataManager`/`WorkoutManager` (also marks the source test workout completed).
+- **IntervalPlayerViewModel.swift**: Pure, testable state machine for the in-app interval player. Drives interval progression via an injectable wall-clock and emits `IntervalPlayerCueIntent` values for audio/haptic side effects.
+
+#### Dropped/Services/
+
+- **IntervalCueService.swift**: Translates `IntervalPlayerCueIntent` values into AVFoundation system sounds, `UIImpactFeedbackGenerator` haptics, and `AVSpeechSynthesizer` spoken cues. Configures the shared `AVAudioSession` for playback during a session.
 
 #### Dropped/Views/
 
@@ -40,9 +48,12 @@ This project is a SwiftUI-based iOS cycling training application.
 - **OnboardingView.swift**: Rider profile setup screen.
 - **PlanSummaryView.swift**: Training plan summary, generated workout cards, settings entry point, and onboarding reset.
 - **SettingsView.swift**: Settings screen for preferred weight units and app information.
-- **WorkoutDetailView.swift**: Detailed workout screen with overview, interval list, and inline power/time graph.
+- **WorkoutDetailView.swift**: Detailed workout screen with overview, interval list, inline power/time graph, and a "Start workout" CTA that presents the full-screen interval player.
+- **IntervalPlayerView.swift**: Full-screen guided interval player. Hosts `IntervalPlayerViewModel`, drives a 10 Hz timer, plays cues via `IntervalCueService`, keeps the screen awake (`isIdleTimerDisabled`), and exposes pause/resume/skip/end-early controls.
 - **WorkoutGeneratorView.swift**: AI workout type selection and generation screen.
 - **WorkoutGeneratorReviewView.swift**: Review surface for accepting or regenerating an AI-generated workout.
+- **PowerZonesView.swift**: Lists Coggan zones Z1–Z7 with %FTP ranges and target wattages computed from the rider's current FTP. Includes a link to the FTP tests screen.
+- **FTPTestsView.swift**: Lists built-in FTP test protocols (20-minute and Ramp), starts them as scheduled workouts, and provides `FTPTestResultEntryView` — the post-test result entry sheet that previews the new FTP and writes it to the user profile on confirm.
 
 ### Dropped.xcodeproj/
 
@@ -54,6 +65,11 @@ This project is a SwiftUI-based iOS cycling training application.
 - **OnboardingViewModelTests.swift**: Unit tests for onboarding validation, unit conversion, and user-data saving.
 - **UserDataTests.swift**: Unit tests for unit conversion, user-data persistence, onboarding completion, and workout persistence reset behavior.
 - **HealthKitServiceTests.swift**: Unit tests for the HealthKit integration. Uses a `MockHealthKitService` to verify body-mass sync logic, energy estimation math, and `WorkoutManager.markWorkoutCompleted` write-through behavior driven by the Health-sync toggle.
+- **FTPCalculatorTests.swift**: Unit tests for FTP-from-test math (20-minute and ramp formulas, rounding boundaries, non-positive guards).
+- **PowerZonesTests.swift**: Unit tests for Coggan zone boundary classification, watt-range computation across FTPs (including FTP=0), and `UserData.powerZones`.
+- **FTPTestWorkoutsTests.swift**: Unit tests for the structure of built-in FTP test workouts and `Workout` codable backward compatibility for the new `testKind` field.
+- **FTPTestResultViewModelTests.swift**: Unit tests for the result-entry view model using isolated `UserDefaults`, covering profile updates, validation, and the source-workout completion side effect.
+- **IntervalPlayerViewModelTests.swift**: Unit tests for the interval player state machine: lifecycle, tick advancement across boundaries (including multi-interval jumps), countdown cue de-duplication, pause/resume across simulated background gaps, skip, end-early, natural completion, progress monotonicity, and watts/%FTP calculations.
 
 ### DroppedUITests/
 

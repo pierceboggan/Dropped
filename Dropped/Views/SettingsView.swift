@@ -155,6 +155,16 @@ struct SettingsView: View {
                     .padding(.vertical, 8)
                 }
                 
+                // Training Section
+                Section(header: Text("Training")) {
+                    NavigationLink(destination: PowerZonesView()) {
+                        Label("Power Zones", systemImage: "chart.bar.fill")
+                    }
+                    NavigationLink(destination: FTPTestsView()) {
+                        Label("Take an FTP test", systemImage: "bolt.heart")
+                    }
+                }
+
                 // Apple Health Section
                 Section(header: Text("Apple Health"),
                         footer: Text(viewModel.isHealthAvailable

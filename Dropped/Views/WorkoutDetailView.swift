@@ -5,10 +5,19 @@ struct WorkoutDetailView: View {
     /// The workout to display.
     let workout: Workout
 
+    @State private var showingResultEntry = false
+    /// Controls presentation of the full-screen interval player.
+    @State private var isPlayerPresented: Bool = false
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 WorkoutOverviewHeader(workout: workout)
+                if let testTypeRaw = workout.testKind,
+                   let testType = FTPTestType(rawValue: testTypeRaw) {
+                    logResultButton(testType: testType)
+                }
+                startWorkoutButton
                 intervalsSection
                 powerProfileSection
             }
@@ -17,6 +26,61 @@ struct WorkoutDetailView: View {
         .background(Color(UIColor.systemBackground))
         .navigationTitle("Workout Details")
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showingResultEntry) {
+            if let testTypeRaw = workout.testKind,
+               let testType = FTPTestType(rawValue: testTypeRaw) {
+                FTPTestResultEntryView(testType: testType, sourceWorkout: workout)
+            }
+        }
+        .fullScreenCover(isPresented: $isPlayerPresented) {
+            IntervalPlayerView(
+                workout: workout,
+                ftp: UserDataManager.shared.loadUserData().ftp
+            )
+        }
+    }
+
+    private func logResultButton(testType: FTPTestType) -> some View {
+        Button(action: { showingResultEntry = true }) {
+            HStack {
+                Image(systemName: "square.and.pencil")
+                Text("Log \(testType.shortName) result")
+                    .fontWeight(.semibold)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+            .foregroundColor(.white)
+            .background(Color.accentColor.gradient)
+            .cornerRadius(12)
+        }
+        .accessibilityIdentifier("logFTPTestResultButton")
+    }
+
+    /// Primary CTA that launches the guided interval player. Disabled when the
+    /// workout has no intervals to play.
+    private var startWorkoutButton: some View {
+        Button {
+            isPlayerPresented = true
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: "play.fill")
+                Text("Start workout")
+                    .fontWeight(.semibold)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 14)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(workout.intervals.isEmpty ? Color.gray.opacity(0.4) : Color.accentColor)
+            )
+            .foregroundColor(.white)
+        }
+        .buttonStyle(.plain)
+        .disabled(workout.intervals.isEmpty)
+        .accessibilityLabel("Start workout")
+        .accessibilityHint(workout.intervals.isEmpty
+            ? "This workout has no intervals to play"
+            : "Begins a guided interval session")
     }
 
     /// List of workout intervals, or an empty state if the workout has none.
