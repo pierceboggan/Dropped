@@ -52,6 +52,57 @@ struct PlanSummaryView: View {
                             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
                     )
                     .padding(.horizontal)
+
+                    // Power zones + FTP test entry points
+                    VStack(alignment: .leading, spacing: 10) {
+                        NavigationLink(destination: PowerZonesView()) {
+                            HStack {
+                                Image(systemName: "chart.bar.fill")
+                                    .foregroundColor(.accentColor)
+                                VStack(alignment: .leading) {
+                                    Text("Power Zones")
+                                        .font(.headline)
+                                        .foregroundColor(.primary)
+                                    Text("See your Z1–Z7 wattage targets")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color(.systemBackground))
+                                    .shadow(color: Color.black.opacity(0.08), radius: 4, x: 0, y: 2)
+                            )
+                        }
+                        NavigationLink(destination: FTPTestsView()) {
+                            HStack {
+                                Image(systemName: "bolt.heart")
+                                    .foregroundColor(.accentColor)
+                                VStack(alignment: .leading) {
+                                    Text("Take an FTP test")
+                                        .font(.headline)
+                                        .foregroundColor(.primary)
+                                    Text("20-minute or Ramp protocol")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color(.systemBackground))
+                                    .shadow(color: Color.black.opacity(0.08), radius: 4, x: 0, y: 2)
+                            )
+                        }
+                    }
+                    .padding(.horizontal)
                     
                     // Workout plan
                     VStack(alignment: .leading, spacing: 10) {

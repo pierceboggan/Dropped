@@ -50,14 +50,19 @@ struct Workout: Identifiable, Codable, Equatable {
     let summary: String
     let intervals: [Interval]
     let status: WorkoutStatus
-    
+    /// Optional marker identifying this workout as a built-in test (e.g. an FTP test).
+    /// Stored as the raw value of `FTPTestType` when applicable, nil otherwise.
+    /// Decoded with `decodeIfPresent` so older persisted workouts remain readable.
+    let testKind: String?
+
     init(
         id: UUID = UUID(),
         title: String,
         date: Date,
         summary: String,
         intervals: [Interval],
-        status: WorkoutStatus = .scheduled
+        status: WorkoutStatus = .scheduled,
+        testKind: String? = nil
     ) {
         self.id = id
         self.title = title
@@ -65,6 +70,22 @@ struct Workout: Identifiable, Codable, Equatable {
         self.summary = summary
         self.intervals = intervals
         self.status = status
+        self.testKind = testKind
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id, title, date, summary, intervals, status, testKind
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(UUID.self, forKey: .id)
+        self.title = try container.decode(String.self, forKey: .title)
+        self.date = try container.decode(Date.self, forKey: .date)
+        self.summary = try container.decode(String.self, forKey: .summary)
+        self.intervals = try container.decode([Interval].self, forKey: .intervals)
+        self.status = try container.decode(WorkoutStatus.self, forKey: .status)
+        self.testKind = try container.decodeIfPresent(String.self, forKey: .testKind)
     }
     
     /// Calculate the total duration of the workout in seconds
@@ -151,6 +172,9 @@ struct UserData: Codable, Equatable {
         }
         return weight
     }
+
+    /// Coggan power zones derived from the user's current FTP.
+    var powerZones: PowerZones { PowerZones(ftp: ftp) }
 }
 
 // MARK: - Integrated Models
@@ -190,10 +214,12 @@ class UserDataManager {
     private let onboardingCompletedKey = "com.dropped.hasCompletedOnboarding"
     private let defaults: UserDefaults
     
-    private init(defaults: UserDefaults = .standard) {
+    /// Internal so tests can construct an isolated instance backed by an
+    /// in-memory `UserDefaults(suiteName:)`. Production code should use `.shared`.
+    init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
     }
-    
+
     func saveUserData(_ userData: UserData) {
         guard let data = try? JSONEncoder().encode(userData) else {
             assertionFailure("Failed to encode user data.")
@@ -231,10 +257,11 @@ class WorkoutManager {
     private let workoutLogsKey = "com.dropped.workoutLogs"
     private let defaults: UserDefaults
     
-    private init(defaults: UserDefaults = .standard) {
+    /// Internal so tests can construct an isolated instance.
+    init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
     }
-    
+
     // MARK: - Workout Management
     
     /// Save a workout to memory

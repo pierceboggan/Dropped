@@ -63,7 +63,7 @@ struct OnboardingView: View {
                         .overlay {
                             InfoPopupView(
                                 title: "What is FTP?",
-                                message: "Functional Threshold Power (FTP) is the maximum power you can sustain for an hour. It's used to set your training zones and personalize your workouts.\n\nIf you don't know your FTP, enter an estimate based on your fitness level:\n• Beginner: 120-150 watts\n• Intermediate: 150-220 watts\n• Advanced: 220+ watts",
+                                message: "Functional Threshold Power (FTP) is the maximum power you can sustain for an hour. It's used to set your training zones and personalize your workouts.\n\nIf you don't know your FTP, enter an estimate based on your fitness level:\n• Beginner: 120-150 watts\n• Intermediate: 150-220 watts\n• Advanced: 220+ watts\n\nAfter setup, you can take a 20-minute or Ramp FTP test from the FTP Tests screen to dial in an accurate value.",
                                 isPresented: $showingFTPInfo
                             )
                         }
