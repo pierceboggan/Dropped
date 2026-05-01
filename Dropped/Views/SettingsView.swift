@@ -188,7 +188,3 @@ struct UnitSelectionButton: View {
         .foregroundColor(isSelected ? .white : .primary)
     }
 }
-
-#Preview {
-    SettingsView()
-}

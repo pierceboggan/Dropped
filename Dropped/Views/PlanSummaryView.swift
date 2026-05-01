@@ -69,8 +69,9 @@ struct PlanSummaryView: View {
                     Spacer(minLength: 30)
                     
                     Button(action: {
-                        // Reset user data in memory
-                        UserDataManager.shared.saveUserData(UserData.defaultData)
+                        UserDataManager.shared.resetUserData()
+                        WorkoutManager.shared.resetWorkouts()
+                        workouts = []
                         hasCompletedOnboarding = false
                     }) {
                         HStack {
@@ -423,8 +424,8 @@ struct WorkoutCard: View {
     var intensityColor: Color {
         // Calculate intensity from intervals
         let avgPower = workout.averagePower
-        let ftpPercent = UserDataManager.shared.loadUserData().ftp > 0 ?
-            Double(avgPower) / Double(UserDataManager.shared.loadUserData().ftp) : 0.75
+        let ftp = UserDataManager.shared.loadUserData().ftp
+        let ftpPercent = ftp > 0 ? Double(avgPower) / Double(ftp) : 0.75
         
         switch ftpPercent {
         case ..<0.65: return .blue
@@ -446,8 +447,8 @@ struct WorkoutCard: View {
     // Get intensity as string
     var intensityText: String {
         let avgPower = workout.averagePower
-        let ftpPercent = UserDataManager.shared.loadUserData().ftp > 0 ?
-            Double(avgPower) / Double(UserDataManager.shared.loadUserData().ftp) : 0.75
+        let ftp = UserDataManager.shared.loadUserData().ftp
+        let ftpPercent = ftp > 0 ? Double(avgPower) / Double(ftp) : 0.75
         
         switch ftpPercent {
         case ..<0.65: return "Low"
@@ -517,8 +518,4 @@ struct WorkoutCard: View {
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(dayOfWeek), \(workout.title) workout. \(durationText). Intensity: \(intensityText). \(workout.summary)")
     }
-}
-
-#Preview {
-    PlanSummaryView(hasCompletedOnboarding: .constant(true))
 }

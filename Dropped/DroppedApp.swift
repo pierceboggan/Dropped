@@ -12,11 +12,8 @@ struct DroppedApp: App {
     init() {
         // Setup for UI testing
         if CommandLine.arguments.contains("-resetUserDefaults") {
-            // Reset UserDefaults for testing
-            let domain = Bundle.main.bundleIdentifier!
-            UserDefaults.standard.removePersistentDomain(forName: domain)
-            UserDefaults.standard.synchronize()
-            print("Reset UserDefaults for UI testing")
+            UserDataManager.shared.resetUserData()
+            WorkoutManager.shared.resetWorkouts()
         }
     }
     

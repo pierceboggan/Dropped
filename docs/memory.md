@@ -1,65 +1,59 @@
 ## Project Architecture Overview
 
-This project is a SwiftUI-based iOS application structured as follows:
+This project is a SwiftUI-based iOS cycling training application.
 
-### Root Files
-- **README.md**: Project overview and setup instructions.
+### Root files
+
+- **README.md**: Project overview, setup instructions, OpenAI configuration, and test command.
 
 ### docs/
+
 - **idea.md**: Project ideas and brainstorming notes.
-- **memory.md**: (This file) Documentation of project architecture and file purposes.
+- **memory.md**: This file. Documents the current project structure and file purposes.
+- **openai.md**: Notes for calling OpenAI APIs from Swift without an SDK.
 - **research.md**: Research notes and references for the project.
-    - **openai.md**: Guide for calling OpenAI APIs in Swift without SDKs.
-- **specs/**: Folder containing feature specifications.
-  - **workout-detail-view.md**: Specification for the workout detail view feature.
-- **plans/**: Folder containing implementation plans.
-  - **workout-detail-view-plan.md**: Implementation plan for the workout detail view feature.
+- **specs/**: Feature specifications.
+- **plans/**: Historical implementation plans.
 
 ### Dropped/
-- **ContentView.swift**: The main SwiftUI view for the app's content. Now includes navigation to the AI Workout Generator via a prominent navigation link.
-- **Dropped.entitlements**: App entitlements configuration for permissions.
-- **DroppedApp.swift**: The main app entry point, sets up the SwiftUI app lifecycle.
-- **Assets.xcassets/**: Asset catalog for images, colors, and app icons.
-  - **AccentColor.colorset/**: Accent color definition.
-  - **AppIcon.appiconset/**: App icon images and metadata.
 
-#### Models/
-- **UserData.swift**: Defines the user data model and related logic. Also contains the `Interval`, `Workout`, and `WorkoutDay` models:
-  - `Interval`: Represents a single workout interval (power, duration, etc).
-  - `Workout`: Represents a workout, including title, date, summary, and intervals.
-  - `WorkoutDay`: Merges user data and workout data for a specific day, associating a user's state with a performed workout and optional notes.
+- **ContentView.swift**: App root view. Shows onboarding until the user profile is complete, then exposes the training plan and AI workout generator entry points.
+- **Dropped.entitlements**: App entitlements configuration.
+- **DroppedApp.swift**: SwiftUI app entry point. Handles UI-test reset launch arguments before showing ContentView.
+- **Assets.xcassets/**: Asset catalog for app icons and colors.
 
-- **WorkoutType.swift**: Enum defining the types of cycling workouts (endurance, threshold, vo2Max, sprint, recovery) for user selection and AI prompt construction. Used in the workout generator feature.
-- **AIWorkoutGenerator.swift**: Service for generating structured cycling workouts using the OpenAI API. Handles prompt construction, API requests, and response parsing for the workout generator feature.
+#### Dropped/Models/
 
-#### ViewModels/
-- **OnboardingViewModel.swift**: ViewModel for onboarding logic and state management.
-- **WorkoutGeneratorViewModel.swift**: ViewModel for the AI-powered workout generator feature. Manages state for workout type selection, workout generation, loading, and error handling. Coordinates with AIWorkoutGenerator to fetch structured workouts from OpenAI and handles user acceptance of generated workouts.
+- **UserData.swift**: Core user, workout, interval, and workout-day models. Also contains persisted `UserDataManager` and `WorkoutManager` storage helpers.
+- **WorkoutType.swift**: Enum defining AI workout types: endurance, threshold, VO2 max, sprint, and recovery.
+- **AIWorkoutGenerator.swift**: OpenAI chat-completions client for generated workouts. Reads API keys from configuration, requests a strict JSON schema, and converts responses into `Workout` models.
 
-#### Views/
- - **InfoPopupView.swift**: SwiftUI view for displaying informational popups.
- - **OnboardingView.swift**: SwiftUI view for onboarding screens.
- - **PlanSummaryView.swift**: SwiftUI view summarizing user plans.
- - **SettingsView.swift**: SwiftUI view for app settings.
- - **WorkoutGeneratorView.swift**: SwiftUI view for the AI-powered workout generator feature. Allows users to select a workout type, generate a workout using AI, and view loading/error states and the generated workout preview.
-- **WorkoutGeneratorReviewView.swift**: SwiftUI view for reviewing and accepting a generated workout. Wraps WorkoutDetailView, provides accessible Accept/Regenerate buttons, and smooth transitions.
- - **WorkoutDetailView.swift**: SwiftUI view displaying detailed information about a specific workout, including overview, intervals list, and power graph. Created as part of the workout detail feature. Accessible, supports light/dark mode, and is visually consistent with the app. Now also contains the `WorkoutDetailGraph` component for inline power/time graph visualization.
- - **WorkoutDetailGraph.swift**: (No longer used; graph is now implemented inline in WorkoutDetailView.swift.)
+#### Dropped/ViewModels/
+
+- **OnboardingViewModel.swift**: Onboarding validation, unit conversion, and profile-save logic.
+- **WorkoutGeneratorViewModel.swift**: AI workout generator state, loading/error handling, and generated-workout acceptance into persisted workout storage.
+
+#### Dropped/Views/
+
+- **InfoPopupView.swift**: Informational modal used for onboarding help.
+- **OnboardingView.swift**: Rider profile setup screen.
+- **PlanSummaryView.swift**: Training plan summary, generated workout cards, settings entry point, and onboarding reset.
+- **SettingsView.swift**: Settings screen for preferred weight units and app information.
+- **WorkoutDetailView.swift**: Detailed workout screen with overview, interval list, and inline power/time graph.
+- **WorkoutGeneratorView.swift**: AI workout type selection and generation screen.
+- **WorkoutGeneratorReviewView.swift**: Review surface for accepting or regenerating an AI-generated workout.
 
 ### Dropped.xcodeproj/
-- **project.pbxproj**: Xcode project configuration file.
-- **project.xcworkspace/**: Xcode workspace data.
-  - **contents.xcworkspacedata**: Workspace metadata.
-- **xcuserdata/**: User-specific Xcode data (schemes, settings).
-  - **xcschemes/**: Xcode scheme management files.
+
+- **project.pbxproj**: Xcode project configuration.
+- **project.xcworkspace/**: Xcode workspace metadata.
 
 ### DroppedTests/
-- **DroppedTests.swift**: General unit tests for the app.
-- **OnboardingViewModelTests.swift**: Unit tests for onboarding ViewModel.
-- **UserDataTests.swift**: Unit tests for user data model.
-- **WorkoutDetailTests.swift**: Unit tests for the workout detail functionality.
+
+- **OnboardingViewModelTests.swift**: Unit tests for onboarding validation, unit conversion, and user-data saving.
+- **UserDataTests.swift**: Unit tests for unit conversion, user-data persistence, onboarding completion, and workout persistence reset behavior.
 
 ### DroppedUITests/
-- **DroppedUITests.swift**: UI tests for the app.
-- **DroppedUITestsLaunchTests.swift**: UI launch tests for the app.
-- **WorkoutDetailUITests.swift**: UI tests for the workout detail view.
+
+- **DroppedUITests.swift**: UI tests for onboarding and basic plan access.
+- **DroppedUITestsLaunchTests.swift**: UI launch tests.

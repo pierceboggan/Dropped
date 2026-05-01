@@ -70,12 +70,3 @@ struct InfoPopupView: View {
         .padding(30)
     }
 }
-
-#Preview {
-    InfoPopupView(
-        title: "What is FTP?",
-        message: "Functional Threshold Power (FTP) is the maximum power you can sustain for an hour. It's used to set your training zones and personalize your workouts.",
-        isPresented: .constant(true)
-    )
-    .preferredColorScheme(.dark)
-}

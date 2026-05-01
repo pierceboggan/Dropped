@@ -20,7 +20,7 @@ struct ContentView: View {
                     NavigationLink(destination: {
                         // Inject dependencies for the generator
                         let userData = UserDataManager.shared.loadUserData()
-                        let aiGenerator = AIWorkoutGenerator(apiKey: "YOUR_OPENAI_API_KEY")
+                        let aiGenerator = AIWorkoutGenerator(apiKey: OpenAIConfiguration.apiKey)
                         let viewModel = WorkoutGeneratorViewModel(aiGenerator: aiGenerator, userData: userData)
                         WorkoutGeneratorView(viewModel: viewModel)
                     }) {
@@ -35,8 +35,4 @@ struct ContentView: View {
                 .accessibilityIdentifier("onboardingView")
         }
     }
-}
-
-#Preview {
-    ContentView()
 }

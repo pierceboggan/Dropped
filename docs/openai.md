@@ -1,50 +1,22 @@
-# Calling OpenAI APIs in Swift (No SDK)
+# Calling OpenAI APIs in Swift without an SDK
 
-To call the OpenAI APIs in Swift without using any SDKs, you can use Swift's built-in networking with `URLSession`. Here’s a concise, accessible approach:
+The app uses `URLSession` and `Codable` request/response models in `Dropped/Models/AIWorkoutGenerator.swift`.
 
-## Steps
+## App configuration
 
-1. **Create a URLRequest** to the OpenAI endpoint (e.g., `https://api.openai.com/v1/chat/completions`).
-2. **Set the HTTP method** to `POST`.
-3. **Add your API key** in the `Authorization` header: `Bearer YOUR_API_KEY`.
-4. **Set the `Content-Type` header** to `application/json`.
-5. **Encode your request body as JSON** (using `JSONEncoder` or manual `Data`).
-6. **Use `URLSession.shared.dataTask`** to send the request and handle the response.
+Do not hardcode API keys in Swift source. `OpenAIConfiguration.apiKey` reads `OPENAI_API_KEY` from the app's Info.plist or launch environment. If no usable key is configured, `AIWorkoutGenerator` returns a user-facing `missingAPIKey` error.
 
-## Example: Chat Completions
+## Request pattern
 
-```swift
-import Foundation
+1. Create a `URLRequest` for `https://api.openai.com/v1/chat/completions`.
+2. Set `POST`, `Content-Type: application/json`, and `Authorization: Bearer <api key>`.
+3. Encode the chat-completions request with `JSONEncoder`.
+4. Ask the model for a strict JSON object.
+5. Decode the response into the app's generated-workout schema.
+6. Convert the generated schema into `Workout` and `Interval` models before updating UI state.
 
-// 1. Define your request body
-struct ChatRequest: Codable {
-    let model: String
-    let messages: [[String: String]]
-}
+## Notes
 
-let apiKey = "YOUR_OPENAI_API_KEY"
-let url = URL(string: "https://api.openai.com/v1/chat/completions")!
-var request = URLRequest(url: url)
-request.httpMethod = "POST"
-request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-let chatRequest = ChatRequest(
-    model: "gpt-3.5-turbo",
-    messages: [
-        ["role": "user", "content": "Hello!"]
-    ]
-)
-
-request.httpBody = try? JSONEncoder().encode(chatRequest)
-
-// 2. Send the request
-let task = URLSession.shared.dataTask(with: request) { data, response, error in
-    guard let data = data else { return }
-    // Handle the response (decode JSON, etc.)
-    print(String(data: data, encoding: .utf8) ?? "No response")
-}
-task.resume()
-```
-
-Replace `"YOUR_OPENAI_API_KEY"` with your actual key. This approach works for any OpenAI endpoint—just adjust the request body as needed. No SDKs required!
+- Keep OpenAI response parsing in the model/service layer, not in SwiftUI views.
+- Prefer explicit error messages for missing keys, failed network calls, non-2xx responses, and invalid workout JSON.
+- The app should continue to function without an OpenAI key; only AI generation is disabled.

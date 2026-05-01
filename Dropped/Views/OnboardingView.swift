@@ -174,7 +174,8 @@ struct OnboardingView: View {
                     text: $viewModel.weight,
                     placeholder: "Enter your weight",
                     keyboardType: .decimalPad,
-                    error: viewModel.weightError
+                    error: viewModel.weightError,
+                    accessibilityIdentifier: "Weight"
                 )
             }
             
@@ -201,7 +202,8 @@ struct OnboardingView: View {
                     text: $viewModel.ftp,
                     placeholder: "Enter your FTP",
                     keyboardType: .numberPad,
-                    error: viewModel.ftpError
+                    error: viewModel.ftpError,
+                    accessibilityIdentifier: "FTP"
                 )
             }
         }
@@ -235,7 +237,8 @@ struct OnboardingView: View {
                     text: $viewModel.trainingHoursPerWeek,
                     placeholder: "Available training hours",
                     keyboardType: .numberPad,
-                    error: viewModel.hoursError
+                    error: viewModel.hoursError,
+                    accessibilityIdentifier: "Hours per week"
                 )
             }
             
@@ -318,6 +321,7 @@ struct CustomTextField: View {
     let placeholder: String
     let keyboardType: UIKeyboardType
     let error: String?
+    let accessibilityIdentifier: String
     
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -328,7 +332,7 @@ struct CustomTextField: View {
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(error != nil ? Color.red : Color.gray.opacity(0.3), lineWidth: 1)
                 )
-                .accessibilityIdentifier(placeholder)
+                .accessibilityIdentifier(accessibilityIdentifier)
             
             if let error = error {
                 Text(error)
@@ -387,8 +391,4 @@ struct GoalCard: View {
                 .stroke(isSelected ? Color.accentColor : Color.clear, lineWidth: 1.5)
         )
     }
-}
-
-#Preview {
-    OnboardingView(hasCompletedOnboarding: .constant(false))
 }

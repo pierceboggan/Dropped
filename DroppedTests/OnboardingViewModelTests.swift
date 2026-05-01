@@ -15,8 +15,8 @@ final class OnboardingViewModelTests: XCTestCase {
     private var cancellables: Set<AnyCancellable>!
     
     override func setUpWithError() throws {
-        // Make sure there's no data in UserDefaults
-        UserDefaults.standard.removeObject(forKey: "com.dropped.userdata")
+        UserDataManager.shared.resetUserData()
+        WorkoutManager.shared.resetWorkouts()
         
         // Create a fresh viewModel for each test
         viewModel = OnboardingViewModel()
@@ -26,7 +26,8 @@ final class OnboardingViewModelTests: XCTestCase {
     override func tearDownWithError() throws {
         viewModel = nil
         cancellables = nil
-        UserDefaults.standard.removeObject(forKey: "com.dropped.userdata")
+        UserDataManager.shared.resetUserData()
+        WorkoutManager.shared.resetWorkouts()
     }
     
     func testValidInputsValidation() throws {
