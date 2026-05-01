@@ -24,9 +24,10 @@ This project is a SwiftUI-based iOS cycling training application.
 
 #### Dropped/Models/
 
-- **UserData.swift**: Core user, workout, interval, and workout-day models. Also contains persisted `UserDataManager` and `WorkoutManager` storage helpers.
+- **UserData.swift**: Core user, workout, interval, and workout-day models. Also contains persisted `UserDataManager` and `WorkoutManager` storage helpers. `UserDataManager` exposes `updateWeightFromHealth(kg:sampleDate:)` for HealthKit sync, and `WorkoutManager` exposes `markWorkoutCompleted(_:summary:)` which writes to HealthKit when the user has enabled `WorkoutManager.healthSyncEnabledKey`.
 - **WorkoutType.swift**: Enum defining AI workout types: endurance, threshold, VO2 max, sprint, and recovery.
 - **AIWorkoutGenerator.swift**: OpenAI chat-completions client for generated workouts. Reads API keys from configuration, requests a strict JSON schema, and converts responses into `Workout` models.
+- **HealthKitService.swift**: HealthKit integration. Defines the `HealthKitServicing` protocol, default `HealthKitService` implementation backed by `HKHealthStore` + `HKWorkoutBuilder`, the `CompletedWorkoutSummary` value type used to write cycling workouts, energy estimation helpers, and a `syncBodyMassToProfile(using:)` extension that pushes newer Health weights into `UserDataManager`. Simulator/macOS-safe via availability gates.
 
 #### Dropped/ViewModels/
 
@@ -52,6 +53,7 @@ This project is a SwiftUI-based iOS cycling training application.
 
 - **OnboardingViewModelTests.swift**: Unit tests for onboarding validation, unit conversion, and user-data saving.
 - **UserDataTests.swift**: Unit tests for unit conversion, user-data persistence, onboarding completion, and workout persistence reset behavior.
+- **HealthKitServiceTests.swift**: Unit tests for the HealthKit integration. Uses a `MockHealthKitService` to verify body-mass sync logic, energy estimation math, and `WorkoutManager.markWorkoutCompleted` write-through behavior driven by the Health-sync toggle.
 
 ### DroppedUITests/
 
