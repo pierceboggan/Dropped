@@ -5,10 +5,16 @@ struct WorkoutDetailView: View {
     /// The workout to display.
     let workout: Workout
 
+    @State private var showingResultEntry = false
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 WorkoutOverviewHeader(workout: workout)
+                if let testTypeRaw = workout.testKind,
+                   let testType = FTPTestType(rawValue: testTypeRaw) {
+                    logResultButton(testType: testType)
+                }
                 intervalsSection
                 powerProfileSection
             }
@@ -17,6 +23,28 @@ struct WorkoutDetailView: View {
         .background(Color(UIColor.systemBackground))
         .navigationTitle("Workout Details")
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showingResultEntry) {
+            if let testTypeRaw = workout.testKind,
+               let testType = FTPTestType(rawValue: testTypeRaw) {
+                FTPTestResultEntryView(testType: testType, sourceWorkout: workout)
+            }
+        }
+    }
+
+    private func logResultButton(testType: FTPTestType) -> some View {
+        Button(action: { showingResultEntry = true }) {
+            HStack {
+                Image(systemName: "square.and.pencil")
+                Text("Log \(testType.shortName) result")
+                    .fontWeight(.semibold)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+            .foregroundColor(.white)
+            .background(Color.accentColor.gradient)
+            .cornerRadius(12)
+        }
+        .accessibilityIdentifier("logFTPTestResultButton")
     }
 
     /// List of workout intervals, or an empty state if the workout has none.
